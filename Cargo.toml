@@ -1,5 +1,6 @@
 [workspace]
 members = [
     "bassment",
+    "bassment-cli",
     "bassment-model"
 ]
