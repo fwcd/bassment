@@ -1,0 +1,8 @@
+# General
+.DS_Store
+.vscode
+local
+
+# Rust
+target
+**/*.rs.bk
