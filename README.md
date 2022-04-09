@@ -1,3 +1,3 @@
 # Bassment
 
-The ultimate tool to manage your music library across hosts.
+Music library server with support for cue points, playlists, crates and more.
