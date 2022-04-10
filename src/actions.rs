@@ -2,7 +2,7 @@ use diesel::{PgConnection, RunQueryDsl};
 
 use crate::{db::DbResult, models::{Artist, NewArtist}};
 
-pub fn artists(conn: &PgConnection) -> DbResult<Vec<Artist>> {
+pub fn fetch_artists(conn: &PgConnection) -> DbResult<Vec<Artist>> {
     use crate::schema::artist::dsl::*;
 
     Ok(artist.get_results(conn)?)
