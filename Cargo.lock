@@ -243,7 +243,6 @@ dependencies = [
  "diesel_migrations",
  "dotenv",
  "log",
- "r2d2",
  "serde",
  "serde_json",
 ]
@@ -388,6 +387,7 @@ dependencies = [
  "byteorder",
  "diesel_derives",
  "pq-sys",
+ "r2d2",
 ]
 
 [[package]]

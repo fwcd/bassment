@@ -4,14 +4,15 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 mod actions;
+mod db;
 mod routes;
 mod schema;
 mod models;
 
 use std::{io, env};
 
-use actix_web::{HttpServer, App};
-use diesel::{PgConnection, Connection};
+use actix_web::{web, HttpServer, App};
+use diesel::{PgConnection, r2d2::{ConnectionManager, Pool}};
 use diesel_migrations::embed_migrations;
 use dotenv::dotenv;
 
@@ -21,16 +22,20 @@ embed_migrations!();
 async fn main() -> io::Result<()> {
     dotenv().ok();
 
-    // Connect to database
+    // Create database pool
     let db_url = env::var("DATABASE_URL").expect("The DATABASE_URL must be set");
-    let connection = PgConnection::establish(&db_url).expect(&format!("Error connecting to {}", db_url));
+    let manager = ConnectionManager::<PgConnection>::new(db_url);
+    let pool = Pool::builder()
+        .build(manager)
+        .expect("Failed to create database pool");
 
     // Run database migrations
-    embedded_migrations::run(&connection).expect("Could not run migrations");
+    embedded_migrations::run(&pool.get().unwrap()).expect("Could not run migrations");
 
     // Start server
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .app_data(web::Data::new(pool.clone()))
             .configure(routes::api_config)
     })
     .bind(("127.0.0.1", 8080))?
