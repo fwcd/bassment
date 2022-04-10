@@ -1,17 +1,14 @@
+mod routes;
+
 use std::io;
 
-use actix_web::{get, web, Responder, HttpServer, App};
-
-#[get("/hello/{name}")]
-async fn greet(name: web::Path<String>) -> impl Responder {
-    format!("Hello {}!", name)
-}
+use actix_web::{HttpServer, App};
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(greet)
+            .configure(routes::api_config)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
