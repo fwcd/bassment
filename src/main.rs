@@ -1,7 +1,12 @@
 #[macro_use]
+extern crate diesel;
+#[macro_use]
 extern crate diesel_migrations;
 
+mod actions;
 mod routes;
+mod schema;
+mod models;
 
 use std::{io, env};
 
