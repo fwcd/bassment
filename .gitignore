@@ -6,8 +6,3 @@ local
 # Rust
 target
 **/*.rs.bk
-
-
-# Added by cargo
-
-/target
