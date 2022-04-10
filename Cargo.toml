@@ -9,4 +9,4 @@ edition = "2021"
 log = "0.4"
 actix-web = "4"
 diesel = { version = "1.4", features = ["postgres"] }
-
+diesel_migrations = "1.4"
