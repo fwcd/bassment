@@ -12,8 +12,7 @@ CREATE TABLE album (
 
 CREATE TABLE track (
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    album_id INT REFERENCES album(id)
+    title TEXT NOT NULL
 );
 
 CREATE TABLE track_artist (
