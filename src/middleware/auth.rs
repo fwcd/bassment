@@ -1,8 +1,10 @@
 use std::{future::{Ready, ready, Future}, pin::Pin, task::{Context, Poll}, result};
 
-use actix_web::dev::{Transform, ServiceRequest, Service, ServiceResponse};
+use actix_web::{dev::{Transform, ServiceRequest, Service, ServiceResponse}, http::header, web};
+use lazy_static::lazy_static;
+use regex::Regex;
 
-use crate::error::{Error, Result};
+use crate::{error::{Error, Result}, actions::auth, db::DbPool};
 
 pub struct Authentication;
 
@@ -21,6 +23,10 @@ where
     fn new_transform(&self, service: S) -> Self::Future {
         ready(Ok(AuthenticationMiddleware { service }))
     }
+}
+
+lazy_static! {
+    static ref BEARER_PATTERN: Regex = Regex::new(r"^\s*[bB]earer\s+(\S+)\s*$").unwrap();
 }
 
 pub struct AuthenticationMiddleware<S> {
@@ -44,7 +50,20 @@ where
     fn call(&self, req: ServiceRequest) -> Self::Future {
         let mut pass = false;
 
-        // TODO: Validate the JWT token
+        // Search Authorization header for a Bearer token
+        if let Some(captures) = req.headers().get(header::AUTHORIZATION)
+                                             .and_then(|h| h.to_str().ok())
+                                             .and_then(|s| BEARER_PATTERN.captures(s)) {
+            let token = &captures[1];
+            // Grab a database connection from the pool
+            if let Some(conn) = req.app_data::<web::Data<DbPool>>()
+                                   .and_then(|p| p.get().ok()) {
+                // Validate the token
+                if auth::decode(token, &conn).is_ok() {
+                    pass = true;
+                }
+            }
+        }
 
         if pass {
             let fut = self.service.call(req);
