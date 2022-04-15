@@ -21,7 +21,14 @@ embed_migrations!();
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    // Load .env
     dotenv().ok();
+
+    // Set up stdout tracing subscriber (structured logging)
+    let subscriber = tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::INFO)
+        .finish();
+    tracing::subscriber::set_global_default(subscriber).expect("Could not set tracing subscriber");
 
     // Create database pool
     let db_url = env::var("DATABASE_URL").expect("The DATABASE_URL must be set");
