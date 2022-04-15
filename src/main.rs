@@ -15,7 +15,9 @@ use actix_web::{web, HttpServer, App};
 use diesel::{PgConnection, r2d2::{ConnectionManager, Pool}};
 use diesel_migrations::embed_migrations;
 use dotenv::dotenv;
+use tracing::Level;
 use tracing_actix_web::TracingLogger;
+use tracing_subscriber::fmt::format::FmtSpan;
 
 embed_migrations!();
 
@@ -26,7 +28,8 @@ async fn main() -> io::Result<()> {
 
     // Set up stdout tracing subscriber (structured logging)
     let subscriber = tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::INFO)
+        .with_span_events(FmtSpan::NEW)
+        .with_max_level(Level::INFO)
         .finish();
     tracing::subscriber::set_global_default(subscriber).expect("Could not set tracing subscriber");
 

@@ -251,7 +251,6 @@ dependencies = [
  "diesel",
  "diesel_migrations",
  "dotenv",
- "log",
  "serde",
  "serde_json",
  "tracing",
