@@ -11,6 +11,7 @@ categories = ["multimedia", "audio"]
 
 [dependencies]
 actix-web = "4"
+actix-web-httpauth = "0.6"
 diesel = { version = "1.4", features = ["postgres", "r2d2"] }
 diesel_migrations = "1.4"
 r2d2 = "0.8" # only for the conversion From<r2d2::Error> to our Error
