@@ -4,15 +4,9 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-        - os: ubuntu-latest
-          artifact_name: bassment
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up toolchain
       uses: actions-rs/toolchain@v1
       with:
@@ -21,15 +15,4 @@ jobs:
       uses: actions-rs/cargo@v1
       with:
         command: build
-        args: --release --all-features
-    - name: Fetch OS info
-      id: fetch-os-info
-      run: |
-        suffix=$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m)
-        echo "Using suffix $suffix"
-        echo "::set-output name=suffix::$suffix"
-    - name: Upload binaries
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.artifact_name }}-${{ steps.fetch-os-info.outputs.suffix }}
-        path: target/release/${{ matrix.artifact_name }}
+        args: --all-features
