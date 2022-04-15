@@ -5,22 +5,6 @@ use serde::{Serialize, Deserialize};
 use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
-pub struct Artist {
-    pub id: i32,
-    pub name: String,
-    pub cover_art_id: Option<i32>,
-    pub last_modified_at: SystemTime,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
-pub struct Album {
-    pub id: i32,
-    pub name: String,
-    pub cover_art_id: Option<i32>,
-    pub last_modified_at: SystemTime,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct Track {
     pub id: i32,
     pub name: String,
@@ -40,21 +24,6 @@ pub struct Track {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
-pub struct Genre {
-    pub id: i32,
-    pub name: String,
-    pub last_modified_at: SystemTime,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
-pub struct Resource {
-    pub id: i32,
-    pub location: String,
-    pub is_local: bool,
-    pub kind: i32, // TODO: Strongly typed as enum?
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct TrackArtist {
     pub track_id: i32,
     pub artist_id: i32,
@@ -71,18 +40,6 @@ pub struct TrackAlbum {
 pub struct TrackGenre {
     pub track_id: i32,
     pub genre_id: i32,
-}
-
-#[derive(Debug, Clone, Insertable)]
-#[table_name = "artists"]
-pub struct NewArtist<'a> {
-    pub name: &'a str,
-}
-
-#[derive(Debug, Clone, Insertable)]
-#[table_name = "albums"]
-pub struct NewAlbum<'a> {
-    pub name: &'a str,
 }
 
 #[derive(Debug, Clone, Insertable)]
