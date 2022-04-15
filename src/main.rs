@@ -4,6 +4,7 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 mod actions;
+mod middleware;
 mod db;
 mod error;
 mod routes;

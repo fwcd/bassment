@@ -7,6 +7,7 @@ use actix_web::{ResponseError, HttpResponse, http::StatusCode};
 pub enum Error {
     Internal(String),
     BadRequest(String),
+    Unauthorized,
 }
 
 impl Error {
@@ -20,6 +21,7 @@ impl fmt::Display for Error {
         match self {
             Self::Internal(_) => write!(f, "Internal error"),
             Self::BadRequest(_) => write!(f, "Bad request"),
+            Self::Unauthorized => write!(f, "Unauthorized"),
         }
     }
 }
@@ -50,6 +52,7 @@ impl ResponseError for Error {
         match self {
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
+            Self::Unauthorized => StatusCode::UNAUTHORIZED,
         }
     }
 }
