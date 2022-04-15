@@ -1,19 +1,6 @@
 use actix_web::{web, post, Responder};
-use serde::Deserialize;
 
-use crate::{db::DbPool, error::Result};
-
-#[derive(Deserialize)]
-struct Login {
-    username: String,
-    password: String,
-}
-
-#[derive(Deserialize)]
-struct Signup {
-    username: String,
-    password: String,
-}
+use crate::{db::DbPool, error::Result, models::{Login, Signup}};
 
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl Responder> {
@@ -32,4 +19,3 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(signup)
     );
 }
-
