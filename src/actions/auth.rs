@@ -1,4 +1,14 @@
-use crate::{models::Claim, db::DbConn, error::Result};
+use diesel::RunQueryDsl;
+
+use crate::{models::{Claim, TokenSecret}, db::DbConn, error::Result};
+
+/// Fetches the secret from the database.
+fn secret(conn: &DbConn) -> Result<Vec<u8>> {
+    use crate::schema::token_secret::dsl::*;
+
+    let row: TokenSecret = token_secret.get_result(conn)?;
+    Ok(row.secret)
+}
 
 /// Encodes/issues a new token.
 pub fn encode(claim: Claim) -> String {

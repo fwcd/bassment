@@ -71,7 +71,7 @@ table! {
 table! {
     token_secret (id) {
         id -> Bool,
-        secret -> Nullable<Bytea>,
+        secret -> Bytea,
     }
 }
 

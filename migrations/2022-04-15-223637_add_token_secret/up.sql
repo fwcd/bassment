@@ -2,6 +2,6 @@
 
 CREATE TABLE token_secret (
     id BOOL PRIMARY KEY DEFAULT TRUE,
-    secret BYTEA,
+    secret BYTEA NOT NULL,
     CONSTRAINT only_one_secret CHECK (id)
 );
