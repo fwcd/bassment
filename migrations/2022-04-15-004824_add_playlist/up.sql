@@ -9,8 +9,9 @@ CREATE TABLE playlist (
                                  -- 3 => set log
     cover_art_id INT REFERENCES resource(id),
     parent_id INT REFERENCES playlist(id),
-    position INT NOT NULL -- starts from 0, indexed within the parent folder
-                          -- (i.e. the first child is always 0)
+    position INT NOT NULL, -- starts from 0, indexed within the parent folder
+                           -- (i.e. the first child is always 0)
+    last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE playlist_track (
@@ -19,3 +20,5 @@ CREATE TABLE playlist_track (
     track_number INT,
     CONSTRAINT playlist_track_pkey PRIMARY KEY (playlist_id, track_id)
 );
+
+SELECT manage_last_modified('playlist');
