@@ -3,6 +3,7 @@ table! {
         id -> Int4,
         title -> Text,
         cover_art_id -> Nullable<Int4>,
+        last_modified_at -> Timestamp,
     }
 }
 
@@ -11,6 +12,7 @@ table! {
         id -> Int4,
         name -> Text,
         cover_art_id -> Nullable<Int4>,
+        last_modified_at -> Timestamp,
     }
 }
 
@@ -18,6 +20,7 @@ table! {
     genre (id) {
         id -> Int4,
         name -> Text,
+        last_modified_at -> Timestamp,
     }
 }
 
