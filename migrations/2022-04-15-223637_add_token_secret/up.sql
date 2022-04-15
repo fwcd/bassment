@@ -5,3 +5,10 @@ CREATE TABLE token_secret (
     secret BYTEA NOT NULL,
     CONSTRAINT only_one_secret CHECK (id)
 );
+
+-- Generate a cryptographically strong random 256-bit secret.
+
+INSERT INTO token_secret VALUES (
+    TRUE,
+    gen_random_bytes(32)
+);
