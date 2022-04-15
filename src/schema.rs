@@ -17,11 +17,27 @@ table! {
 }
 
 table! {
+    crate (id) {
+        id -> Int4,
+        name -> Text,
+        kind -> Int4,
+        cover_art_id -> Nullable<Int4>,
+        parent_id -> Nullable<Int4>,
+    }
+}
+
+table! {
+    crate_track (crate_id, track_id) {
+        crate_id -> Int4,
+        track_id -> Int4,
+    }
+}
+
+table! {
     cue (id) {
         id -> Int4,
         track_id -> Nullable<Int4>,
-        #[sql_name = "type"]
-        type_ -> Nullable<Int4>,
+        kind -> Int4,
         position_ms -> Nullable<Int4>,
         length_ms -> Int4,
         hotcue -> Nullable<Int4>,
@@ -35,6 +51,24 @@ table! {
         id -> Int4,
         name -> Text,
         last_modified_at -> Timestamp,
+    }
+}
+
+table! {
+    playlist (id) {
+        id -> Int4,
+        name -> Text,
+        kind -> Int4,
+        cover_art_id -> Nullable<Int4>,
+        parent_id -> Nullable<Int4>,
+    }
+}
+
+table! {
+    playlist_track (playlist_id, track_id, track_number) {
+        playlist_id -> Int4,
+        track_id -> Int4,
+        track_number -> Int4,
     }
 }
 
@@ -98,7 +132,13 @@ table! {
 
 joinable!(album -> resource (cover_art_id));
 joinable!(artist -> resource (cover_art_id));
+joinable!(crate -> resource (cover_art_id));
+joinable!(crate_track -> crate (crate_id));
+joinable!(crate_track -> track (track_id));
 joinable!(cue -> track (track_id));
+joinable!(playlist -> resource (cover_art_id));
+joinable!(playlist_track -> playlist (playlist_id));
+joinable!(playlist_track -> track (track_id));
 joinable!(track_album -> album (album_id));
 joinable!(track_album -> track (track_id));
 joinable!(track_artist -> artist (artist_id));
@@ -111,8 +151,12 @@ joinable!(track_genre -> track (track_id));
 allow_tables_to_appear_in_same_query!(
     album,
     artist,
+    crate,
+    crate_track,
     cue,
     genre,
+    playlist,
+    playlist_track,
     resource,
     track,
     track_album,
