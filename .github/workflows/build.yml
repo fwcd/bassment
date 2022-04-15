@@ -8,6 +8,7 @@ jobs:
       matrix:
         include:
         - os: ubuntu-latest
+          artifact_name: bassment
 
     runs-on: ${{ matrix.os }}
     steps:
