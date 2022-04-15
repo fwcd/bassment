@@ -15,6 +15,7 @@ use actix_web::{web, HttpServer, App};
 use diesel::{PgConnection, r2d2::{ConnectionManager, Pool}};
 use diesel_migrations::embed_migrations;
 use dotenv::dotenv;
+use tracing_actix_web::TracingLogger;
 
 embed_migrations!();
 
@@ -35,6 +36,7 @@ async fn main() -> io::Result<()> {
     // Start server
     HttpServer::new(move || {
         App::new()
+            .wrap(TracingLogger::default())
             .app_data(web::Data::new(pool.clone()))
             .configure(routes::config)
     })

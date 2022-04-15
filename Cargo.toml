@@ -13,3 +13,5 @@ diesel_migrations = "1.4"
 dotenv = "0.15"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+tracing = "0.1"
+tracing-actix-web = "0.5"
