@@ -21,7 +21,7 @@ pub struct TokenSecret {
 
 /// The JWT payload.
 #[derive(Serialize, Deserialize)]
-pub struct Claim {
+pub struct Claims {
     /// Expiration UTC timestamp.
     pub exp: usize,
     /// Subject (in our case the username).

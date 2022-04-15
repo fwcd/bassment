@@ -1,6 +1,7 @@
 use diesel::RunQueryDsl;
+use jsonwebtoken::{Header, EncodingKey, DecodingKey, Validation};
 
-use crate::{models::{Claim, TokenSecret}, db::DbConn, error::Result};
+use crate::{models::{Claims, TokenSecret}, db::DbConn, error::Result};
 
 /// Fetches the secret from the database.
 fn secret(conn: &DbConn) -> Result<Vec<u8>> {
@@ -11,13 +12,19 @@ fn secret(conn: &DbConn) -> Result<Vec<u8>> {
 }
 
 /// Encodes/issues a new token.
-pub fn encode(claim: Claim) -> String {
-    // TODO
-    todo!()
+pub fn encode(claims: Claims, conn: &DbConn) -> Result<String> {
+    Ok(jsonwebtoken::encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(&secret(conn)?),
+    )?)
 }
 
 /// Decodes/validates the given token. Errors if the token is invalid/malformed.
-pub fn decode(claim: Claim, conn: &DbConn) -> Result<Claim> {
-    // TODO
-    todo!()
+pub fn decode(token: &str, conn: &DbConn) -> Result<Claims> {
+    Ok(jsonwebtoken::decode(
+        token,
+        &DecodingKey::from_secret(&secret(conn)?),
+        &Validation::default(),
+    )?.claims)
 }

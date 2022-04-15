@@ -38,6 +38,10 @@ impl From<diesel::result::Error> for Error {
     fn from(e: diesel::result::Error) -> Self { Self::Internal(format!("Diesel error: {:?}", e)) }
 }
 
+impl From<jsonwebtoken::errors::Error> for Error {
+    fn from(e: jsonwebtoken::errors::Error) -> Self { Self::Internal(format!("JWT error: {:?}", e)) }
+}
+
 impl From<String> for Error {
     fn from(s: String) -> Self { Self::Internal(s) }
 }
