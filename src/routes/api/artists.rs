@@ -1,21 +1,19 @@
 use actix_web::{get, web, Responder, post};
 
-use crate::{actions::{insert_artist, fetch_artists}, db::DbPool};
-
-// TODO: Better error handling?
+use crate::{actions::{insert_artist, fetch_artists}, db::DbPool, error::Result};
 
 #[get("")]
-async fn get_artists(pool: web::Data<DbPool>) -> impl Responder {
-    let conn = pool.get().expect("Could not get DB connection");
-    let artists = fetch_artists(&conn).expect("Could not query artists");
-    web::Json(artists)
+async fn get_artists(pool: web::Data<DbPool>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let artists = fetch_artists(&conn)?;
+    Ok(web::Json(artists))
 }
 
 #[post("/{name}")]
-async fn post_artist(pool: web::Data<DbPool>, name: web::Path<String>) -> impl Responder {
-    let conn = pool.get().expect("Could not get DB connection");
-    let artist = insert_artist(&name, &conn).expect("Could not create artist");
-    web::Json(artist)
+async fn post_artist(pool: web::Data<DbPool>, name: web::Path<String>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let artist = insert_artist(&name, &conn)?;
+    Ok(web::Json(artist))
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {

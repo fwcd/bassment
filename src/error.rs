@@ -1,7 +1,6 @@
 use std::{io, fmt};
 
 use actix_web::{ResponseError, HttpResponse, http::StatusCode};
-use diesel::r2d2;
 
 /// The general error type used by Bassment.
 #[derive(Debug)]
