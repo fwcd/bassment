@@ -36,7 +36,7 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
-            .configure(routes::api_config)
+            .configure(routes::config)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

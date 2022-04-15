@@ -18,10 +18,8 @@ async fn post_artist(pool: web::Data<DbPool>, name: web::Path<String>) -> impl R
     web::Json(artist)
 }
 
-pub fn api_config(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::scope("/api/v1")
-            .service(get_artists)
-            .service(post_artist)
-    );
+pub fn config(cfg: &mut web::ServiceConfig) {
+    cfg
+        .service(get_artists)
+        .service(post_artist);
 }
