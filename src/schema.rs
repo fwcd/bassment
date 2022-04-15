@@ -17,6 +17,20 @@ table! {
 }
 
 table! {
+    cue (id) {
+        id -> Int4,
+        track_id -> Nullable<Int4>,
+        #[sql_name = "type"]
+        type_ -> Nullable<Int4>,
+        position_ms -> Nullable<Int4>,
+        length_ms -> Int4,
+        hotcue -> Nullable<Int4>,
+        label -> Nullable<Text>,
+        color -> Nullable<Int4>,
+    }
+}
+
+table! {
     genre (id) {
         id -> Int4,
         name -> Text,
@@ -84,6 +98,7 @@ table! {
 
 joinable!(album -> resource (cover_art_id));
 joinable!(artist -> resource (cover_art_id));
+joinable!(cue -> track (track_id));
 joinable!(track_album -> album (album_id));
 joinable!(track_album -> track (track_id));
 joinable!(track_artist -> artist (artist_id));
@@ -96,6 +111,7 @@ joinable!(track_genre -> track (track_id));
 allow_tables_to_appear_in_same_query!(
     album,
     artist,
+    cue,
     genre,
     resource,
     track,
