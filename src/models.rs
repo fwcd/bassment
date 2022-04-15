@@ -74,19 +74,19 @@ pub struct TrackGenre {
 }
 
 #[derive(Debug, Clone, Insertable)]
-#[table_name = "artist"]
+#[table_name = "artists"]
 pub struct NewArtist<'a> {
     pub name: &'a str,
 }
 
 #[derive(Debug, Clone, Insertable)]
-#[table_name = "album"]
+#[table_name = "albums"]
 pub struct NewAlbum<'a> {
     pub name: &'a str,
 }
 
 #[derive(Debug, Clone, Insertable)]
-#[table_name = "track"]
+#[table_name = "tracks"]
 pub struct NewTrack<'a> {
     pub name: &'a str,
 }
