@@ -1,12 +1,12 @@
 -- Add modification dates to most entities and corresponding triggers.
 
-ALTER TABLE artist
+ALTER TABLE artists
     ADD COLUMN last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL;
 
-ALTER TABLE album
+ALTER TABLE albums
     ADD COLUMN last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL;
 
-ALTER TABLE genre
+ALTER TABLE genres
     ADD COLUMN last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL;
 
 -- Helper functions for creating triggers that automatically
@@ -39,7 +39,7 @@ $$ LANGUAGE plpgsql;
 
 -- Attach these helpers to the corresponding tables.
 
-SELECT manage_last_modified('track');
-SELECT manage_last_modified('genre');
-SELECT manage_last_modified('album');
-SELECT manage_last_modified('artist');
+SELECT manage_last_modified('tracks');
+SELECT manage_last_modified('genres');
+SELECT manage_last_modified('albums');
+SELECT manage_last_modified('artists');

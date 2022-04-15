@@ -1,6 +1,6 @@
 -- Remove track metadata columns
 
-ALTER TABLE track
+ALTER TABLE tracks
     DROP COLUMN year,
     DROP COLUMN comment,
     DROP COLUMN duration_ms,
@@ -15,6 +15,6 @@ ALTER TABLE track
     DROP COLUMN last_modified_at,
     DROP COLUMN last_played_at;
 
-DROP TABLE track_genre;
-DROP TABLE track_album;
-DROP TABLE genre;
+DROP TABLE track_genres;
+DROP TABLE track_albums;
+DROP TABLE genres;

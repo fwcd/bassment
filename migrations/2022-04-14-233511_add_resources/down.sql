@@ -1,10 +1,10 @@
 -- Remove resource table and associated columns
 
-ALTER TABLE artist
+ALTER TABLE artists
     DROP COLUMN cover_art_id;
 
-ALTER TABLE album
+ALTER TABLE albums
     DROP COLUMN cover_art_id;
 
-DROP TABLE track_audio;
-DROP TABLE resource;
+DROP TABLE track_audios;
+DROP TABLE resources;

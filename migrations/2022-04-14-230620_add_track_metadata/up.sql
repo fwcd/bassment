@@ -1,24 +1,24 @@
 -- Add track metadata columns
 
-CREATE TABLE genre (
+CREATE TABLE genres (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
 
-CREATE TABLE track_album (
-    track_id INT REFERENCES track(id),
-    album_id INT REFERENCES album(id),
+CREATE TABLE track_albums (
+    track_id INT REFERENCES tracks(id),
+    album_id INT REFERENCES albums(id),
     CONSTRAINT track_album_pkey PRIMARY KEY (track_id, album_id),
     track_number INT NOT NULL
 );
 
-CREATE TABLE track_genre (
-    track_id INT REFERENCES track(id),
-    genre_id INT REFERENCES genre(id),
+CREATE TABLE track_genres (
+    track_id INT REFERENCES tracks(id),
+    genre_id INT REFERENCES genres(id),
     CONSTRAINT track_genre_pkey PRIMARY KEY (track_id, genre_id)
 );
 
-ALTER TABLE track
+ALTER TABLE tracks
     ADD COLUMN year TEXT,
     ADD COLUMN comment TEXT,
     ADD COLUMN duration_ms INT,
