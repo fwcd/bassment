@@ -15,7 +15,7 @@ pub struct Artist {
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct Album {
     pub id: i32,
-    pub title: String,
+    pub name: String,
     pub cover_art_id: Option<i32>,
     pub last_modified_at: SystemTime,
 }
@@ -23,7 +23,7 @@ pub struct Album {
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct Track {
     pub id: i32,
-    pub title: String,
+    pub name: String,
     pub year: Option<String>,
     pub comment: Option<String>,
     pub duration_ms: Option<i32>,
@@ -82,11 +82,11 @@ pub struct NewArtist<'a> {
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "album"]
 pub struct NewAlbum<'a> {
-    pub title: &'a str,
+    pub name: &'a str,
 }
 
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "track"]
 pub struct NewTrack<'a> {
-    pub title: &'a str,
+    pub name: &'a str,
 }

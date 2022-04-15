@@ -1,7 +1,7 @@
 table! {
     album (id) {
         id -> Int4,
-        title -> Text,
+        name -> Text,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
     }
@@ -84,7 +84,7 @@ table! {
 table! {
     track (id) {
         id -> Int4,
-        title -> Text,
+        name -> Text,
         year -> Nullable<Text>,
         comment -> Nullable<Text>,
         duration_ms -> Nullable<Int4>,

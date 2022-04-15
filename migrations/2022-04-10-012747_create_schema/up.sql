@@ -7,12 +7,12 @@ CREATE TABLE artist (
 
 CREATE TABLE album (
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE track (
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL
+    name TEXT NOT NULL
 );
 
 CREATE TABLE track_artist (
