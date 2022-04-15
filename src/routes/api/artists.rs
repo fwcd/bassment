@@ -1,18 +1,18 @@
 use actix_web::{get, web, Responder, post};
 
-use crate::{actions::{insert_artist, fetch_artists}, db::DbPool, error::Result};
+use crate::{actions::artists, db::DbPool, error::Result};
 
 #[get("")]
 async fn get_artists(pool: web::Data<DbPool>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let artists = fetch_artists(&conn)?;
+    let artists = artists::all(&conn)?;
     Ok(web::Json(artists))
 }
 
 #[post("/{name}")]
 async fn post_artist(pool: web::Data<DbPool>, name: web::Path<String>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let artist = insert_artist(&name, &conn)?;
+    let artist = artists::insert(&name, &conn)?;
     Ok(web::Json(artist))
 }
 
