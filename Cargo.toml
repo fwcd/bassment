@@ -4,6 +4,8 @@ description = "Music library server with support for cue points, playlists, crat
 version = "0.1.0"
 license = "GPL-3.0"
 edition = "2021"
+repository = "https://github.com/fwcd/bassment"
+categories = ["multimedia", "audio"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
