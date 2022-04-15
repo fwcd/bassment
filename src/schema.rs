@@ -69,6 +69,13 @@ table! {
 }
 
 table! {
+    token_secret (id) {
+        id -> Bool,
+        secret -> Nullable<Bytea>,
+    }
+}
+
+table! {
     track_albums (track_id, album_id) {
         track_id -> Int4,
         album_id -> Int4,
@@ -154,6 +161,7 @@ allow_tables_to_appear_in_same_query!(
     playlist_tracks,
     playlists,
     resources,
+    token_secret,
     track_albums,
     track_artists,
     track_audios,
