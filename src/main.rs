@@ -27,6 +27,9 @@ embed_migrations!();
 #[derive(Parser, Debug)]
 #[clap(version, about)]
 struct Args {
+    /// A custom database URL to use.
+    #[clap(long)]
+    database_url: Option<String>,
     /// Regenerates the root user and prints the password.
     #[clap(long)]
     regenerate_root: bool,
@@ -48,7 +51,7 @@ async fn main() -> io::Result<()> {
     tracing::subscriber::set_global_default(subscriber).expect("Could not set tracing subscriber");
 
     // Create database pool
-    let db_url = env::var("DATABASE_URL").expect("The DATABASE_URL must be set");
+    let db_url = args.database_url.or_else(|| env::var("DATABASE_URL").ok()).expect("The DATABASE_URL must be set");
     let manager = ConnectionManager::<PgConnection>::new(db_url);
     let pool = Pool::builder()
         .build(manager)
