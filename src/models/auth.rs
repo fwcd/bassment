@@ -1,3 +1,4 @@
+use chrono::{Duration, Utc, Timelike, DateTime, TimeZone};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -26,4 +27,20 @@ pub struct Claims {
     pub exp: usize,
     /// Subject (in our case the username).
     pub sub: String,
+}
+
+impl Claims {
+    /// Creates a new payload expiring in the given duration for the given username.
+    pub fn new(expires_in: Duration, username: &str) -> Self {
+        Self {
+            exp: (Utc::now() + expires_in).timestamp() as usize,
+            sub: username.to_owned(),
+        }
+    }
+
+    /// Fetches the expiry DateTime.
+    pub fn expiry(&self) -> DateTime<Utc> { Utc.timestamp(self.exp as i64, 0) }
+
+    /// Fetches the username in question.
+    pub fn username(&self) -> &str { &self.sub }
 }
