@@ -1,8 +1,9 @@
 use std::time::SystemTime;
 
+use bcrypt::DEFAULT_COST;
 use serde::{Serialize, Deserialize};
 
-use crate::schema::*;
+use crate::{schema::*, error::Result};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct User {
@@ -19,5 +20,14 @@ pub struct User {
 #[table_name = "users"]
 pub struct NewUser<'a> {
     pub username: &'a str,
-    pub password_hash: &'a str,
+    pub password_hash: String,
+}
+
+impl<'a> NewUser<'a> {
+    pub fn new(username: &'a str, password: &'a str) -> Result<Self> {
+        Ok(Self {
+            username,
+            password_hash: bcrypt::hash(password, DEFAULT_COST)?,
+        })
+    }
 }

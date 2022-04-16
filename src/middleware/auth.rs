@@ -1,7 +1,7 @@
 use actix_web::{dev::ServiceRequest, web};
 use actix_web_httpauth::{extractors::bearer::BearerAuth};
 
-use crate::{db::DbPool, error::Error, actions::auth};
+use crate::{db::DbPool, error::Error, actions::auth, models::Claims};
 
 /// Validates a token from the given credentials.
 pub async fn validate_token(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, actix_web::Error> {

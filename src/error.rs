@@ -42,6 +42,10 @@ impl From<jsonwebtoken::errors::Error> for Error {
     fn from(e: jsonwebtoken::errors::Error) -> Self { Self::Internal(format!("JWT error: {:?}", e)) }
 }
 
+impl From<bcrypt::BcryptError> for Error {
+    fn from(e: bcrypt::BcryptError) -> Self { Self::Internal(format!("Bcrypt error: {:?}", e)) }
+}
+
 impl From<String> for Error {
     fn from(s: String) -> Self { Self::Internal(s) }
 }
