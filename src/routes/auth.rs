@@ -1,19 +1,28 @@
 use actix_web::{web, post, Responder};
 use chrono::Duration;
 
-use crate::{db::DbPool, error::Result, models::{Login, Signup, Claims}, actions::auth};
+use crate::{db::DbPool, error::{Result, Error}, models::{Login, Signup, Claims, NewUser}, actions::{auth, users}};
 
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl Responder> {
-    // FIXME/DEBUG: Actually check the user before handing out tokens
     let conn = pool.get()?;
-    let token = auth::encode(Claims::new(Duration::seconds(120), &info.username), &conn)?;
+    let user = users::by_username(&info.username, &conn).map_err(|_| Error::Unauthorized)?;
+    if !user.password_matches(&info.password)? {
+        return Err(Error::Unauthorized);
+    }
+    // TODO: Return a refresh token instead?
+    let token = auth::encode(Claims::new(Duration::minutes(60), &info.username), &conn)?;
     Ok(token)
 }
 
 #[post("/signup")]
 async fn signup(pool: web::Data<DbPool>, info: web::Json<Signup>) -> Result<impl Responder> {
-    Ok("Success!")
+    let conn = pool.get()?;
+    if users::by_username(&info.username, &conn).is_ok() {
+        return Err(Error::Conflict);
+    }
+    let user = users::insert(&NewUser::new(&info.username, &info.password)?, &conn)?;
+    Ok(web::Json(user))
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {

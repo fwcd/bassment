@@ -8,6 +8,7 @@ pub enum Error {
     Internal(String),
     BadRequest(String),
     Unauthorized,
+    Conflict,
 }
 
 impl Error {
@@ -22,6 +23,7 @@ impl fmt::Display for Error {
             Self::Internal(_) => write!(f, "Internal error"),
             Self::BadRequest(_) => write!(f, "Bad request"),
             Self::Unauthorized => write!(f, "Unauthorized"),
+            Self::Conflict => write!(f, "Conflict"),
         }
     }
 }
@@ -61,6 +63,7 @@ impl ResponseError for Error {
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
             Self::Unauthorized => StatusCode::UNAUTHORIZED,
+            Self::Conflict => StatusCode::CONFLICT,
         }
     }
 }

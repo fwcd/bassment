@@ -13,6 +13,11 @@ pub struct Signup {
     pub password: String,
 }
 
+#[derive(Serialize)]
+pub struct TokenResponse {
+    pub token: String,
+}
+
 /// The secret for generating JWT tokens.
 #[derive(Clone, Queryable)]
 pub struct TokenSecret {
