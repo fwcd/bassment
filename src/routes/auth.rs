@@ -6,9 +6,10 @@ use crate::{db::DbPool, error::{Result, Error}, models::{Login, Signup, Claims, 
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let user = users::by_username(&info.username, &conn).map_err(|_| Error::Unauthorized)?;
+    let user = users::by_username(&info.username, &conn)
+        .map_err(|e| Error::Unauthorized(format!("Could not find user '{}': {:?}", info.username, e)))?;
     if !user.password_matches(&info.password)? {
-        return Err(Error::Unauthorized);
+        return Err(Error::Unauthorized(format!("Wrong password for username '{}'", info.username)));
     }
     // TODO: Return a refresh token instead?
     let token = auth::encode(Claims::new(Duration::minutes(60), &info.username), &conn)?;
@@ -19,7 +20,7 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl R
 async fn signup(pool: web::Data<DbPool>, info: web::Json<Signup>) -> Result<impl Responder> {
     let conn = pool.get()?;
     if users::by_username(&info.username, &conn).is_ok() {
-        return Err(Error::Conflict);
+        return Err(Error::Conflict(format!("Username '{}' already exists", info.username)));
     }
     let user = users::insert(&NewUser::new(&info.username, &info.password)?, &conn)?;
     Ok(web::Json(user))

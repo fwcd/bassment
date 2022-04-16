@@ -7,14 +7,8 @@ use actix_web::{ResponseError, HttpResponse, http::StatusCode};
 pub enum Error {
     Internal(String),
     BadRequest(String),
-    Unauthorized,
-    Conflict,
-}
-
-impl Error {
-    pub fn internal(s: &str) -> Self { Self::Internal(s.to_owned()) }
-
-    pub fn bad_request(s: &str) -> Self { Self::BadRequest(s.to_owned()) }
+    Unauthorized(String),
+    Conflict(String),
 }
 
 impl fmt::Display for Error {
@@ -22,8 +16,8 @@ impl fmt::Display for Error {
         match self {
             Self::Internal(_) => write!(f, "Internal error"),
             Self::BadRequest(_) => write!(f, "Bad request"),
-            Self::Unauthorized => write!(f, "Unauthorized"),
-            Self::Conflict => write!(f, "Conflict"),
+            Self::Unauthorized(_) => write!(f, "Unauthorized"),
+            Self::Conflict(_) => write!(f, "Conflict"),
         }
     }
 }
@@ -41,7 +35,7 @@ impl From<diesel::result::Error> for Error {
 }
 
 impl From<jsonwebtoken::errors::Error> for Error {
-    fn from(e: jsonwebtoken::errors::Error) -> Self { Self::Internal(format!("JWT error: {:?}", e)) }
+    fn from(e: jsonwebtoken::errors::Error) -> Self { Self::Unauthorized(format!("JWT error: {:?}", e)) }
 }
 
 impl From<bcrypt::BcryptError> for Error {
@@ -62,8 +56,8 @@ impl ResponseError for Error {
         match self {
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
-            Self::Unauthorized => StatusCode::UNAUTHORIZED,
-            Self::Conflict => StatusCode::CONFLICT,
+            Self::Unauthorized(_) => StatusCode::UNAUTHORIZED,
+            Self::Conflict(_) => StatusCode::CONFLICT,
         }
     }
 }
