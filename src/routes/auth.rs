@@ -1,7 +1,7 @@
 use actix_web::{web, post, Responder};
 use chrono::Duration;
 
-use crate::{db::DbPool, error::{Result, Error}, models::{Login, Signup, Claims, NewUser}, actions::{auth, users}};
+use crate::{db::DbPool, error::{Result, Error}, models::{Login, Signup, Claims, NewUser, TokenResponse}, actions::{auth, users}};
 
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl Responder> {
@@ -13,7 +13,7 @@ async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl R
     }
     // TODO: Return a refresh token instead?
     let token = auth::encode(Claims::new(Duration::minutes(60), &info.username), &conn)?;
-    Ok(token)
+    Ok(web::Json(TokenResponse { token }))
 }
 
 #[post("/signup")]
