@@ -28,14 +28,16 @@ impl User {
 pub struct NewUser<'a> {
     pub username: &'a str,
     pub password_hash: String,
+    pub is_admin: bool,
 }
 
 impl<'a> NewUser<'a> {
     /// Creates a new user from the given credentials, hashing the password.
-    pub fn new(username: &'a str, password: &'a str) -> Result<Self> {
+    pub fn new(username: &'a str, password: &'a str, is_admin: bool) -> Result<Self> {
         Ok(Self {
             username,
             password_hash: bcrypt::hash(password, DEFAULT_COST)?,
+            is_admin,
         })
     }
 }

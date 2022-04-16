@@ -31,6 +31,6 @@ pub fn insert(new_user: &NewUser, conn: &DbConn) -> Result<User> {
 pub fn generate_root(conn: &DbConn) -> Result<(String, User)> {
     let password = PasswordGenerator::new().length(48).generate_one()
         .map_err(|e| Error::Internal(format!("Could not generate root password: {}", e)))?;
-    let user = insert(&NewUser::new("root", &password)?, conn)?;
+    let user = insert(&NewUser::new("root", &password, /* is_admin */ true)?, conn)?;
     Ok((password, user))
 }

@@ -22,7 +22,7 @@ async fn signup(pool: web::Data<DbPool>, info: web::Json<Signup>) -> Result<impl
     if users::by_username(&info.username, &conn).is_ok() {
         return Err(Error::Conflict(format!("Username '{}' already exists", info.username)));
     }
-    let user = users::insert(&NewUser::new(&info.username, &info.password)?, &conn)?;
+    let user = users::insert(&NewUser::new(&info.username, &info.password, /* is_admin */ false)?, &conn)?;
     Ok(web::Json(user))
 }
 
