@@ -23,7 +23,7 @@ impl User {
     }
 }
 
-#[derive(Debug, Clone, Insertable)]
+#[derive(Debug, Clone, Insertable, AsChangeset)]
 #[table_name = "users"]
 pub struct NewUser<'a> {
     pub username: &'a str,

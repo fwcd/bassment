@@ -14,6 +14,7 @@ mod models;
 use std::{io, env};
 
 use actix_web::{web, HttpServer, App};
+use clap::Parser;
 use diesel::{PgConnection, r2d2::{ConnectionManager, Pool}};
 use diesel_migrations::embed_migrations;
 use dotenv::dotenv;
@@ -23,8 +24,19 @@ use tracing_subscriber::fmt::format::FmtSpan;
 
 embed_migrations!();
 
+#[derive(Parser, Debug)]
+#[clap(version, about)]
+struct Args {
+    /// Regenerates the root user and prints the password.
+    #[clap(long)]
+    regenerate_root: bool,
+}
+
 #[actix_web::main]
 async fn main() -> io::Result<()> {
+    // Parse args
+    let args = Args::parse();
+
     // Load .env
     dotenv().ok();
 
@@ -48,7 +60,7 @@ async fn main() -> io::Result<()> {
     // Generate root user if not exists
     {
         let conn = pool.get().expect("Could not fetch connection for checking root user");
-        if actions::users::root(&conn).is_err() {
+        if args.regenerate_root || actions::users::root(&conn).is_err() {
             let (password, _) = actions::users::generate_root(&conn).expect("Could not generate root user");
             info!("// ROOT-PASSWORD: {}", password)
         }

@@ -20,14 +20,17 @@ pub fn root(conn: &DbConn) -> Result<User> {
     by_username("root", conn)
 }
 
-/// Inserts a user into the database.
+/// Inserts (or updates) a user into the database.
 pub fn insert(new_user: &NewUser, conn: &DbConn) -> Result<User> {
     Ok(diesel::insert_into(users)
         .values(new_user)
+        .on_conflict(username)
+        .do_update()
+        .set(new_user)
         .get_result(conn)?)
 }
 
-/// Creates a new root user and returns the password.
+/// (Re)creates a new root user and returns the password.
 pub fn generate_root(conn: &DbConn) -> Result<(String, User)> {
     let password = PasswordGenerator::new().length(48).generate_one()
         .map_err(|e| Error::Internal(format!("Could not generate root password: {}", e)))?;
