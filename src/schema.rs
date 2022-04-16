@@ -132,6 +132,7 @@ table! {
         email -> Nullable<Text>,
         password_hash -> Text,
         added_at -> Timestamp,
+        is_admin -> Bool,
         last_modified_at -> Timestamp,
     }
 }

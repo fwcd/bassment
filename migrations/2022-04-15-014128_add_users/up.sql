@@ -6,6 +6,7 @@ CREATE TABLE users (
     email TEXT UNIQUE,
     password_hash TEXT NOT NULL,
     added_at TIMESTAMP DEFAULT NOW() NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE NOT NULL,
     last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
