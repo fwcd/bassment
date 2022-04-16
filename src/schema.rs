@@ -129,6 +129,7 @@ table! {
     users (id) {
         id -> Int4,
         username -> Text,
+        email -> Nullable<Text>,
         password_hash -> Text,
         added_at -> Timestamp,
         last_modified_at -> Timestamp,

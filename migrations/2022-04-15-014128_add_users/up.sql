@@ -2,7 +2,8 @@
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT UNIQUE,
     password_hash TEXT NOT NULL,
     added_at TIMESTAMP DEFAULT NOW() NOT NULL,
     last_modified_at TIMESTAMP DEFAULT NOW() NOT NULL
