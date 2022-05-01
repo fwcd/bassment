@@ -32,6 +32,15 @@ table! {
 }
 
 table! {
+    files (id) {
+        id -> Int4,
+        location -> Text,
+        is_local -> Bool,
+        kind -> Nullable<Int4>,
+    }
+}
+
+table! {
     genres (id) {
         id -> Int4,
         name -> Text,
@@ -60,15 +69,6 @@ table! {
         last_modified_at -> Timestamp,
         added_by -> Nullable<Int4>,
         description -> Nullable<Text>,
-    }
-}
-
-table! {
-    resources (id) {
-        id -> Int4,
-        location -> Text,
-        is_local -> Bool,
-        kind -> Nullable<Int4>,
     }
 }
 
@@ -141,19 +141,19 @@ table! {
     }
 }
 
-joinable!(albums -> resources (cover_art_id));
-joinable!(artists -> resources (cover_art_id));
+joinable!(albums -> files (cover_art_id));
+joinable!(artists -> files (cover_art_id));
 joinable!(cues -> tracks (track_id));
 joinable!(playlist_tracks -> playlists (playlist_id));
 joinable!(playlist_tracks -> tracks (track_id));
 joinable!(playlist_tracks -> users (added_by));
-joinable!(playlists -> resources (cover_art_id));
+joinable!(playlists -> files (cover_art_id));
 joinable!(playlists -> users (added_by));
 joinable!(track_albums -> albums (album_id));
 joinable!(track_albums -> tracks (track_id));
 joinable!(track_artists -> artists (artist_id));
 joinable!(track_artists -> tracks (track_id));
-joinable!(track_audios -> resources (resource_id));
+joinable!(track_audios -> files (resource_id));
 joinable!(track_audios -> tracks (track_id));
 joinable!(track_genres -> genres (genre_id));
 joinable!(track_genres -> tracks (track_id));
@@ -163,10 +163,10 @@ allow_tables_to_appear_in_same_query!(
     albums,
     artists,
     cues,
+    files,
     genres,
     playlist_tracks,
     playlists,
-    resources,
     token_secret,
     track_albums,
     track_artists,
