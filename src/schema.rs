@@ -135,6 +135,8 @@ table! {
         last_modified_at -> Timestamp,
         last_played_at -> Nullable<Timestamp>,
         added_by -> Nullable<Int4>,
+        beats -> Nullable<Int4>,
+        keys -> Nullable<Int4>,
     }
 }
 
