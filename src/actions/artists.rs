@@ -1,4 +1,4 @@
-use diesel::RunQueryDsl;
+use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
 use crate::{models::{Artist, NewArtist}, error::Result, db::DbConn};
 use crate::schema::artists::dsl::*;
@@ -6,6 +6,11 @@ use crate::schema::artists::dsl::*;
 /// Fetches all artists from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Artist>> {
     Ok(artists.get_results(conn)?)
+}
+
+/// Looks up an artist by id.
+pub fn by_id(artist_id: i32, conn: &DbConn) -> Result<Option<Artist>> {
+    Ok(artists.filter(id.eq(artist_id)).get_result(conn).optional()?)
 }
 
 /// Inserts an artist into the database.
