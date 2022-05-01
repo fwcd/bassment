@@ -19,6 +19,15 @@ table! {
 }
 
 table! {
+    blobs (id) {
+        id -> Int4,
+        data -> Bytea,
+        version -> Text,
+        sub_version -> Nullable<Text>,
+    }
+}
+
+table! {
     cues (id) {
         id -> Int4,
         track_id -> Nullable<Int4>,
@@ -162,6 +171,7 @@ joinable!(tracks -> users (added_by));
 allow_tables_to_appear_in_same_query!(
     albums,
     artists,
+    blobs,
     cues,
     files,
     genres,
