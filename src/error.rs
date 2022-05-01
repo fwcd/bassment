@@ -1,9 +1,10 @@
 use std::{io, fmt};
 
-use actix_web::{ResponseError, HttpResponse, http::StatusCode};
+use actix_web::{ResponseError, HttpResponse, http::StatusCode, error::BlockingError};
+use serde::{Serialize, Deserialize};
 
 /// The general error type used by Bassment.
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Error {
     Internal(String),
     NotFound(String),
@@ -42,6 +43,10 @@ impl From<jsonwebtoken::errors::Error> for Error {
 
 impl From<bcrypt::BcryptError> for Error {
     fn from(e: bcrypt::BcryptError) -> Self { Self::Internal(format!("Bcrypt error: {:?}", e)) }
+}
+
+impl From<BlockingError> for Error {
+    fn from(e: BlockingError) -> Self { Self::Internal(format!("Blocking error: {:?}", e)) }
 }
 
 impl From<String> for Error {

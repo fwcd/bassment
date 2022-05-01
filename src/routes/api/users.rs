@@ -6,7 +6,7 @@ use crate::{actions::users, db::DbPool, error::Result, middleware::auth::authent
 #[get("")]
 async fn get_users(pool: web::Data<DbPool>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let users = users::all(&conn)?;
+    let users = web::block(move || users::all(&conn)).await??;
     Ok(web::Json(users))
 }
 
