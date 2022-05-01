@@ -14,6 +14,6 @@ pub struct Album {
 
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "albums"]
-pub struct NewAlbum<'a> {
-    pub name: &'a str,
+pub struct NewAlbum {
+    pub name: String,
 }
