@@ -12,8 +12,8 @@ pub struct Artist {
     pub last_modified_at: SystemTime,
 }
 
-#[derive(Debug, Clone, Insertable)]
+#[derive(Debug, Clone, Insertable, Deserialize)]
 #[table_name = "artists"]
-pub struct NewArtist<'a> {
-    pub name: &'a str,
+pub struct NewArtist {
+    pub name: String,
 }

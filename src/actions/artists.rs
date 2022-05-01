@@ -9,8 +9,8 @@ pub fn all(conn: &DbConn) -> Result<Vec<Artist>> {
 }
 
 /// Inserts an artist into the database.
-pub fn insert(new_name: &str, conn: &DbConn) -> Result<Artist> {
+pub fn insert(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
     Ok(diesel::insert_into(artists)
-        .values(&NewArtist { name: new_name })
+        .values(new_artist)
         .get_result(conn)?)
 }

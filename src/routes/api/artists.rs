@@ -1,6 +1,6 @@
 use actix_web::{get, web, Responder, post};
 
-use crate::{actions::artists, db::DbPool, error::Result};
+use crate::{actions::artists, db::DbPool, error::Result, models::NewArtist};
 
 #[get("")]
 async fn get_artists(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -9,10 +9,10 @@ async fn get_artists(pool: web::Data<DbPool>) -> Result<impl Responder> {
     Ok(web::Json(artists))
 }
 
-#[post("/{name}")]
-async fn post_artist(pool: web::Data<DbPool>, name: web::Path<String>) -> Result<impl Responder> {
+#[post("")]
+async fn post_artist(pool: web::Data<DbPool>, artist: web::Json<NewArtist>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let artist = artists::insert(&name, &conn)?;
+    let artist = artists::insert(&artist, &conn)?;
     Ok(web::Json(artist))
 }
 
