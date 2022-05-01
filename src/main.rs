@@ -33,6 +33,12 @@ struct Args {
     /// Regenerates the root user and prints the password.
     #[clap(long)]
     regenerate_root: bool,
+    /// The host to run on.
+    #[clap(short, long, default_value = "127.0.0.1")]
+    host: String,
+    /// The port to run on.
+    #[clap(short, long, default_value_t = 8080)]
+    port: u16,
 }
 
 #[actix_web::main]
@@ -76,7 +82,7 @@ async fn main() -> io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .configure(routes::config)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind((args.host, args.port))?
     .run()
     .await
 }
