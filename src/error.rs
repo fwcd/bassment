@@ -6,6 +6,7 @@ use actix_web::{ResponseError, HttpResponse, http::StatusCode};
 #[derive(Debug)]
 pub enum Error {
     Internal(String),
+    NotFound(String),
     BadRequest(String),
     Unauthorized(String),
     Conflict(String),
@@ -15,6 +16,7 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Internal(_) => write!(f, "Internal error"),
+            Self::NotFound(_) => write!(f, "Not found"),
             Self::BadRequest(_) => write!(f, "Bad request"),
             Self::Unauthorized(_) => write!(f, "Unauthorized"),
             Self::Conflict(_) => write!(f, "Conflict"),
@@ -55,6 +57,7 @@ impl ResponseError for Error {
     fn status_code(&self) -> actix_web::http::StatusCode {
         match self {
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::NotFound(_) => StatusCode::NOT_FOUND,
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
             Self::Unauthorized(_) => StatusCode::UNAUTHORIZED,
             Self::Conflict(_) => StatusCode::CONFLICT,
