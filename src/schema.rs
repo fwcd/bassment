@@ -4,6 +4,7 @@ table! {
         name -> Text,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
+        description -> Nullable<Text>,
     }
 }
 
@@ -13,6 +14,7 @@ table! {
         name -> Text,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
+        description -> Nullable<Text>,
     }
 }
 
@@ -34,6 +36,7 @@ table! {
         id -> Int4,
         name -> Text,
         last_modified_at -> Timestamp,
+        description -> Nullable<Text>,
     }
 }
 
@@ -56,6 +59,7 @@ table! {
         position -> Int4,
         last_modified_at -> Timestamp,
         added_by -> Nullable<Int4>,
+        description -> Nullable<Text>,
     }
 }
 

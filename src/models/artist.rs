@@ -10,6 +10,7 @@ pub struct Artist {
     pub name: String,
     pub cover_art_id: Option<i32>,
     pub last_modified_at: SystemTime,
+    pub description: Option<String>,
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
