@@ -19,7 +19,7 @@ pub async fn authenticate_user(req: ServiceRequest, credentials: BearerAuth) -> 
 pub async fn authenticate_admin(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, actix_web::Error> {
     let conn = db_conn(&req)?;
     let token = auth::decode(credentials.token(), &conn)?;
-    let user = users::by_username(token.username(), &conn).map_err(|e| Error::Unauthorized(format!("No user for '{}': {:?}", token.username(), e)))?;
+    let user = users::by_username(token.username(), &conn)?.ok_or_else(|| Error::Unauthorized(format!("No user for '{}'", token.username())))?;
     if user.is_admin {
         Ok(req)
     } else {

@@ -6,8 +6,8 @@ use crate::{db::DbPool, error::{Result, Error}, models::{Login, Signup, Claims, 
 #[post("/login")]
 async fn login(pool: web::Data<DbPool>, info: web::Json<Login>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let user = users::by_username(&info.username, &conn)
-        .map_err(|e| Error::Unauthorized(format!("Could not find user '{}': {:?}", info.username, e)))?;
+    let user = users::by_username(&info.username, &conn)?
+        .ok_or_else(|| Error::Unauthorized(format!("Could not find user '{}'", info.username)))?;
     if !user.password_matches(&info.password)? {
         return Err(Error::Unauthorized(format!("Wrong password for username '{}'", info.username)));
     }
