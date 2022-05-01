@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
@@ -8,6 +10,7 @@ pub struct Blob {
     pub data: Vec<u8>,
     pub version: String,
     pub sub_version: Option<String>,
+    pub last_modified_at: SystemTime,
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
