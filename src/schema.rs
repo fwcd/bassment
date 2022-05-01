@@ -24,6 +24,7 @@ table! {
         data -> Bytea,
         version -> Text,
         sub_version -> Nullable<Text>,
+        last_modified_at -> Timestamp,
     }
 }
 
@@ -46,6 +47,7 @@ table! {
         location -> Text,
         is_local -> Bool,
         kind -> Nullable<Int4>,
+        last_modified_at -> Timestamp,
     }
 }
 
