@@ -20,3 +20,11 @@ pub struct NewBlob {
     pub version: String,
     pub sub_version: Option<String>,
 }
+
+#[derive(Debug, Clone, AsChangeset, Deserialize)]
+#[table_name = "blobs"]
+pub struct UpdateBlob {
+    pub data: Option<Vec<u8>>,
+    pub version: Option<String>,
+    pub sub_version: Option<String>,
+}
