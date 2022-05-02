@@ -32,7 +32,7 @@ table! {
     cues (id) {
         id -> Int4,
         track_id -> Nullable<Int4>,
-        kind -> Int4,
+        kind -> Cue_kind,
         position_ms -> Nullable<Int4>,
         length_ms -> Int4,
         hotcue -> Nullable<Int4>,
@@ -46,7 +46,7 @@ table! {
         id -> Int4,
         location -> Text,
         is_local -> Bool,
-        kind -> Nullable<Int4>,
+        kind -> File_kind,
         last_modified_at -> Timestamp,
     }
 }
@@ -73,7 +73,7 @@ table! {
     playlists (id) {
         id -> Int4,
         name -> Text,
-        kind -> Int4,
+        kind -> Playlist_kind,
         cover_art_id -> Nullable<Int4>,
         parent_id -> Nullable<Int4>,
         position -> Int4,
