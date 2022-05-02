@@ -63,6 +63,7 @@ table! {
         is_local -> Bool,
         kind -> File_kind,
         last_modified_at -> Timestamp,
+        name -> Text,
     }
 }
 
