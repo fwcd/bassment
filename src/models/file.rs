@@ -1,15 +1,24 @@
 use std::time::SystemTime;
 
+use diesel_derive_enum::DbEnum;
 use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
+
+#[derive(Debug, Clone, Serialize, Deserialize, DbEnum)]
+#[DieselType = "File_kind"]
+#[serde(rename_all = "snake_case")]
+pub enum FileKind {
+    Audio,
+    CoverArt,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct FileLocation {
     pub id: i32,
     pub location: String,
     pub is_local: bool,
-    pub kind: Option<i32>, // TODO: Better typing as enum
+    pub kind: FileKind,
     pub last_modified_at: SystemTime,
 }
 
@@ -18,7 +27,7 @@ pub struct FileLocation {
 pub struct NewFileLocation {
     pub location: String,
     pub is_local: bool,
-    pub kind: Option<i32>, // TODO: Better typing as enum
+    pub kind: FileKind,
 }
 
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
@@ -26,5 +35,5 @@ pub struct NewFileLocation {
 pub struct UpdateFileLocation {
     pub location: Option<String>,
     pub is_local: Option<bool>,
-    pub kind: Option<i32>, // TODO: Better typing as enum
+    pub kind: Option<FileKind>,
 }

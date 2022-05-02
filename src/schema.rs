@@ -1,4 +1,7 @@
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     albums (id) {
         id -> Int4,
         name -> Text,
@@ -9,6 +12,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     artists (id) {
         id -> Int4,
         name -> Text,
@@ -19,6 +25,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     blobs (id) {
         id -> Int4,
         data -> Bytea,
@@ -29,6 +38,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     cues (id) {
         id -> Int4,
         track_id -> Nullable<Int4>,
@@ -42,6 +54,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     file_locations (id) {
         id -> Int4,
         location -> Text,
@@ -52,6 +67,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     genres (id) {
         id -> Int4,
         name -> Text,
@@ -61,6 +79,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     playlist_tracks (playlist_id, track_id) {
         playlist_id -> Int4,
         track_id -> Int4,
@@ -70,6 +91,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     playlists (id) {
         id -> Int4,
         name -> Text,
@@ -84,6 +108,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     token_secret (id) {
         id -> Bool,
         secret -> Bytea,
@@ -91,6 +118,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     track_albums (track_id, album_id) {
         track_id -> Int4,
         album_id -> Int4,
@@ -99,6 +129,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     track_artists (track_id, artist_id) {
         track_id -> Int4,
         artist_id -> Int4,
@@ -106,6 +139,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     track_audios (track_id, resource_id) {
         track_id -> Int4,
         resource_id -> Int4,
@@ -113,6 +149,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     track_genres (track_id, genre_id) {
         track_id -> Int4,
         genre_id -> Int4,
@@ -120,6 +159,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     tracks (id) {
         id -> Int4,
         name -> Text,
@@ -143,6 +185,9 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     users (id) {
         id -> Int4,
         username -> Text,

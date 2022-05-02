@@ -8,6 +8,7 @@ mod middleware;
 mod db;
 mod error;
 mod routes;
+#[allow(unused_imports)]
 mod schema;
 mod models;
 
