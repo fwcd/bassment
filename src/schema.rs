@@ -57,10 +57,8 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
-    file_locations (id) {
+    file_infos (id) {
         id -> Int4,
-        location -> Text,
-        is_local -> Bool,
         kind -> File_kind,
         last_modified_at -> Timestamp,
         name -> Text,
@@ -211,19 +209,19 @@ table! {
     }
 }
 
-joinable!(albums -> file_locations (cover_art_id));
-joinable!(artists -> file_locations (cover_art_id));
+joinable!(albums -> file_infos (cover_art_id));
+joinable!(artists -> file_infos (cover_art_id));
 joinable!(cues -> tracks (track_id));
 joinable!(playlist_tracks -> playlists (playlist_id));
 joinable!(playlist_tracks -> tracks (track_id));
 joinable!(playlist_tracks -> users (added_by));
-joinable!(playlists -> file_locations (cover_art_id));
+joinable!(playlists -> file_infos (cover_art_id));
 joinable!(playlists -> users (added_by));
 joinable!(track_albums -> albums (album_id));
 joinable!(track_albums -> tracks (track_id));
 joinable!(track_artists -> artists (artist_id));
 joinable!(track_artists -> tracks (track_id));
-joinable!(track_audios -> file_locations (resource_id));
+joinable!(track_audios -> file_infos (resource_id));
 joinable!(track_audios -> tracks (track_id));
 joinable!(track_genres -> genres (genre_id));
 joinable!(track_genres -> tracks (track_id));
@@ -234,7 +232,7 @@ allow_tables_to_appear_in_same_query!(
     artists,
     blobs,
     cues,
-    file_locations,
+    file_infos,
     genres,
     playlist_tracks,
     playlists,

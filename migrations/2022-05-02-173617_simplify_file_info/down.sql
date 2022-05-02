@@ -1,0 +1,3 @@
+ALTER TABLE file_infos
+    ADD COLUMN location TEXT NOT NULL,
+    ADD COLUMN is_local BOOLEAN NOT NULL;
