@@ -20,6 +20,7 @@ pub struct FileInfo {
     pub kind: FileKind,
     pub last_modified_at: SystemTime,
     pub name: String,
+    pub media_type: String,
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
@@ -27,6 +28,7 @@ pub struct FileInfo {
 pub struct NewFileInfo {
     pub kind: FileKind,
     pub name: String,
+    pub media_type: String,
 }
 
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
@@ -34,4 +36,5 @@ pub struct NewFileInfo {
 pub struct UpdateFileInfo {
     pub kind: Option<FileKind>,
     pub name: Option<String>,
+    pub media_type: Option<String>,
 }

@@ -40,6 +40,7 @@ async fn path_for_id(id: i32, pool: &DbPool) -> Result<String> {
 
 // TODO: Range requests, etc?
 // TODO: MIME-Type?
+// TODO: Deletion endpoints
 
 #[get("/{id}/data")]
 async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
