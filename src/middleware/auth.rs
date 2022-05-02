@@ -1,6 +1,5 @@
 use actix_web::{dev::ServiceRequest, web};
 use actix_web_httpauth::{extractors::bearer::BearerAuth};
-
 use crate::{db::{DbPool, DbPooledConn}, error::Error, actions::{auth, users, settings}};
 
 fn db_conn(req: &ServiceRequest) -> Result<DbPooledConn, actix_web::Error> {
@@ -12,6 +11,10 @@ fn db_conn(req: &ServiceRequest) -> Result<DbPooledConn, actix_web::Error> {
 /// Validates a token from the given credentials.
 pub async fn authenticate_user(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, actix_web::Error> {
     let conn = db_conn(&req)?;
+    // TODO: allow_unauthenticated_access still requires the user to pass
+    //       an Authorization: Bearer header (with a dummy value) to get
+    //       past the HttpAuthentication middleware. Ideally, this shouldn't
+    //       be needed.
     if settings::get(&conn)?.allow_unauthenticated_access {
         Ok(req)
     } else {
