@@ -1,0 +1,8 @@
+{
+  "baseUrl": "./",
+  "compilerOptions": {
+    "paths": {
+      "@bassment/*": ["./src/*"]
+    }
+  }
+}
