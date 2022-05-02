@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {SafeAreaView, StatusBar, Text} from 'react-native';
 
 function App() {
   return (
@@ -16,6 +8,6 @@ function App() {
       <Text>Hello world!</Text>
     </SafeAreaView>
   );
-};
+}
 
 export default App;

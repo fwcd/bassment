@@ -1,8 +1,11 @@
 # General
 .DS_Store
-.vscode
 .env
 local
+
+# VSCode
+.vscode/**/*
+!.vscode/settings.json
 
 # Rust
 target
