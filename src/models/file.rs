@@ -9,6 +9,7 @@ use crate::schema::*;
 #[DieselType = "File_kind"]
 #[serde(rename_all = "snake_case")]
 pub enum FileKind {
+    Generic,
     Audio,
     CoverArt,
 }
