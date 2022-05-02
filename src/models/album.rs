@@ -14,7 +14,7 @@ pub struct Album {
     pub description: Option<String>,
 }
 
-#[derive(Debug, Clone, Insertable)]
+#[derive(Debug, Clone, Deserialize, Insertable)]
 #[table_name = "albums"]
 pub struct NewAlbum {
     pub name: String,
