@@ -39,6 +39,7 @@ async fn path_for_id(id: i32, pool: &DbPool) -> Result<String> {
 }
 
 // TODO: Range requests, etc?
+// TODO: MIME-Type?
 
 #[get("/{id}/data")]
 async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
@@ -52,6 +53,18 @@ async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<i
     Ok(data)
 }
 
+#[patch("/{id}/data")]
+async fn put_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, data: web::Bytes) -> Result<impl Responder> {
+    let pool_clone = pool.clone();
+    let info = web::block(move || {
+        let conn = pool_clone.get()?;
+        files::by_id(*id, &conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", id)))
+    }).await??;
+    let path = path_for_id(info.id, &pool).await?;
+    web::block(move || fs::write(path, &data)).await??;
+    Ok("Success!")
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/files")
@@ -60,5 +73,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_by_id)
             .service(patch_by_id)
             .service(get_data_by_id)
+            .service(put_data_by_id)
     );
 }
