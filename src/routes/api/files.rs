@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{fs, path::PathBuf, io};
 
 use actix_web::{get, web, Responder, post, patch, HttpResponse};
 
@@ -69,7 +69,10 @@ async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<i
         let info = files::by_id(*id, &conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", id)))?;
         // Read the actual file
         let path = path_for(&info, &pool)?;
-        let data = fs::read(path)?;
+        let data = fs::read(&path).map_err(|e| match e.kind() {
+            io::ErrorKind::NotFound => Error::NotFound(format!("Could not find file at {}", path.display())),
+            _ => e.into(),
+        })?;
         Result::<_>::Ok((info.media_type, data))
     }).await??;
     Ok(HttpResponse::Ok()
