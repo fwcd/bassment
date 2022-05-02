@@ -23,6 +23,7 @@ pub fn insert(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
 /// Updates an artist in the database.
 pub fn update(artist_id: i32, update_artist: &UpdateArtist, conn: &DbConn) -> Result<Artist> {
     Ok(diesel::update(artists)
+        .filter(id.eq(artist_id))
         .set(update_artist)
         .get_result(conn)?)
 }

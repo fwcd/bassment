@@ -23,6 +23,7 @@ pub fn insert(new_album: &NewAlbum, conn: &DbConn) -> Result<Album> {
 /// Updates an album in the database.
 pub fn update(album_id: i32, update_album: &UpdateAlbum, conn: &DbConn) -> Result<Album> {
     Ok(diesel::update(albums)
+        .filter(id.eq(album_id))
         .set(update_album)
         .get_result(conn)?)
 }
