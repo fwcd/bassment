@@ -3,6 +3,7 @@ use std::time::SystemTime;
 use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
+use crate::utils::serde::deserialize_optional_field;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct Artist {
@@ -25,6 +26,8 @@ pub struct NewArtist {
 #[table_name = "artists"]
 pub struct UpdateArtist {
     pub name: Option<String>,
-    pub cover_art_id: Option<i32>,
-    pub description: Option<String>,
+    #[serde(deserialize_with = "deserialize_optional_field")]
+    pub cover_art_id: Option<Option<i32>>,
+    #[serde(deserialize_with = "deserialize_optional_field")]
+    pub description: Option<Option<String>>,
 }

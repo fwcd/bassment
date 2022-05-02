@@ -3,6 +3,7 @@ use std::time::SystemTime;
 use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
+use crate::utils::serde::deserialize_optional_field;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 pub struct Blob {
@@ -26,5 +27,6 @@ pub struct NewBlob {
 pub struct UpdateBlob {
     pub data: Option<Vec<u8>>,
     pub version: Option<String>,
-    pub sub_version: Option<String>,
+    #[serde(deserialize_with = "deserialize_optional_field")]
+    pub sub_version: Option<Option<String>>,
 }

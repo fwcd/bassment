@@ -11,6 +11,7 @@ mod routes;
 #[allow(unused_imports)]
 mod schema;
 mod models;
+mod utils;
 
 use std::{io, env};
 
