@@ -78,6 +78,7 @@ async fn main() -> io::Result<()> {
     }
 
     // Start server
+    info!("Starting on {}:{}...", args.host, args.port);
     HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
