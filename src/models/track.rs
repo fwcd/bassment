@@ -13,14 +13,17 @@ pub struct Track {
     pub duration_ms: Option<i32>,
     pub sample_rate: Option<i32>,
     pub channels: Option<i32>,
-    pub bpm: Option<i32>,
-    pub times_played: usize,
+    pub bpm: Option<f64>,
+    pub times_played: i32,
     pub rating: Option<i32>,
     pub key: Option<String>,
     pub color: Option<i32>,
     pub added_at: SystemTime,
     pub last_modified_at: SystemTime,
     pub last_played_at: Option<SystemTime>,
+    pub added_by: Option<i32>,
+    pub beats: Option<i32>,
+    pub keys: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
@@ -42,8 +45,16 @@ pub struct TrackGenre {
     pub genre_id: i32,
 }
 
-#[derive(Debug, Clone, Insertable)]
+// TODO: Add other fields to NewTrack and UpdateTrack
+
+#[derive(Debug, Clone, Deserialize, Insertable)]
 #[table_name = "tracks"]
-pub struct NewTrack<'a> {
-    pub name: &'a str,
+pub struct NewTrack {
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Deserialize, AsChangeset)]
+#[table_name = "tracks"]
+pub struct UpdateTrack {
+    pub name: Option<String>,
 }

@@ -1,6 +1,7 @@
 mod albums;
 mod artists;
 mod genres;
+mod tracks;
 mod users;
 
 use actix_web::web;
@@ -14,6 +15,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .configure(albums::config)
             .configure(artists::config)
             .configure(genres::config)
+            .configure(tracks::config)
             .configure(users::config)
             .wrap(HttpAuthentication::bearer(authenticate_user))
     );
