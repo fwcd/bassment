@@ -1,5 +1,6 @@
 mod albums;
 mod artists;
+mod files;
 mod genres;
 mod settings;
 mod tracks;
@@ -15,6 +16,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         web::scope("/api/v1")
             .configure(albums::config)
             .configure(artists::config)
+            .configure(files::config)
             .configure(genres::config)
             .configure(settings::config)
             .configure(tracks::config)
