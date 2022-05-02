@@ -17,4 +17,14 @@ pub struct Artist {
 #[table_name = "artists"]
 pub struct NewArtist {
     pub name: String,
+    pub cover_art_id: Option<i32>,
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, AsChangeset, Deserialize)]
+#[table_name = "artists"]
+pub struct UpdateArtist {
+    pub name: Option<String>,
+    pub cover_art_id: Option<i32>,
+    pub description: Option<String>,
 }

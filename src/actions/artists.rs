@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Artist, NewArtist}, error::Result, db::DbConn};
+use crate::{models::{Artist, NewArtist, UpdateArtist}, error::Result, db::DbConn};
 use crate::schema::artists::dsl::*;
 
 /// Fetches all artists from the database.
@@ -17,5 +17,12 @@ pub fn by_id(artist_id: i32, conn: &DbConn) -> Result<Option<Artist>> {
 pub fn insert(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
     Ok(diesel::insert_into(artists)
         .values(new_artist)
+        .get_result(conn)?)
+}
+
+/// Updates an artist in the database.
+pub fn update(update_artist: &UpdateArtist, conn: &DbConn) -> Result<Artist> {
+    Ok(diesel::update(artists)
+        .set(update_artist)
         .get_result(conn)?)
 }
