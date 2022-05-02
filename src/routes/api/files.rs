@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf, io};
 
-use actix_web::{get, web, Responder, post, patch, HttpResponse};
+use actix_web::{get, web, Responder, post, patch, put, HttpResponse};
 
 use crate::{actions::{files, settings}, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo, FileInfo}};
 
@@ -57,7 +57,6 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, raw_info: web:
 }
 
 // TODO: Range requests, etc?
-// TODO: MIME-Type?
 // TODO: Deletion endpoints
 
 #[get("/{id}/data")]
@@ -80,7 +79,7 @@ async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<i
         .body(data))
 }
 
-#[patch("/{id}/data")]
+#[put("/{id}/data")]
 async fn put_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, data: web::Bytes) -> Result<impl Responder> {
     let pool_clone = pool.clone();
     web::block(move || {
