@@ -6,6 +6,7 @@ mod cue;
 mod file;
 mod genre;
 mod playlist;
+mod settings;
 mod track;
 mod user;
 
@@ -17,5 +18,6 @@ pub use cue::*;
 pub use file::*;
 pub use genre::*;
 pub use playlist::*;
+pub use settings::*;
 pub use track::*;
 pub use user::*;

@@ -111,6 +111,17 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    settings (id) {
+        id -> Bool,
+        allow_unauthenticated_access -> Bool,
+        file_storage_base_directory -> Text,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     token_secret (id) {
         id -> Bool,
         secret -> Bytea,
@@ -226,6 +237,7 @@ allow_tables_to_appear_in_same_query!(
     genres,
     playlist_tracks,
     playlists,
+    settings,
     token_secret,
     track_albums,
     track_artists,
