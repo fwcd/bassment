@@ -35,6 +35,7 @@ module.exports = {
     ],
     alias: {
       'react-native$': 'react-native-web',
+      '@bassment': path.join(__dirname, '..', 'src'),
     },
   },
 };

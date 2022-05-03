@@ -1,10 +1,11 @@
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import { Hello } from '@bassment/components/Hello';
 
 export function App() {
   return (
     <SafeAreaView>
-      <Text>Hello</Text>
+      <Hello />
     </SafeAreaView>
   );
 }

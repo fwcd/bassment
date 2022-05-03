@@ -4,7 +4,7 @@ The web + mobile frontend for Bassment, written in React Native.
 
 ## Usage
 
-To install the dependencies, run `npm install`. To run the app in the browser, run `npm run web`, to run it on iOS use `npm run ios` and for Android use `npm run android`.
+To install the dependencies, run `npm install`. To run the app in the browser, run `npm run web`, to run it on iOS use `npm run ios` and for Android use `npm run android`. To run the Metro bundler directly, run `npm start` (or `npm start -- --reset-cache` to reset the transform cache).
 
 ## Template
 
