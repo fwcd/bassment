@@ -1,13 +1,18 @@
-import { Hello } from '@bassment/components/Hello';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { Text } from 'react-native';
+
+const Drawer = createDrawerNavigator();
 
 function App() {
   return (
-    <SafeAreaView>
-      <StatusBar />
-      <Hello />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Test" component={() => <Text>Hello</Text>} />
+        <Drawer.Screen name="Test 2" component={() => <Text>ABC</Text>} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
