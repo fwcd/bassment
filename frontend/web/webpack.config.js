@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const rootDir = path.join(__dirname, '..');
 const webpackEnv = process.env.NODE_ENV || 'development';
@@ -60,6 +61,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, './index.html'),
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+    new webpack.DefinePlugin({
+      __DEV__: webpackEnv === 'development',
+    }),
   ],
   resolve: {
     extensions: [
@@ -75,6 +82,7 @@ module.exports = {
     alias: {
       'react-native$': 'react-native-web',
       '@bassment': path.join(__dirname, '..', 'src'),
+      process: 'process/browser',
     },
   },
 };
