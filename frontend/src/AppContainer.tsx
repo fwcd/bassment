@@ -1,4 +1,5 @@
 import { AppSidebar } from '@bassment/AppSidebar';
+import { useRandom } from '@bassment/hooks/useRandom';
 import { AlbumsScreen } from '@bassment/screens/Albums';
 import { ArtistsScreen } from '@bassment/screens/Artists';
 import { GenresScreen } from '@bassment/screens/Genres';
@@ -12,7 +13,6 @@ import {
 import React from 'react';
 import { Platform, useColorScheme, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useRandom } from './components/hooks/useRandom';
 
 const Drawer = createDrawerNavigator();
 
