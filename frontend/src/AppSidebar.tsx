@@ -1,5 +1,7 @@
+import { DrawerTreeItem } from '@bassment/components/DrawerTreeItem';
 import { HorizontalDivider } from '@bassment/components/HorizontalDivider';
 import { SearchBar } from '@bassment/components/SearchBar';
+import { ThemedText } from '@bassment/components/ThemedText';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -23,16 +25,17 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           props.navigation.navigate('Tracks');
         }}
       />
-      <DrawerItem
+      <DrawerTreeItem
         label="Albums"
         icon={({ size, color }) => (
           <Icon name="albums-outline" size={size} color={color} />
-        )}
-        focused={routeName === 'Albums'}
-        onPress={() => {
-          props.navigation.navigate('Albums');
-        }}
-      />
+        )}>
+        <DrawerItem label="Test 1" onPress={() => {}} />
+        <DrawerTreeItem label="Test 2">
+          <DrawerItem label="Nested 1" onPress={() => {}} />
+        </DrawerTreeItem>
+        <DrawerItem label="Test 3" onPress={() => {}} />
+      </DrawerTreeItem>
       <HorizontalDivider />
     </DrawerContentScrollView>
   );
