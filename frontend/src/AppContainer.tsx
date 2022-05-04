@@ -1,4 +1,8 @@
 import { AppSidebar } from '@bassment/AppSidebar';
+import { AlbumsScreen } from '@bassment/screens/AlbumsScreen';
+import { ArtistsScreen } from '@bassment/screens/ArtistsScreen';
+import { GenresScreen } from '@bassment/screens/GenresScreen';
+import { TracksScreen } from '@bassment/screens/TracksScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   DarkTheme,
@@ -44,7 +48,7 @@ export function AppContainer() {
               />
             ),
           }}
-          component={() => <Text>Home</Text>}
+          component={TracksScreen}
         />
         <Drawer.Screen
           name="Albums"
@@ -57,7 +61,7 @@ export function AppContainer() {
               />
             ),
           }}
-          component={() => <Text>Test 123</Text>}
+          component={AlbumsScreen}
         />
         <Drawer.Screen
           name="Artists"
@@ -70,7 +74,7 @@ export function AppContainer() {
               />
             ),
           }}
-          component={() => <Text>Test 123</Text>}
+          component={ArtistsScreen}
         />
         <Drawer.Screen
           name="Genres"
@@ -79,7 +83,7 @@ export function AppContainer() {
               <Icon name="star-outline" size={props.size} color={props.color} />
             ),
           }}
-          component={() => <Text>Test 123</Text>}
+          component={GenresScreen}
         />
       </Drawer.Navigator>
     </NavigationContainer>
