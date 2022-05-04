@@ -1,16 +1,11 @@
-import { useTheme } from '@react-navigation/native';
+import { useStyles } from '@bassment/styles';
 import React from 'react';
 import { View } from 'react-native';
 
 export function HorizontalDivider() {
-  const theme = useTheme();
+  const styles = useStyles();
+
   return (
-    <View
-      style={{
-        borderBottomColor: theme.colors.border,
-        borderBottomWidth: 1,
-        margin: 10,
-      }}
-    />
+    <View style={[styles.margin, styles.border, { borderBottomWidth: 1 }]} />
   );
 }
