@@ -12,12 +12,17 @@ import {
 import React from 'react';
 import { Platform, useColorScheme, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useRandom } from './components/hooks/useRandom';
 
 const Drawer = createDrawerNavigator();
 
 export function AppContainer() {
   const dimensions = useWindowDimensions();
   const scheme = useColorScheme();
+
+  // usually, you would do something interesting with this
+  const { value } = useRandom();
+  console.log(value);
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator
