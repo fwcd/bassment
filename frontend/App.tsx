@@ -1,13 +1,16 @@
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StatusBar } from 'react-native';
+import { StatusBar, useWindowDimensions, View } from 'react-native';
 import { AppContainer } from '@bassment/AppContainer';
 
 export function App() {
+  const dimensions = useWindowDimensions();
   return (
     <SafeAreaProvider>
-      <StatusBar />
-      <AppContainer />
+      <View style={{ height: dimensions.height }}>
+        <StatusBar />
+        <AppContainer />
+      </View>
     </SafeAreaProvider>
   );
 }
