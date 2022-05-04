@@ -5,7 +5,9 @@ import { View } from 'react-native';
 interface DrawerTreeItemProps {
   label: string;
   icon?: (params: { size: number; color: string }) => ReactNode;
-  children: ReactNode;
+  onPress?: () => void;
+  focused?: boolean;
+  children?: ReactNode;
 }
 
 export function DrawerTreeItem(props: DrawerTreeItemProps) {
@@ -15,7 +17,10 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
       <DrawerItem
         label={props.label}
         icon={props.icon}
-        onPress={() => setExpanded(!isExpanded)}
+        focused={props.focused}
+        onPress={() =>
+          props.onPress ? props.onPress() : setExpanded(!isExpanded)
+        }
       />
       {isExpanded ? (
         <View style={{ marginLeft: 10 }}>{props.children}</View>

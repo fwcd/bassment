@@ -15,7 +15,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   return (
     <DrawerContentScrollView>
       <SearchBar />
-      <DrawerItem
+      <DrawerTreeItem
         label="Tracks"
         icon={({ size, color }) => (
           <Icon name="musical-notes-outline" size={size} color={color} />
@@ -30,11 +30,11 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         icon={({ size, color }) => (
           <Icon name="albums-outline" size={size} color={color} />
         )}>
-        <DrawerItem label="Test 1" onPress={() => {}} />
+        <DrawerTreeItem label="Test 1" onPress={() => {}} />
         <DrawerTreeItem label="Test 2">
-          <DrawerItem label="Nested 1" onPress={() => {}} />
+          <DrawerTreeItem label="Nested 1" onPress={() => {}} />
         </DrawerTreeItem>
-        <DrawerItem label="Test 3" onPress={() => {}} />
+        <DrawerTreeItem label="Test 3" onPress={() => {}} />
       </DrawerTreeItem>
       <HorizontalDivider />
     </DrawerContentScrollView>
