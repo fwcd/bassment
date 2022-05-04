@@ -49,7 +49,7 @@ module.exports = {
         include: [
           path.resolve(rootDir, 'node_modules', 'react-native-vector-icons'),
         ],
-        loader: 'url-loader',
+        loader: 'file-loader',
       },
     ],
   },
