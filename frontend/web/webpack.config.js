@@ -16,13 +16,6 @@ module.exports = {
   devtool: 'source-map',
   module: {
     rules: [
-      // {
-      //   test: /\.(tsx|ts|jsx|js|mjs)$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'ts-loader',
-      //   },
-      // },
       {
         test: /\.(j|t)sx?$/,
         include: [
@@ -50,11 +43,6 @@ module.exports = {
           },
         },
       },
-      // {
-      //   enforce: 'pre',
-      //   test: /\.js$/,
-      //   loader: 'source-map-loader',
-      // },
     ],
   },
   plugins: [
