@@ -24,11 +24,25 @@ export function App() {
         <Drawer.Screen
           name="Home"
           options={{
-            drawerIcon: props => <Icon name="albums-outline" />,
+            drawerIcon: props => (
+              <Icon name="home-outline" size={props.size} color={props.color} />
+            ),
           }}
           component={() => <Text>Home</Text>}
         />
-        <Drawer.Screen name="Test" component={() => <Text>Test 123</Text>} />
+        <Drawer.Screen
+          name="Test"
+          options={{
+            drawerIcon: props => (
+              <Icon
+                name="albums-outline"
+                size={props.size}
+                color={props.color}
+              />
+            ),
+          }}
+          component={() => <Text>Test 123</Text>}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
