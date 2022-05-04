@@ -7,7 +7,7 @@ const webpackEnv = process.env.NODE_ENV || 'development';
 module.exports = {
   mode: webpackEnv,
   entry: {
-    app: path.join(rootDir, './index.ts'),
+    app: path.join(rootDir, './index.web.ts'),
   },
   output: {
     path: path.resolve(rootDir, 'dist'),
@@ -43,6 +43,13 @@ module.exports = {
             esModule: false,
           },
         },
+      },
+      {
+        test: /\.ttf$/,
+        include: [
+          path.resolve(rootDir, 'node_modules', 'react-native-vector-icons'),
+        ],
+        loader: 'url-loader',
       },
     ],
   },
