@@ -1,15 +1,25 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import React from 'react';
-import { Platform, Text, useWindowDimensions } from 'react-native';
+import {
+  Platform,
+  Text,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Drawer = createDrawerNavigator();
 
 export function AppContainer() {
   const dimensions = useWindowDimensions();
+  const scheme = useColorScheme();
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator
         initialRouteName="Test"
         screenOptions={{
