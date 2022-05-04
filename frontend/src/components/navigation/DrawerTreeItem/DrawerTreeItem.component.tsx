@@ -1,5 +1,4 @@
-import { ThemedText } from '@bassment/components/ThemedText';
-import { useStyles } from '@bassment/styles';
+import { ThemedText } from '@bassment/components/display/ThemedText';
 import { useTheme } from '@react-navigation/native';
 import React, { ReactNode, useState } from 'react';
 import { Pressable, View, ViewStyle } from 'react-native';
