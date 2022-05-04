@@ -1,3 +1,4 @@
+import { AppSidebar } from '@bassment/AppSidebar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   DarkTheme,
@@ -22,6 +23,7 @@ export function AppContainer() {
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator
         initialRouteName="Test"
+        drawerContent={AppSidebar}
         screenOptions={{
           drawerType:
             Platform.OS === 'web' || dimensions.width >= 600
