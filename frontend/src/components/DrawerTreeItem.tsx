@@ -8,11 +8,14 @@ interface DrawerTreeItemProps {
   icon?: (params: { size: number; color: string }) => ReactNode;
   onPress?: () => void;
   focused?: boolean;
+  isExpandedInitially?: boolean;
   children?: ReactNode;
 }
 
 export function DrawerTreeItem(props: DrawerTreeItemProps) {
-  const [isExpanded, setExpanded] = useState(false);
+  const [isExpanded, setExpanded] = useState(
+    props.isExpandedInitially || false,
+  );
   const chevronStyles: ViewStyle = {
     width: 25,
     paddingEnd: 30,
