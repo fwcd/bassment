@@ -37,6 +37,12 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         <DrawerTreeItem label="Test 3" onPress={() => {}} />
       </DrawerTreeItem>
       <HorizontalDivider />
+      <DrawerTreeItem
+        label="Add Playlist"
+        icon={({ size, color }) => (
+          <Icon name="add-outline" size={size} color={color} />
+        )}
+      />
     </DrawerContentScrollView>
   );
 }
