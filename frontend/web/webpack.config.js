@@ -24,6 +24,7 @@ module.exports = {
           path.resolve(rootDir, 'src'),
           path.resolve(rootDir, 'node_modules', 'react-native-gesture-handler'),
           path.resolve(rootDir, 'node_modules', 'react-native-reanimated'),
+          path.resolve(rootDir, 'node_modules', 'react-native-vector-icons'),
         ],
         use: {
           loader: 'babel-loader',
