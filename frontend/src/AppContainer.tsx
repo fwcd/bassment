@@ -29,7 +29,7 @@ export function AppContainer() {
               ? 'permanent'
               : 'slide',
           drawerStyle: {
-            minWidth: 200,
+            width: 220,
           },
         }}>
         <Drawer.Screen
