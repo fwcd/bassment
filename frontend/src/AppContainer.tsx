@@ -10,12 +10,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import React from 'react';
-import {
-  Platform,
-  Text,
-  useColorScheme,
-  useWindowDimensions,
-} from 'react-native';
+import { Platform, useColorScheme, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Drawer = createDrawerNavigator();
