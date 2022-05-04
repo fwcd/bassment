@@ -32,16 +32,20 @@ export function AppContainer() {
           },
         }}>
         <Drawer.Screen
-          name="Home"
+          name="Tracks"
           options={{
             drawerIcon: props => (
-              <Icon name="home-outline" size={props.size} color={props.color} />
+              <Icon
+                name="musical-notes-outline"
+                size={props.size}
+                color={props.color}
+              />
             ),
           }}
           component={() => <Text>Home</Text>}
         />
         <Drawer.Screen
-          name="Test"
+          name="Albums"
           options={{
             drawerIcon: props => (
               <Icon
@@ -49,6 +53,28 @@ export function AppContainer() {
                 size={props.size}
                 color={props.color}
               />
+            ),
+          }}
+          component={() => <Text>Test 123</Text>}
+        />
+        <Drawer.Screen
+          name="Artists"
+          options={{
+            drawerIcon: props => (
+              <Icon
+                name="people-outline"
+                size={props.size}
+                color={props.color}
+              />
+            ),
+          }}
+          component={() => <Text>Test 123</Text>}
+        />
+        <Drawer.Screen
+          name="Genres"
+          options={{
+            drawerIcon: props => (
+              <Icon name="star-outline" size={props.size} color={props.color} />
             ),
           }}
           component={() => <Text>Test 123</Text>}
