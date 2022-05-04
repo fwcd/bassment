@@ -11,7 +11,7 @@
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
 			<string>Open Source Licenses</string>
-			<key>Key</key>
+			<key>File</key>
 			<string>com.k-tomoyasu.react-native-oss-license</string>
 		</dict>
 	</array>
