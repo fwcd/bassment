@@ -37,54 +37,7 @@ export function AppContainer() {
             width: 220,
           },
         }}>
-        <Drawer.Screen
-          name="Tracks"
-          options={{
-            drawerIcon: props => (
-              <Icon
-                name="musical-notes-outline"
-                size={props.size}
-                color={props.color}
-              />
-            ),
-          }}
-          component={TracksScreen}
-        />
-        <Drawer.Screen
-          name="Albums"
-          options={{
-            drawerIcon: props => (
-              <Icon
-                name="albums-outline"
-                size={props.size}
-                color={props.color}
-              />
-            ),
-          }}
-          component={AlbumsScreen}
-        />
-        <Drawer.Screen
-          name="Artists"
-          options={{
-            drawerIcon: props => (
-              <Icon
-                name="people-outline"
-                size={props.size}
-                color={props.color}
-              />
-            ),
-          }}
-          component={ArtistsScreen}
-        />
-        <Drawer.Screen
-          name="Genres"
-          options={{
-            drawerIcon: props => (
-              <Icon name="star-outline" size={props.size} color={props.color} />
-            ),
-          }}
-          component={GenresScreen}
-        />
+        <Drawer.Screen name="Tracks" component={TracksScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
