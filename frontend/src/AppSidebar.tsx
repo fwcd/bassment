@@ -1,11 +1,9 @@
-import { DrawerTreeItem } from '@bassment/components/DrawerTreeItem';
-import { HorizontalDivider } from '@bassment/components/HorizontalDivider';
-import { SearchBar } from '@bassment/components/SearchBar';
-import { ThemedText } from '@bassment/components/ThemedText';
+import { SearchBar } from '@bassment/components/input/SearchBar';
+import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
+import { HorizontalDivider } from '@bassment/components/structure/HorizontalDivider';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItem,
 } from '@react-navigation/drawer';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';

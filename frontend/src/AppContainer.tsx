@@ -1,8 +1,9 @@
 import { AppSidebar } from '@bassment/AppSidebar';
-import { AlbumsScreen } from '@bassment/screens/AlbumsScreen';
-import { ArtistsScreen } from '@bassment/screens/ArtistsScreen';
-import { GenresScreen } from '@bassment/screens/GenresScreen';
-import { TracksScreen } from '@bassment/screens/TracksScreen';
+import { useRandom } from '@bassment/hooks/useRandom';
+import { AlbumsScreen } from '@bassment/screens/Albums';
+import { ArtistsScreen } from '@bassment/screens/Artists';
+import { GenresScreen } from '@bassment/screens/Genres';
+import { TracksScreen } from '@bassment/screens/Tracks';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   DarkTheme,
@@ -18,6 +19,10 @@ const Drawer = createDrawerNavigator();
 export function AppContainer() {
   const dimensions = useWindowDimensions();
   const scheme = useColorScheme();
+
+  // usually, you would do something interesting with this
+  const { value } = useRandom();
+  console.log(value);
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator

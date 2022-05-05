@@ -1,4 +1,4 @@
-import { ThemedText } from '@bassment/components/ThemedText';
+import { ThemedText } from '@bassment/components/display/ThemedText';
 import React from 'react';
 import { View } from 'react-native';
 
