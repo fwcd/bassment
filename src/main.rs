@@ -13,7 +13,7 @@ mod schema;
 mod models;
 mod utils;
 
-use std::{io, env};
+use std::{io, env, path::PathBuf};
 
 use actix_web::{web, HttpServer, App};
 use clap::Parser;
@@ -29,6 +29,12 @@ embed_migrations!();
 #[derive(Parser, Debug)]
 #[clap(version, about)]
 struct Args {
+    /// Only serves the API/auth endpoints (without the frontend).
+    #[clap(long)]
+    api_only: bool,
+    /// The path to the built frontend to serve.
+    #[clap(long, default_value = "./frontend/dist")]
+    frontend_path: String,
     /// A custom database URL to use.
     #[clap(long)]
     database_url: Option<String>,
@@ -80,10 +86,13 @@ async fn main() -> io::Result<()> {
     // Start server
     info!("Starting on {}:{}...", args.host, args.port);
     HttpServer::new(move || {
+        let frontend_path = Some(args.frontend_path.clone())
+            .filter(|_| !args.api_only)
+            .map(PathBuf::from);
         App::new()
             .wrap(TracingLogger::default())
             .app_data(web::Data::new(pool.clone()))
-            .configure(routes::config)
+            .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref())))
     })
     .bind((args.host, args.port))?
     .run()
