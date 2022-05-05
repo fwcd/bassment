@@ -1,6 +1,7 @@
 # Bassment
 
 [![Build](https://github.com/fwcd/bassment/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/bassment/actions/workflows/build.yml)
+[![Frontend](https://github.com/fwcd/bassment/actions/workflows/frontend.yml/badge.svg)](https://github.com/fwcd/bassment/actions/workflows/frontend.yml)
 
 Music library server with support for cue points, playlists, crates and more.
 

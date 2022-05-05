@@ -1,4 +1,4 @@
-# OSX
+# macOS
 #
 .DS_Store
 
@@ -59,3 +59,6 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+# Webpack
+dist/

@@ -1,0 +1,27 @@
+name: Frontend
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      frontend-dir: ./frontend
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 17
+    - name: Install dependencies
+      run: npm install
+      working-directory: ${{ env.frontend-dir }}
+    - name: Typecheck project
+      run: npm run typecheck
+      working-directory: ${{ env.frontend-dir }}
+
+# TODO: Lint?
+# TODO: Run tests?

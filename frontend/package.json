@@ -9,6 +9,7 @@
     "pod-install": "cd ios && pod install",
     "web": "cd web && webpack-dev-server --open",
     "build:web": "cd web && webpack",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "generate-oss-licenses-ios": "react-native-oss-license --format settings-bundle --output-path ios/Bassment/Settings.bundle",
