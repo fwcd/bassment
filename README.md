@@ -5,6 +5,8 @@
 
 Music library server with support for cue points, playlists, crates and more.
 
+<img alt="Icon" src="icons/icon-rounded.svg" width="100">
+
 ## Development
 
 To develop Bassment, make sure to have a Rust toolchain and PostgreSQL installed (the latter also running). Create a database and make sure that the `pgcrypto` extension is enabled (within the database). With sufficient privileges, you can enable it from `psql your_db_name` using
