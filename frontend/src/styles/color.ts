@@ -7,5 +7,6 @@ export function useColorStyles() {
     background: theme.colors.background,
     card: theme.colors.card,
     border: theme.colors.border,
+    selection: `rgba(255, 200, 115, ${theme.dark ? '0.2' : '0.5'})`,
   };
 }

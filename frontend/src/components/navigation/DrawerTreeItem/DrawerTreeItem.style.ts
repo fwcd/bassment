@@ -7,7 +7,11 @@ export function useDrawerTreeItemStyles(focused: boolean) {
     item: {
       flex: 1,
       flexDirection: 'row',
-      margin: styles.layout.smallSpace,
+      padding: styles.layout.smallSpace,
+      margin: styles.layout.tinySpace,
+      marginHorizontal: styles.layout.smallSpace,
+      backgroundColor: focused ? styles.color.selection : 'transparent',
+      borderRadius: 5,
     },
     icons: {
       flexDirection: 'row',

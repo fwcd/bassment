@@ -2,7 +2,7 @@ import { ThemedText } from '@bassment/components/display/ThemedText';
 import { useDrawerTreeItemStyles } from '@bassment/components/navigation/DrawerTreeItem/DrawerTreeItem.style';
 import { useStyles } from '@bassment/styles';
 import React, { ReactNode, useState } from 'react';
-import { Pressable, View, ViewStyle } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface IconProps {
