@@ -15,15 +15,15 @@ export function useDrawerTreeItemStyles(focused: boolean) {
     },
     icons: {
       flexDirection: 'row',
-      paddingEnd: styles.layout.space,
+      paddingEnd: styles.layout.smallSpace,
     },
     label: {
       fontSize: styles.text.fontSize,
       color: styles.text.color,
     },
     chevron: {
-      width: 25,
-      paddingEnd: 15,
+      width: styles.icon.size,
+      paddingEnd: styles.layout.smallSpace,
     },
   });
 }

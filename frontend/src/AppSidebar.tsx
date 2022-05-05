@@ -1,6 +1,6 @@
 import { SearchBar } from '@bassment/components/input/SearchBar';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
-import { HorizontalDivider } from '@bassment/components/structure/HorizontalDivider';
+import { Divider } from '@bassment/components/structure/Divider';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -34,7 +34,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         </DrawerTreeItem>
         <DrawerTreeItem label="Test 3" onPress={() => {}} />
       </DrawerTreeItem>
-      <HorizontalDivider />
+      <Divider />
       <DrawerTreeItem
         label="Add Playlist"
         icon={({ size, color }) => (

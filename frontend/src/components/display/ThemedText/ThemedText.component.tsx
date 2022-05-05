@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { useThemedTextStyles } from '@bassment/components/display/ThemedText/ThemedText.style';
 import React, { ReactNode } from 'react';
 import { StyleProp, Text, TextStyle } from 'react-native';
 
@@ -12,9 +12,9 @@ interface ThemedTextProps {
  * the currently used theme (light or dark).
  */
 export function ThemedText({ children, style }: ThemedTextProps) {
-  const theme = useTheme();
+  const styles = useThemedTextStyles();
   return (
-    <Text style={[{ color: theme.colors.text }, ...(style ? [style] : [])]}>
+    <Text style={[styles.themedText, ...(style ? [style] : [])]}>
       {children}
     </Text>
   );
