@@ -1,12 +1,9 @@
 import { useTheme } from '@react-navigation/native';
-import { TextStyle } from 'react-native';
 
-const textSize = 14;
-
-export function useLabelStyles(): TextStyle {
+export function useTextStyles() {
   const theme = useTheme();
   return {
-    fontSize: textSize,
+    fontSize: 16,
     color: theme.colors.text,
   };
 }

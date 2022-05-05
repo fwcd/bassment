@@ -1,5 +1,6 @@
 import { ThemedText } from '@bassment/components/display/ThemedText';
-import { useTheme } from '@react-navigation/native';
+import { useDrawerTreeItemStyles } from '@bassment/components/navigation/DrawerTreeItem/DrawerTreeItem.style';
+import { useStyles } from '@bassment/styles';
 import React, { ReactNode, useState } from 'react';
 import { Pressable, View, ViewStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -22,16 +23,8 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
   const [isExpanded, setExpanded] = useState(
     props.isExpandedInitially || false,
   );
-  const chevronStyles: ViewStyle = {
-    width: 25,
-    paddingEnd: 15,
-  };
-  const theme = useTheme();
-  const iconProps: IconProps = {
-    // TODO: Proper font styling, larger fonts on mobile?
-    size: 16,
-    color: theme.colors.text,
-  };
+  const globalStyles = useStyles();
+  const styles = useDrawerTreeItemStyles(props.focused || false);
   // TODO: Background, focused colors, etc
   return (
     <>
@@ -42,8 +35,8 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
         style={({ pressed }) => ({
           opacity: pressed ? 0.5 : 1,
         })}>
-        <View style={{ flex: 1, flexDirection: 'row', margin: 5 }}>
-          <View style={{ flexDirection: 'row', paddingEnd: 10 }}>
+        <View style={styles.item}>
+          <View style={styles.icons}>
             {props.children ? (
               <Icon
                 name={
@@ -51,14 +44,14 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
                     ? 'chevron-down-outline'
                     : 'chevron-forward-outline'
                 }
-                size={iconProps.size}
-                color={iconProps.color}
-                style={chevronStyles}
+                size={globalStyles.icon.size}
+                color={globalStyles.icon.color}
+                style={styles.chevron}
               />
             ) : (
-              <View style={chevronStyles} />
+              <View style={styles.chevron} />
             )}
-            {props.icon ? props.icon(iconProps) : []}
+            {props.icon ? props.icon(globalStyles.icon) : []}
           </View>
           <ThemedText>{props.label}</ThemedText>
         </View>

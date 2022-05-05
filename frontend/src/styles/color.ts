@@ -1,16 +1,11 @@
 import { useTheme } from '@react-navigation/native';
-import { ViewStyle } from 'react-native';
 
-export function useBackgroundStyles(): ViewStyle {
+export function useColorStyles() {
   const theme = useTheme();
   return {
-    backgroundColor: theme.colors.background,
-  };
-}
-
-export function useBorderStyles(): ViewStyle {
-  const theme = useTheme();
-  return {
-    borderColor: theme.colors.border,
+    primary: theme.colors.primary,
+    background: theme.colors.background,
+    card: theme.colors.card,
+    border: theme.colors.border,
   };
 }

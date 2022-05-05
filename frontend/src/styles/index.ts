@@ -1,24 +1,13 @@
-import { StyleSheet } from 'react-native';
-import {
-  margin,
-  padding,
-  smallMargin,
-  smallPadding,
-} from '@bassment/styles/layout';
-import { useBackgroundStyles, useBorderStyles } from '@bassment/styles/color';
-import { useLabelStyles } from '@bassment/styles/text';
+import { useColorStyles } from '@bassment/styles/color';
+import { useIconStyles } from '@bassment/styles/icon';
+import { useLayoutStyles } from '@bassment/styles/layout';
+import { useTextStyles } from '@bassment/styles/text';
 
 export function useStyles() {
-  return StyleSheet.create({
-    // Layout
-    padding,
-    margin,
-    smallPadding,
-    smallMargin,
-    // Color
-    background: useBackgroundStyles(),
-    border: useBorderStyles(),
-    // Text
-    label: useLabelStyles(),
-  });
+  return {
+    color: useColorStyles(),
+    layout: useLayoutStyles(),
+    text: useTextStyles(),
+    icon: useIconStyles(),
+  };
 }
