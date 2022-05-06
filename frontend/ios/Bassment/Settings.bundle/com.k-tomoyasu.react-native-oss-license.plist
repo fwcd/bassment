@@ -261,9 +261,49 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression</string>
+            <key>Title</key>
+            <string>@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining</string>
+            <key>Title</key>
+            <string>@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-async-generator-functions</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-async-generator-functions</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-class-properties</string>
             <key>Title</key>
             <string>@babel/plugin-proposal-class-properties</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-class-static-block</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-class-static-block</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-dynamic-import</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-dynamic-import</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -277,9 +317,41 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-export-namespace-from</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-export-namespace-from</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-json-strings</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-json-strings</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-logical-assignment-operators</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-logical-assignment-operators</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-nullish-coalescing-operator</string>
             <key>Title</key>
             <string>@babel/plugin-proposal-nullish-coalescing-operator</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-numeric-separator</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-numeric-separator</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -309,9 +381,49 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-private-methods</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-private-methods</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-private-property-in-object</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-private-property-in-object</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-proposal-unicode-property-regex</string>
+            <key>Title</key>
+            <string>@babel/plugin-proposal-unicode-property-regex</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-async-generators</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-async-generators</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-class-properties</string>
             <key>Title</key>
             <string>@babel/plugin-syntax-class-properties</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-class-static-block</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-class-static-block</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -333,9 +445,25 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-export-namespace-from</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-export-namespace-from</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-flow</string>
             <key>Title</key>
             <string>@babel/plugin-syntax-flow</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-json-strings</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-json-strings</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -349,9 +477,25 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-logical-assignment-operators</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-logical-assignment-operators</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-nullish-coalescing-operator</string>
             <key>Title</key>
             <string>@babel/plugin-syntax-nullish-coalescing-operator</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-numeric-separator</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-numeric-separator</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -376,6 +520,22 @@
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-optional-chaining</string>
             <key>Title</key>
             <string>@babel/plugin-syntax-optional-chaining</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-private-property-in-object</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-private-property-in-object</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-syntax-top-level-await</string>
+            <key>Title</key>
+            <string>@babel/plugin-syntax-top-level-await</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -445,6 +605,22 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-dotall-regex</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-dotall-regex</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-duplicate-keys</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-duplicate-keys</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-exponentiation-operator</string>
             <key>Title</key>
             <string>@babel/plugin-transform-exponentiation-operator</string>
@@ -493,9 +669,49 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-modules-amd</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-modules-amd</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-modules-commonjs</string>
             <key>Title</key>
             <string>@babel/plugin-transform-modules-commonjs</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-modules-systemjs</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-modules-systemjs</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-modules-umd</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-modules-umd</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-named-capturing-groups-regex</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-named-capturing-groups-regex</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-new-target</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-new-target</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -573,6 +789,14 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-reserved-words</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-reserved-words</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-runtime</string>
             <key>Title</key>
             <string>@babel/plugin-transform-runtime</string>
@@ -613,9 +837,25 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-typeof-symbol</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-typeof-symbol</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-typescript</string>
             <key>Title</key>
             <string>@babel/plugin-transform-typescript</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/plugin-transform-unicode-escapes</string>
+            <key>Title</key>
+            <string>@babel/plugin-transform-unicode-escapes</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -629,9 +869,25 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/preset-env</string>
+            <key>Title</key>
+            <string>@babel/preset-env</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@babel/preset-flow</string>
             <key>Title</key>
             <string>@babel/preset-flow</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@babel/preset-modules</string>
+            <key>Title</key>
+            <string>@babel/preset-modules</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -1936,6 +2192,14 @@
             <string>com.k-tomoyasu.react-native-oss-license/esprima</string>
             <key>Title</key>
             <string>esprima</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/esutils</string>
+            <key>Title</key>
+            <string>esutils</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
