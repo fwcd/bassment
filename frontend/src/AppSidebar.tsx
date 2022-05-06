@@ -1,3 +1,4 @@
+import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { SearchBar } from '@bassment/components/input/SearchBar';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
@@ -8,7 +9,6 @@ import {
 } from '@react-navigation/drawer';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const routeName = props.state.routeNames[props.state.index];
@@ -25,7 +25,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Tracks"
         icon={({ size, color }) => (
-          <Icon name="musical-notes-outline" size={size} color={color} />
+          <ThemedIcon name="musical-notes-outline" size={size} color={color} />
         )}
         focused={routeName === 'Tracks'}
         onPress={() => {
@@ -35,7 +35,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Artists"
         icon={({ size, color }) => (
-          <Icon name="person-outline" size={size} color={color} />
+          <ThemedIcon name="person-outline" size={size} color={color} />
         )}>
         <DrawerTreeItem label="Pop" onPress={() => {}} />
         <DrawerTreeItem label="House" onPress={() => {}} />
@@ -43,7 +43,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Albums"
         icon={({ size, color }) => (
-          <Icon name="albums-outline" size={size} color={color} />
+          <ThemedIcon name="albums-outline" size={size} color={color} />
         )}>
         <DrawerTreeItem label="Test 1" onPress={() => {}} />
         <DrawerTreeItem label="Test 2">
@@ -54,7 +54,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Genres"
         icon={({ size, color }) => (
-          <Icon name="star-outline" size={size} color={color} />
+          <ThemedIcon name="star-outline" size={size} color={color} />
         )}>
         <DrawerTreeItem label="Pop" onPress={() => {}} />
         <DrawerTreeItem label="House" onPress={() => {}} />
@@ -62,7 +62,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Streams"
         icon={({ size, color }) => (
-          <Icon name="radio-outline" size={size} color={color} />
+          <ThemedIcon name="radio-outline" size={size} color={color} />
         )}
       />
       <Divider />
@@ -70,30 +70,30 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         label="Test 1"
         isExpandedInitially
         icon={({ size, color }) => (
-          <Icon name="folder-outline" size={size} color={color} />
+          <ThemedIcon name="folder-outline" size={size} color={color} />
         )}>
         <DrawerTreeItem
           label="Stuff"
           isExpandedInitially
           icon={({ size, color }) => (
-            <Icon name="folder-outline" size={size} color={color} />
+            <ThemedIcon name="folder-outline" size={size} color={color} />
           )}>
           <DrawerTreeItem
             label="Test 1"
             icon={({ size, color }) => (
-              <Icon name="list-outline" size={size} color={color} />
+              <ThemedIcon name="list-outline" size={size} color={color} />
             )}
           />
           <DrawerTreeItem
             label="Test 2"
             icon={({ size, color }) => (
-              <Icon name="list-outline" size={size} color={color} />
+              <ThemedIcon name="list-outline" size={size} color={color} />
             )}
           />
           <DrawerTreeItem
             label="Some Crate"
             icon={({ size, color }) => (
-              <Icon name="file-tray-outline" size={size} color={color} />
+              <ThemedIcon name="file-tray-outline" size={size} color={color} />
             )}
           />
         </DrawerTreeItem>
@@ -103,14 +103,14 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         label="Add Playlist"
         isButton
         icon={({ size, color }) => (
-          <Icon name="add-outline" size={size} color={color} />
+          <ThemedIcon name="add-outline" size={size} color={color} />
         )}
       />
       <DrawerTreeItem
         label="Add Folder"
         isButton
         icon={({ size, color }) => (
-          <Icon name="add-outline" size={size} color={color} />
+          <ThemedIcon name="add-outline" size={size} color={color} />
         )}
       />
     </DrawerContentScrollView>

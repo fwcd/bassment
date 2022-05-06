@@ -1,9 +1,9 @@
+import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { useDrawerTreeItemStyles } from '@bassment/components/navigation/DrawerTreeItem/DrawerTreeItem.style';
 import { useStyles } from '@bassment/styles';
 import React, { ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 interface IconProps {
   size: number;
@@ -41,14 +41,12 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
         <View style={styles.item}>
           <View style={styles.icons}>
             {props.children ? (
-              <Icon
+              <ThemedIcon
                 name={
                   isExpanded
                     ? 'chevron-down-outline'
                     : 'chevron-forward-outline'
                 }
-                size={globalStyles.icon.size}
-                color={globalStyles.icon.color}
                 style={styles.chevron}
               />
             ) : (

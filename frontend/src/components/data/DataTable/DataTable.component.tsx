@@ -1,9 +1,8 @@
 import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTable.style';
 import { DataTableRow } from '@bassment/components/data/DataTableRow';
-import { useStyles } from '@bassment/styles';
+import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import React, { useState } from 'react';
 import { FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 interface DataTableProps {
   headers: string[];
@@ -22,7 +21,6 @@ interface OrderedColumn {
 }
 
 export function DataTable(props: DataTableProps) {
-  const globalStyles = useStyles();
   const styles = useDataTableStyles();
   const headers = props.headers;
 
@@ -67,13 +65,7 @@ export function DataTable(props: DataTableProps) {
                         name = 'chevron-up-outline';
                         break;
                     }
-                    return (
-                      <Icon
-                        name={name}
-                        size={globalStyles.icon.size}
-                        color={globalStyles.icon.color}
-                      />
-                    );
+                    return <ThemedIcon name={name} />;
                   }
                   return null;
                 })
