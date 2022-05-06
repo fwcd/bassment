@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname $0)"
+source helpers/use-db.sh
+source helpers/confirm.sh
+cd ..
+
+echo "You are about to DELETE ALL CONTENT in the database. This is IRREVERSIBLE."
+confirm "Are you sure?"
+
+# TODO: Remove files + file_infos too?
+# TODO: Reset settings?
+# TODO: Drop users and regenerate root?
+psql "$DATABASE_URL" -c "TRUNCATE albums, artists, blobs, cues, genres, playlist_tracks, playlists, track_albums, track_artists, track_audios, track_genres, tracks, users"
