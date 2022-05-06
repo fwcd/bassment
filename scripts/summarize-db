@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname $0)"
+source helpers/use-db.sh
+cd ..
+
+query-count() {
+  psql "$DATABASE_URL" -qtAX -c "SELECT count(*) FROM $1"
+}
+
+echo "==> $(query-count albums) album(s)"
+echo "==> $(query-count artists) artist(s)"
+echo "==> $(query-count blobs) blob(s)"
+echo "==> $(query-count cues) cue(s)"
+echo "==> $(query-count file_infos) file info(s)"
+echo "==> $(query-count genres) genre(s)"
+echo "==> $(query-count playlists) playlist(s)"
+echo "==> $(query-count tracks) track(s)"
+echo "==> $(query-count users) user(s)"
