@@ -17,7 +17,9 @@ interface DataTableCellProps {
 export function DataTableCell(props: DataTableCellProps) {
   const styles = useDataTableCellStyles();
   const { item, index: j } = props;
+
   const [startWidth, setStartWidth] = useState(props.widths[j]);
+  const minWidth = 40;
 
   return (
     <>
@@ -37,7 +39,7 @@ export function DataTableCell(props: DataTableCellProps) {
         onGestureEvent={({ nativeEvent: event }) => {
           if (props.setWidths) {
             let widths = [...props.widths];
-            widths[j] = startWidth + event.translationX;
+            widths[j] = Math.max(minWidth, startWidth + event.translationX);
             props.setWidths(widths);
           }
         }}
