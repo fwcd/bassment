@@ -7,12 +7,19 @@ export function useDataTableRowStyles() {
     row: {
       flex: 1,
       flexDirection: 'row',
-      padding: styles.layout.smallSpace,
     },
-    even: {
+    evenRow: {
       backgroundColor: styles.color.field,
     },
-    odd: {},
-    cell: {},
+    oddRow: {},
+    evenCell: {
+      backgroundColor: styles.color.secondaryField,
+    },
+    oddCell: {},
+    cell: {
+      padding: styles.layout.smallSpace,
+      borderRightWidth: 3,
+      borderRightColor: styles.color.background,
+    },
   });
 }

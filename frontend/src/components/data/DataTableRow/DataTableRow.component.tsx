@@ -14,9 +14,14 @@ export function DataTableRow(props: DataTableRowProps) {
   const styles = useDataTableRowStyles();
   const item = props.item;
   return (
-    <View style={[styles.row, props.even ? styles.even : styles.odd]}>
+    <View style={[styles.row, props.even ? styles.evenRow : styles.oddRow]}>
       {props.headers.map((h, j) => (
-        <View style={[styles.cell, { width: props.widths[j] }]}>
+        <View
+          style={[
+            styles.cell,
+            ...(!props.even && j % 2 === 0 ? [styles.evenCell] : []),
+            { width: props.widths[j] },
+          ]}>
           <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
             {item ? item[h] : h}
           </ThemedText>

@@ -17,6 +17,7 @@ export function DataTable(props: DataTableProps) {
   );
 
   return (
+    // TODO: Horizontal scroll?
     <FlatList
       style={styles.table}
       data={props.data}
