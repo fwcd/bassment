@@ -12,8 +12,8 @@ interface DataTableProps {
 }
 
 enum Order {
-  Descending,
   Ascending,
+  Descending,
 }
 
 interface OrderedColumn {
@@ -24,26 +24,39 @@ interface OrderedColumn {
 export function DataTable(props: DataTableProps) {
   const globalStyles = useStyles();
   const styles = useDataTableStyles();
+  const headers = props.headers;
+
   // TODO: Assert that initialWidths.length == headers.length
   const [widths, setWidths] = useState(
-    props.initialWidths ?? props.headers.map(_ => 200),
+    props.initialWidths ?? headers.map(_ => 200),
   );
   const [orderedColumn, setOrderedColumn] = useState<OrderedColumn | null>(
     null,
   );
 
+  // Sort data if needed
+  let data = [...(props.data ?? [])];
+  if (orderedColumn) {
+    const header = headers[orderedColumn.index];
+    data.sort(
+      orderedColumn.order === Order.Ascending
+        ? (x, y) => x[header].localeCompare(y[header])
+        : (x, y) => y[header].localeCompare(x[header]),
+    );
+  }
+
   return (
     // TODO: Horizontal scroll?
     <FlatList
       style={styles.table}
-      data={props.data}
+      data={data}
       ListHeaderComponent={
         <DataTableRow
-          headers={props.headers}
+          headers={headers}
           even
           icons={
             orderedColumn
-              ? Array.from({ length: props.headers.length }, (_, i) => {
+              ? Array.from({ length: headers.length }, (_, i) => {
                   if (i === orderedColumn.index) {
                     let name: string;
                     switch (orderedColumn.order) {
@@ -69,13 +82,13 @@ export function DataTable(props: DataTableProps) {
           onPress={j => {
             if (orderedColumn && orderedColumn.index === j) {
               const order = orderedColumn.order;
-              if (order === Order.Descending) {
-                setOrderedColumn({ ...orderedColumn, order: Order.Ascending });
-              } else if (order === Order.Ascending) {
+              if (order === Order.Ascending) {
+                setOrderedColumn({ ...orderedColumn, order: Order.Descending });
+              } else if (order === Order.Descending) {
                 setOrderedColumn(null);
               }
             } else {
-              setOrderedColumn({ index: j, order: Order.Descending });
+              setOrderedColumn({ index: j, order: Order.Ascending });
             }
           }}
           widths={widths}
@@ -84,7 +97,7 @@ export function DataTable(props: DataTableProps) {
       }
       renderItem={({ item, index: i }) => (
         <DataTableRow
-          headers={props.headers}
+          headers={headers}
           even={i % 2 === 1}
           item={item}
           widths={widths}
