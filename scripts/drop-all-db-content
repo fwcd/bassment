@@ -11,5 +11,6 @@ confirm "Are you sure?"
 
 # TODO: Remove files + file_infos too?
 # TODO: Reset settings?
-# TODO: Drop users and regenerate root?
-psql "$DATABASE_URL" -c "TRUNCATE albums, artists, blobs, cues, genres, playlist_tracks, playlists, track_albums, track_artists, track_audios, track_genres, tracks, users"
+tables="albums, artists, blobs, cues, genres, playlist_tracks, playlists, track_albums, track_artists, track_audios, track_genres, tracks, users"
+echo "==> Truncating $tables"
+psql "$DATABASE_URL" -c "TRUNCATE $tables"
