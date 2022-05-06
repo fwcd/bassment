@@ -48,6 +48,7 @@ export function DataTable(props: DataTableProps) {
     <FlatList
       style={styles.table}
       data={data}
+      stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <DataTableRow
           headers={headers}
