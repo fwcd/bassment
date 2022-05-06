@@ -1,14 +1,15 @@
 import { useDataTableCellStyles } from '@bassment/components/data/DataTableCell/DataTableCell.style';
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
 interface DataTableCellProps {
-  header: string;
   index: number;
+  header: string;
   item?: { [key: string]: string };
+  onPress?: () => void;
   rowEven: boolean;
   widths: number[];
   setWidths?: (widths: number[]) => void;
@@ -23,16 +24,18 @@ export function DataTableCell(props: DataTableCellProps) {
 
   return (
     <>
-      <View
-        style={[
-          styles.cell,
-          ...(!props.rowEven && j % 2 === 0 ? [styles.evenCell] : []),
-          { width: props.widths[j] },
-        ]}>
-        <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
-          {item ? item[props.header] : props.header}
-        </ThemedText>
-      </View>
+      <Pressable onPress={props.onPress}>
+        <View
+          style={[
+            styles.cell,
+            ...(!props.rowEven && j % 2 === 0 ? [styles.evenCell] : []),
+            { width: props.widths[j] },
+          ]}>
+          <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
+            {item ? item[props.header] : props.header}
+          </ThemedText>
+        </View>
+      </Pressable>
       <PanGestureHandler
         minDist={0}
         activeOffsetX={0}

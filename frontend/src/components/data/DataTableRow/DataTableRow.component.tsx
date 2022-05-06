@@ -4,11 +4,12 @@ import React from 'react';
 import { View } from 'react-native';
 
 interface DataTableRowProps {
-  even: boolean;
   headers: string[];
+  item?: { [key: string]: string };
+  even: boolean;
+  onPress?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
-  item?: { [key: string]: string };
 }
 
 export function DataTableRow(props: DataTableRowProps) {
@@ -22,6 +23,11 @@ export function DataTableRow(props: DataTableRowProps) {
           index={j}
           item={props.item}
           rowEven={props.even}
+          onPress={() => {
+            if (props.onPress) {
+              props.onPress(j);
+            }
+          }}
           widths={props.widths}
           setWidths={props.setWidths}
         />
