@@ -25,20 +25,22 @@ export function DataTable(props: DataTableProps) {
       ListHeaderComponent={
         <DataTableRow
           headers={props.headers}
-          widths={widths}
           even
           activeHandle={activeHandle}
           setActiveHandle={setActiveHandle}
+          widths={widths}
+          setWidths={setWidths}
         />
       }
       renderItem={({ item, index: i }) => (
         <DataTableRow
           headers={props.headers}
-          widths={widths}
           even={i % 2 === 1}
           item={item}
           activeHandle={activeHandle}
           setActiveHandle={setActiveHandle}
+          widths={widths}
+          setWidths={setWidths}
         />
       )}
     />

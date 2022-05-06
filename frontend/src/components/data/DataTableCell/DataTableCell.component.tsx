@@ -1,7 +1,9 @@
 import { useDataTableCellStyles } from '@bassment/components/data/DataTableCell/DataTableCell.style';
 import { ThemedText } from '@bassment/components/display/ThemedText';
-import React, { useRef } from 'react';
-import { PanResponder, View } from 'react-native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import Animated from 'react-native-reanimated';
 import { Hoverable } from 'react-native-web-hooks';
 
 interface DataTableCellProps {
@@ -17,22 +19,8 @@ interface DataTableCellProps {
 
 export function DataTableCell(props: DataTableCellProps) {
   const styles = useDataTableCellStyles();
-  const { item, index: j, setWidths } = props;
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        let newWidths = [...props.widths];
-        newWidths[props.index] += gestureState.vx;
-        if (props.setWidths) {
-          console.log(props.setWidths);
-          props.setWidths(newWidths);
-        }
-      },
-    }),
-  ).current;
+  const { item, index: j } = props;
+  const [startWidth, setStartWidth] = useState(props.widths[j]);
 
   return (
     <>
@@ -58,14 +46,25 @@ export function DataTableCell(props: DataTableCellProps) {
           }
         }}>
         {() => (
-          <View
-            style={
-              props.activeHandle === j
-                ? styles.activeBorderHandle
-                : styles.borderHandle
-            }
-            {...panResponder.panHandlers}
-          />
+          <PanGestureHandler
+            onGestureEvent={({ nativeEvent: event }) => {
+              if (props.setWidths) {
+                let widths = [...props.widths];
+                widths[j] = startWidth + event.translationX;
+                props.setWidths(widths);
+              }
+            }}
+            onEnded={() => {
+              setStartWidth(props.widths[j]);
+            }}>
+            <Animated.View
+              style={
+                props.activeHandle === j
+                  ? styles.activeBorderHandle
+                  : styles.borderHandle
+              }
+            />
+          </PanGestureHandler>
         )}
       </Hoverable>
     </>
