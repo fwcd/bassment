@@ -18,8 +18,15 @@ export function useDataTableRowStyles() {
     oddCell: {},
     cell: {
       padding: styles.layout.smallSpace,
-      borderRightWidth: 3,
-      borderRightColor: styles.color.background,
+    },
+    borderHandle: {
+      width: 4,
+      backgroundColor: styles.color.background,
+    },
+    activeBorderHandle: {
+      width: 4,
+      backgroundColor: styles.color.primary,
+      cursor: 'col-resize',
     },
   });
 }
