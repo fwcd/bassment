@@ -1,5 +1,5 @@
 import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTable.style';
-import { ThemedText } from '@bassment/components/display/ThemedText';
+import { DataTableRow } from '@bassment/components/data/DataTableRow';
 import React, { useState } from 'react';
 import { FlatList, View } from 'react-native';
 
@@ -21,13 +21,12 @@ export function DataTable(props: DataTableProps) {
       style={styles.table}
       data={props.data}
       renderItem={({ item, index: i }) => (
-        <View style={[styles.row, i % 2 === 0 ? styles.even : styles.odd]}>
-          {props.headers.map((h, j) => (
-            <View style={[styles.cell, { width: widths[j] }]}>
-              <ThemedText>{item[h]}</ThemedText>
-            </View>
-          ))}
-        </View>
+        <DataTableRow
+          headers={props.headers}
+          widths={widths}
+          even={i % 2 === 0}
+          item={item}
+        />
       )}
     />
   );
