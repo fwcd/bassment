@@ -25,7 +25,6 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
   );
   const globalStyles = useStyles();
   const styles = useDrawerTreeItemStyles(props.focused || false);
-  // TODO: Background, focused colors, etc
   return (
     <>
       <Pressable

@@ -14,6 +14,7 @@ export function useDrawerTreeItemStyles(focused: boolean) {
     },
     icons: {
       flexDirection: 'row',
+      width: 2.5 * styles.icon.size,
       paddingEnd: styles.layout.smallSpace,
     },
     label: {
