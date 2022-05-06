@@ -9,7 +9,7 @@ export function useSearchBarStyles() {
       marginHorizontal: styles.layout.tinySpace,
       borderRadius: styles.layout.borderRadius,
       padding: styles.layout.smallSpace,
-      backgroundColor: styles.color.background,
+      backgroundColor: styles.color.field,
       fontSize: styles.text.fontSize,
       color: styles.text.color,
     },
