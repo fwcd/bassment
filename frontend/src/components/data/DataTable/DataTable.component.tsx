@@ -20,11 +20,14 @@ export function DataTable(props: DataTableProps) {
     <FlatList
       style={styles.table}
       data={props.data}
+      ListHeaderComponent={
+        <DataTableRow headers={props.headers} widths={widths} even />
+      }
       renderItem={({ item, index: i }) => (
         <DataTableRow
           headers={props.headers}
           widths={widths}
-          even={i % 2 === 0}
+          even={i % 2 === 1}
           item={item}
         />
       )}
