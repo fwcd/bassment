@@ -3,13 +3,9 @@ import { useRandom } from '@bassment/hooks/useRandom';
 import { TracksScreen } from '@bassment/screens/Tracks';
 import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Platform, useColorScheme, useWindowDimensions } from 'react-native';
+import { Platform, useWindowDimensions } from 'react-native';
 
 const Drawer = createDrawerNavigator();
 
