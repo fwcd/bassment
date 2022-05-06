@@ -15,6 +15,7 @@ interface DataTableRowProps {
 
 export function DataTableRow(props: DataTableRowProps) {
   const styles = useDataTableRowStyles();
+  const onPress = props.onPress;
 
   return (
     <View style={[styles.row, props.even ? styles.evenRow : styles.oddRow]}>
@@ -25,11 +26,7 @@ export function DataTableRow(props: DataTableRowProps) {
           icon={props.icons ? props.icons[j] : null}
           item={props.item}
           rowEven={props.even}
-          onPress={() => {
-            if (props.onPress) {
-              props.onPress(j);
-            }
-          }}
+          onPress={onPress ? () => onPress(j) : undefined}
           widths={props.widths}
           setWidths={props.setWidths}
         />

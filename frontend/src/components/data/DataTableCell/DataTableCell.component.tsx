@@ -23,21 +23,27 @@ export function DataTableCell(props: DataTableCellProps) {
   const [startWidth, setStartWidth] = useState(props.widths[j]);
   const minWidth = 40;
 
+  const cell = (
+    <View
+      style={[
+        styles.cell,
+        ...(!props.rowEven && j % 2 === 0 ? [styles.evenCell] : []),
+        { width: props.widths[j] },
+      ]}>
+      {props.icon}
+      <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
+        {item ? item[props.header] : props.header}
+      </ThemedText>
+    </View>
+  );
+
   return (
     <>
-      <Pressable onPress={props.onPress}>
-        <View
-          style={[
-            styles.cell,
-            ...(!props.rowEven && j % 2 === 0 ? [styles.evenCell] : []),
-            { width: props.widths[j] },
-          ]}>
-          {props.icon}
-          <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
-            {item ? item[props.header] : props.header}
-          </ThemedText>
-        </View>
-      </Pressable>
+      {props.onPress ? (
+        <Pressable onPress={props.onPress}>{cell}</Pressable>
+      ) : (
+        cell
+      )}
       <PanGestureHandler
         minDist={0}
         activeOffsetX={0}
