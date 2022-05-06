@@ -2,6 +2,16 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    album_artists (album_id, artist_id) {
+        album_id -> Int4,
+        artist_id -> Int4,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     albums (id) {
         id -> Int4,
         name -> Text,
@@ -210,6 +220,8 @@ table! {
     }
 }
 
+joinable!(album_artists -> albums (album_id));
+joinable!(album_artists -> artists (artist_id));
 joinable!(albums -> file_infos (cover_art_id));
 joinable!(artists -> file_infos (cover_art_id));
 joinable!(cues -> tracks (track_id));
@@ -229,6 +241,7 @@ joinable!(track_genres -> tracks (track_id));
 joinable!(tracks -> users (added_by));
 
 allow_tables_to_appear_in_same_query!(
+    album_artists,
     albums,
     artists,
     blobs,
