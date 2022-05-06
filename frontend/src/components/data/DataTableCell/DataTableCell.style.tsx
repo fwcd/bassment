@@ -9,6 +9,7 @@ export function useDataTableCellStyles() {
     },
     oddCell: {},
     cell: {
+      flexDirection: 'row',
       padding: styles.layout.smallSpace,
     },
     borderHandle: {

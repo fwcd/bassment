@@ -1,12 +1,13 @@
 import { DataTableCell } from '@bassment/components/data/DataTableCell';
 import { useDataTableRowStyles } from '@bassment/components/data/DataTableRow/DataTableRow.style';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 
 interface DataTableRowProps {
   headers: string[];
+  icons?: ReactNode[];
   item?: { [key: string]: string };
-  even: boolean;
+  even?: boolean;
   onPress?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
@@ -21,6 +22,7 @@ export function DataTableRow(props: DataTableRowProps) {
         <DataTableCell
           header={h}
           index={j}
+          icon={props.icons ? props.icons[j] : null}
           item={props.item}
           rowEven={props.even}
           onPress={() => {

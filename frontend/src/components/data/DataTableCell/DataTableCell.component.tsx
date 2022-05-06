@@ -1,6 +1,6 @@
 import { useDataTableCellStyles } from '@bassment/components/data/DataTableCell/DataTableCell.style';
 import { ThemedText } from '@bassment/components/display/ThemedText';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
@@ -8,9 +8,10 @@ import Animated from 'react-native-reanimated';
 interface DataTableCellProps {
   index: number;
   header: string;
+  icon?: ReactNode;
   item?: { [key: string]: string };
   onPress?: () => void;
-  rowEven: boolean;
+  rowEven?: boolean;
   widths: number[];
   setWidths?: (widths: number[]) => void;
 }
@@ -31,6 +32,7 @@ export function DataTableCell(props: DataTableCellProps) {
             ...(!props.rowEven && j % 2 === 0 ? [styles.evenCell] : []),
             { width: props.widths[j] },
           ]}>
+          {props.icon}
           <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
             {item ? item[props.header] : props.header}
           </ThemedText>
