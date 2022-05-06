@@ -21,10 +21,10 @@ interface DrawerTreeItemProps {
 
 export function DrawerTreeItem(props: DrawerTreeItemProps) {
   const [isExpanded, setExpanded] = useState(
-    props.isExpandedInitially || false,
+    props.isExpandedInitially ?? false,
   );
   const globalStyles = useStyles();
-  const styles = useDrawerTreeItemStyles(props.focused || false);
+  const styles = useDrawerTreeItemStyles(props.focused ?? false);
   return (
     <>
       <Pressable

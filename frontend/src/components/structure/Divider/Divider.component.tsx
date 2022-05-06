@@ -8,7 +8,7 @@ interface DividerProps {
 
 // TODO: Maybe move this to another folder, since this is a concrete implementation/extension
 export function Divider(props: DividerProps) {
-  const styles = useDividerStyles(props.vertical || false);
+  const styles = useDividerStyles(props.vertical ?? false);
 
   return <View style={styles.divider} />;
 }
