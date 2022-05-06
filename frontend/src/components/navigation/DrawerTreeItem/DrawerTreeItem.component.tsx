@@ -15,6 +15,7 @@ interface DrawerTreeItemProps {
   icon?: (params: IconProps) => ReactNode;
   onPress?: () => void;
   focused?: boolean;
+  isButton?: boolean;
   isExpandedInitially?: boolean;
   children?: ReactNode;
 }
@@ -24,7 +25,10 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
     props.isExpandedInitially ?? false,
   );
   const globalStyles = useStyles();
-  const styles = useDrawerTreeItemStyles(props.focused ?? false);
+  const styles = useDrawerTreeItemStyles(
+    props.focused ?? false,
+    props.isButton ?? false,
+  );
   return (
     <>
       <Pressable

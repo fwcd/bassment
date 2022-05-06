@@ -1,7 +1,7 @@
 import { useStyles } from '@bassment/styles';
 import { StyleSheet } from 'react-native';
 
-export function useDrawerTreeItemStyles(focused: boolean) {
+export function useDrawerTreeItemStyles(focused: boolean, isButton: boolean) {
   const styles = useStyles();
   return StyleSheet.create({
     item: {
@@ -9,7 +9,11 @@ export function useDrawerTreeItemStyles(focused: boolean) {
       flexDirection: 'row',
       padding: styles.layout.smallSpace,
       margin: styles.layout.tinySpace,
-      backgroundColor: focused ? styles.color.selection : 'transparent',
+      backgroundColor: focused
+        ? styles.color.selection
+        : isButton
+        ? styles.color.field
+        : 'transparent',
       borderRadius: styles.layout.borderRadius,
     },
     icons: {
@@ -23,7 +27,7 @@ export function useDrawerTreeItemStyles(focused: boolean) {
     },
     chevron: {
       width: styles.icon.size,
-      paddingEnd: styles.layout.smallSpace,
+      paddingEnd: styles.layout.largeSpace,
     },
   });
 }
