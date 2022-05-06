@@ -32,6 +32,8 @@ export function DataTableCell(props: DataTableCellProps) {
         </ThemedText>
       </View>
       <PanGestureHandler
+        minDist={0}
+        activeOffsetX={0}
         onGestureEvent={({ nativeEvent: event }) => {
           if (props.setWidths) {
             let widths = [...props.widths];
