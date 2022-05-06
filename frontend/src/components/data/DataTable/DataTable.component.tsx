@@ -1,7 +1,7 @@
 import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTable.style';
 import { DataTableRow } from '@bassment/components/data/DataTableRow';
 import React, { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 
 interface DataTableProps {
   headers: string[];
