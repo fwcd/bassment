@@ -13,7 +13,6 @@ export function useDataTableCellStyles() {
     },
     borderHandle: {
       width: 4,
-      backgroundColor: styles.color.background,
       cursor: 'col-resize',
     },
   });
