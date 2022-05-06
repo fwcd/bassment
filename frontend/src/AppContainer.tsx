@@ -1,6 +1,7 @@
 import { AppSidebar } from '@bassment/AppSidebar';
 import { useRandom } from '@bassment/hooks/useRandom';
 import { TracksScreen } from '@bassment/screens/Tracks';
+import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   DarkTheme,
@@ -14,14 +15,14 @@ const Drawer = createDrawerNavigator();
 
 export function AppContainer() {
   const dimensions = useWindowDimensions();
-  const scheme = useColorScheme();
+  const theme = useDerivedTheme();
 
   // FIXME: Remove this context and replace it with something proper
   const { value } = useRandom();
   console.log(value);
 
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer theme={theme}>
       <Drawer.Navigator
         initialRouteName="Test"
         drawerContent={AppSidebar}
