@@ -16,10 +16,5 @@ export function useDataTableCellStyles() {
       backgroundColor: styles.color.background,
       cursor: 'col-resize',
     },
-    activeBorderHandle: {
-      width: 4,
-      backgroundColor: styles.color.primary,
-      cursor: 'col-resize',
-    },
   });
 }

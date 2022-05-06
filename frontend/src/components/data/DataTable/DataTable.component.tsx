@@ -15,7 +15,6 @@ export function DataTable(props: DataTableProps) {
   const [widths, setWidths] = useState(
     props.initialWidths ?? props.headers.map(_ => 200),
   );
-  const [activeHandle, setActiveHandle] = useState<number | null>(null);
 
   return (
     // TODO: Horizontal scroll?
@@ -26,8 +25,6 @@ export function DataTable(props: DataTableProps) {
         <DataTableRow
           headers={props.headers}
           even
-          activeHandle={activeHandle}
-          setActiveHandle={setActiveHandle}
           widths={widths}
           setWidths={setWidths}
         />
@@ -37,8 +34,6 @@ export function DataTable(props: DataTableProps) {
           headers={props.headers}
           even={i % 2 === 1}
           item={item}
-          activeHandle={activeHandle}
-          setActiveHandle={setActiveHandle}
           widths={widths}
           setWidths={setWidths}
         />

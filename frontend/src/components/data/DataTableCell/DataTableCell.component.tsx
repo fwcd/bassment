@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { Hoverable } from 'react-native-web-hooks';
 
 interface DataTableCellProps {
   header: string;
@@ -13,8 +12,6 @@ interface DataTableCellProps {
   rowEven: boolean;
   widths: number[];
   setWidths?: (widths: number[]) => void;
-  activeHandle?: number | null;
-  setActiveHandle?: (index: number | null) => void;
 }
 
 export function DataTableCell(props: DataTableCellProps) {
@@ -34,39 +31,19 @@ export function DataTableCell(props: DataTableCellProps) {
           {item ? item[props.header] : props.header}
         </ThemedText>
       </View>
-      <Hoverable
-        onHoverIn={() => {
-          if (props.setActiveHandle) {
-            props.setActiveHandle(j);
+      <PanGestureHandler
+        onGestureEvent={({ nativeEvent: event }) => {
+          if (props.setWidths) {
+            let widths = [...props.widths];
+            widths[j] = startWidth + event.translationX;
+            props.setWidths(widths);
           }
         }}
-        onHoverOut={() => {
-          if (props.setActiveHandle) {
-            props.setActiveHandle(null);
-          }
+        onEnded={() => {
+          setStartWidth(props.widths[j]);
         }}>
-        {() => (
-          <PanGestureHandler
-            onGestureEvent={({ nativeEvent: event }) => {
-              if (props.setWidths) {
-                let widths = [...props.widths];
-                widths[j] = startWidth + event.translationX;
-                props.setWidths(widths);
-              }
-            }}
-            onEnded={() => {
-              setStartWidth(props.widths[j]);
-            }}>
-            <Animated.View
-              style={
-                props.activeHandle === j
-                  ? styles.activeBorderHandle
-                  : styles.borderHandle
-              }
-            />
-          </PanGestureHandler>
-        )}
-      </Hoverable>
+        <Animated.View style={styles.borderHandle} />
+      </PanGestureHandler>
     </>
   );
 }

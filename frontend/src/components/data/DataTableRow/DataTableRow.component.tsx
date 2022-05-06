@@ -8,8 +8,6 @@ interface DataTableRowProps {
   headers: string[];
   widths: number[];
   setWidths?: (widths: number[]) => void;
-  activeHandle?: number | null;
-  setActiveHandle?: (index: number | null) => void;
   item?: { [key: string]: string };
 }
 
@@ -26,8 +24,6 @@ export function DataTableRow(props: DataTableRowProps) {
           rowEven={props.even}
           widths={props.widths}
           setWidths={props.setWidths}
-          activeHandle={props.activeHandle}
-          setActiveHandle={props.setActiveHandle}
         />
       ))}
     </View>
