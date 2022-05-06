@@ -9,9 +9,8 @@ export function useDrawerTreeItemStyles(focused: boolean) {
       flexDirection: 'row',
       padding: styles.layout.smallSpace,
       margin: styles.layout.tinySpace,
-      marginHorizontal: styles.layout.smallSpace,
       backgroundColor: focused ? styles.color.selection : 'transparent',
-      borderRadius: 5,
+      borderRadius: styles.layout.borderRadius,
     },
     icons: {
       flexDirection: 'row',

@@ -1,17 +1,26 @@
 import { SearchBar } from '@bassment/components/input/SearchBar';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
+import { useStyles } from '@bassment/styles';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const routeName = props.state.routeNames[props.state.index];
+  const globalStyles = useStyles();
+  const styles = StyleSheet.create({
+    sidebar: {
+      marginHorizontal: globalStyles.layout.smallSpace,
+    },
+  });
+
   return (
-    <DrawerContentScrollView>
+    <DrawerContentScrollView style={styles.sidebar}>
       <SearchBar />
       <DrawerTreeItem
         label="Tracks"
