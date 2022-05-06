@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname $0)"
+source helpers/use-db.sh
+
+psql "$DATABASE_URL" < data/sample-data.sql
