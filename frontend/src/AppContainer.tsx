@@ -16,9 +16,10 @@ export function AppContainer() {
   const dimensions = useWindowDimensions();
   const scheme = useColorScheme();
 
-  // usually, you would do something interesting with this
+  // FIXME: Remove this context and replace it with something proper
   const { value } = useRandom();
   console.log(value);
+
   return (
     <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer.Navigator
