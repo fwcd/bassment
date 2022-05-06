@@ -16,6 +16,11 @@ enum Order {
   Ascending,
 }
 
+interface OrderedColumn {
+  index: number;
+  order: Order;
+}
+
 export function DataTable(props: DataTableProps) {
   const globalStyles = useStyles();
   const styles = useDataTableStyles();
@@ -23,8 +28,8 @@ export function DataTable(props: DataTableProps) {
   const [widths, setWidths] = useState(
     props.initialWidths ?? props.headers.map(_ => 200),
   );
-  const [orders, setOrders] = useState<(Order | null)[]>(
-    props.headers.map(_ => null),
+  const [orderedColumn, setOrderedColumn] = useState<OrderedColumn | null>(
+    null,
   );
 
   return (
@@ -36,40 +41,42 @@ export function DataTable(props: DataTableProps) {
         <DataTableRow
           headers={props.headers}
           even
-          icons={orders.map(o => {
-            if (o !== null) {
-              let name: string;
-              switch (o) {
-                case Order.Descending:
-                  name = 'chevron-down-outline';
-                  break;
-                case Order.Ascending:
-                  name = 'chevron-up-outline';
-                  break;
-              }
-              return (
-                <Icon
-                  name={name}
-                  size={globalStyles.icon.size}
-                  color={globalStyles.icon.color}
-                />
-              );
-            }
-            return null;
-          })}
+          icons={
+            orderedColumn
+              ? Array.from({ length: props.headers.length }, (_, i) => {
+                  if (i === orderedColumn.index) {
+                    let name: string;
+                    switch (orderedColumn.order) {
+                      case Order.Descending:
+                        name = 'chevron-down-outline';
+                        break;
+                      case Order.Ascending:
+                        name = 'chevron-up-outline';
+                        break;
+                    }
+                    return (
+                      <Icon
+                        name={name}
+                        size={globalStyles.icon.size}
+                        color={globalStyles.icon.color}
+                      />
+                    );
+                  }
+                  return null;
+                })
+              : undefined
+          }
           onPress={j => {
-            const current = orders[j];
-            let newOrders = [...orders];
-
-            if (current === Order.Descending) {
-              newOrders[j] = Order.Ascending;
-            } else if (current === Order.Ascending) {
-              newOrders[j] = null;
+            if (orderedColumn && orderedColumn.index === j) {
+              const order = orderedColumn.order;
+              if (order === Order.Descending) {
+                setOrderedColumn({ ...orderedColumn, order: Order.Ascending });
+              } else if (order === Order.Ascending) {
+                setOrderedColumn(null);
+              }
             } else {
-              newOrders[j] = Order.Descending;
+              setOrderedColumn({ index: j, order: Order.Descending });
             }
-
-            setOrders(newOrders);
           }}
           widths={widths}
           setWidths={setWidths}
