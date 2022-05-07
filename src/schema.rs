@@ -123,7 +123,6 @@ table! {
 
     settings (id) {
         id -> Bool,
-        allow_unauthenticated_access -> Bool,
         file_storage_base_directory -> Text,
     }
 }
