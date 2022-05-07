@@ -28,6 +28,14 @@ export interface ApiTrack {
   keys?: number | null;
 }
 
+// Corresponds to the backend's crate::models::playlist::Artist
+export interface ApiArtist {
+  id?: number;
+  name?: string;
+  cover_art_id?: number | null;
+  description?: string | null;
+}
+
 // Corresponds to the backend's crate::models::playlist::Playlist
 export interface ApiPlaylist {
   id?: number;
@@ -51,8 +59,12 @@ export function fromApiTrack(track: ApiTrack): Track {
     year: track.year,
     comment: track.comment,
     durationMs: track.duration_ms,
+    // TODO: Artists (and other relations)?
   };
 }
+
+// TODO: Should we do this 'unflattening' on the backend and return hierarchial data via the API?
+// TODO: Should we camel-case the API and just merge API and model structures?
 
 /** Converts a list of API playlists to (hierarchial) model playlists. */
 export function fromApiPlaylists(
