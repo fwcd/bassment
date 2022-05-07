@@ -2,6 +2,7 @@ mod albums;
 mod artists;
 mod files;
 mod genres;
+mod playlists;
 mod settings;
 mod tracks;
 mod users;
@@ -18,6 +19,7 @@ pub fn config(cfg: &mut web::ServiceConfig, allow_unauthenticated_access: bool) 
             .configure(artists::config)
             .configure(files::config)
             .configure(genres::config)
+            .configure(playlists::config)
             .configure(settings::config)
             .configure(tracks::config)
             .configure(users::config)
