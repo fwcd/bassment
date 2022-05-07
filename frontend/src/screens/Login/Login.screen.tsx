@@ -21,6 +21,8 @@ export function LoginScreen() {
     }
   }, [auth, username, password]);
 
+  // TODO: Add KeyboardAvoidingView to make this look at bit nicer on mobile
+
   return (
     <View style={styles.login}>
       <ThemedText style={[styles.title, styles.item]}>Bassment</ThemedText>
