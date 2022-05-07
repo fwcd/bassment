@@ -40,7 +40,10 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
         })}>
         <View style={styles.item}>
           <View style={styles.icons}>
-            {props.children ? (
+            {props.children &&
+            (Array.isArray(props.children)
+              ? props.children.length > 0
+              : true) ? (
               <ThemedIcon
                 name={
                   isExpanded
