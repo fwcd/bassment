@@ -6,7 +6,7 @@ interface AuthContextState {
   token?: string;
 }
 
-interface AuthContextValue {
+export interface AuthContextValue {
   token?: string;
 
   logIn(username: string, password: string): Promise<void>;
