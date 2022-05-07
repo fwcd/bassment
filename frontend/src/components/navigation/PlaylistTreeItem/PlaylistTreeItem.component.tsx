@@ -1,0 +1,27 @@
+import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
+import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
+import { Playlist } from '@bassment/models/Playlist';
+import { PlaylistKind } from '@bassment/models/PlaylistKind';
+import React from 'react';
+
+interface PlaylistTreeItemProps {
+  playlist: Playlist;
+}
+
+export function PlaylistTreeItem({ playlist }: PlaylistTreeItemProps) {
+  return (
+    <DrawerTreeItem
+      label={playlist.name ?? 'Unnamed Playlist'}
+      icon={({ size, color }) => (
+        <PlaylistKindIcon
+          kind={playlist.kind ?? PlaylistKind.Playlist}
+          size={size}
+          color={color}
+        />
+      )}>
+      {playlist.children.map(child => (
+        <PlaylistTreeItem playlist={child} />
+      ))}
+    </DrawerTreeItem>
+  );
+}
