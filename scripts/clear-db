@@ -6,6 +6,11 @@ source helpers/use-db.sh
 source helpers/confirm.sh
 cd ..
 
+if [[ ! "$DATABASE_URL" =~ "//localhost/" ]]; then
+  echo "Clearing a non-local database is not supported (for safety reasons, modify this script or do it manually if you are absolutely sure)!"
+  exit 1
+fi
+
 echo "You are about to DELETE ALL CONTENT in the database. This is IRREVERSIBLE."
 confirm "Are you sure?"
 
