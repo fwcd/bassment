@@ -1,13 +1,16 @@
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { SearchBar } from '@bassment/components/input/SearchBar';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
+import { PlaylistTreeItem } from '@bassment/components/navigation/PlaylistTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
+import { ApiContext } from '@bassment/contexts/Api';
+import { Playlist } from '@bassment/models/Playlist';
 import { useStyles } from '@bassment/styles';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import React from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
@@ -18,6 +21,26 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       marginHorizontal: globalStyles.layout.smallSpace,
     },
   });
+
+  const api = useContext(ApiContext);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+
+  const updatePlaylists = useCallback(async () => {
+    setPlaylists(await api.getPlaylists());
+  }, [api]);
+
+  const addPlaylist = useCallback(
+    async (playlist: Playlist) => {
+      // FIXME: Add playlist via API
+      await updatePlaylists();
+    },
+    [updatePlaylists],
+  );
+
+  // Update the playlists on the initial render
+  useEffect(() => {
+    updatePlaylists();
+  }, [updatePlaylists]);
 
   return (
     <DrawerContentScrollView style={styles.sidebar}>
@@ -66,38 +89,9 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         )}
       />
       <Divider />
-      <DrawerTreeItem
-        label="Test 1"
-        isExpandedInitially
-        icon={({ size, color }) => (
-          <ThemedIcon name="folder-outline" size={size} color={color} />
-        )}>
-        <DrawerTreeItem
-          label="Stuff"
-          isExpandedInitially
-          icon={({ size, color }) => (
-            <ThemedIcon name="folder-outline" size={size} color={color} />
-          )}>
-          <DrawerTreeItem
-            label="Test 1"
-            icon={({ size, color }) => (
-              <ThemedIcon name="list-outline" size={size} color={color} />
-            )}
-          />
-          <DrawerTreeItem
-            label="Test 2"
-            icon={({ size, color }) => (
-              <ThemedIcon name="list-outline" size={size} color={color} />
-            )}
-          />
-          <DrawerTreeItem
-            label="Some Crate"
-            icon={({ size, color }) => (
-              <ThemedIcon name="file-tray-outline" size={size} color={color} />
-            )}
-          />
-        </DrawerTreeItem>
-      </DrawerTreeItem>
+      {playlists.map(p => (
+        <PlaylistTreeItem playlist={p} />
+      ))}
       <Divider />
       <DrawerTreeItem
         label="Add Playlist"

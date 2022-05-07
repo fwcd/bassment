@@ -1,4 +1,10 @@
 import { networkConstants } from '@bassment/constants';
+import {
+  ApiPlaylist,
+  ApiTrack,
+  fromApiPlaylists,
+  fromApiTrack,
+} from '@bassment/contexts/Api/Api.protocol';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { Playlist } from '@bassment/models/Playlist';
 import { Track } from '@bassment/models/Track';
@@ -19,7 +25,7 @@ export interface ApiContextValue {
   getPlaylists(): Promise<Playlist[]>;
 }
 
-const ApiContext = createContext<ApiContextValue>({
+export const ApiContext = createContext<ApiContextValue>({
   async getTracks(): Promise<Track[]> {
     console.warn('No API context available for getting tracks!');
     return [];
@@ -43,6 +49,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       const response = await fetch(`${auth.serverUrl}/api/v1${endpoint}`, {
         method,
         headers: {
+          Authorization: `Bearer ${auth.token!}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
           'User-Agent': networkConstants.userAgent,
@@ -56,16 +63,18 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       }
       return await response.json();
     },
-    [auth.serverUrl],
+    [auth.serverUrl, auth.token],
   );
 
   const value: ApiContextValue = {
     async getTracks(): Promise<Track[]> {
-      return await apiRequest('GET', '/tracks');
+      const apiTracks: ApiTrack[] = await apiRequest('GET', '/tracks');
+      return apiTracks.map(fromApiTrack);
     },
 
     async getPlaylists(): Promise<Playlist[]> {
-      return await apiRequest('GET', '/playlists');
+      const apiPlaylists: ApiPlaylist[] = await apiRequest('GET', '/playlists');
+      return fromApiPlaylists(apiPlaylists);
     },
   };
 
