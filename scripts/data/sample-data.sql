@@ -9,6 +9,7 @@ DECLARE come_together_id INTEGER;
 DECLARE jailhouse_rock_id INTEGER;
 DECLARE we_will_rock_you_id INTEGER;
 DECLARE another_one_bites_the_dust_id INTEGER;
+DECLARE rock_id INTEGER;
 DECLARE folder_id INTEGER;
 DECLARE rock_n_roll_crate_id INTEGER;
 DECLARE rock_playlist_id INTEGER;
@@ -24,6 +25,8 @@ BEGIN
     INSERT INTO album_artists (album_id, artist_id) VALUES (news_of_the_world_id, queen_id);
     INSERT INTO album_artists (album_id, artist_id) VALUES (the_game_id, queen_id);
 
+    INSERT INTO genres (name) VALUES ('Rock') RETURNING id INTO rock_id;
+
     INSERT INTO tracks (name) VALUES ('Come Together') RETURNING id INTO come_together_id;
     INSERT INTO tracks (name) VALUES ('Jailhouse Rock') RETURNING id INTO jailhouse_rock_id;
     INSERT INTO tracks (name) VALUES ('We Will Rock You') RETURNING id INTO we_will_rock_you_id;
@@ -32,6 +35,9 @@ BEGIN
     INSERT INTO track_artists (track_id, artist_id) VALUES (jailhouse_rock_id, elvis_id);
     INSERT INTO track_artists (track_id, artist_id) VALUES (we_will_rock_you_id, queen_id);
     INSERT INTO track_artists (track_id, artist_id) VALUES (another_one_bites_the_dust_id, queen_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (jailhouse_rock_id, rock_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (we_will_rock_you_id, rock_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (another_one_bites_the_dust_id, rock_id);
 
     INSERT INTO playlists (name, kind, position) VALUES ('Stuff', 'folder', 1) RETURNING id INTO folder_id;
     INSERT INTO playlists (name, kind, position) VALUES ('50s', 'crate', 1) RETURNING id INTO rock_n_roll_crate_id;
