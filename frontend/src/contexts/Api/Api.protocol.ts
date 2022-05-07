@@ -60,7 +60,9 @@ export function fromApiPlaylists(
   parent?: ApiPlaylist,
 ): Playlist[] {
   return playlists
-    .filter(({ parent_id }) => parent_id === parent?.id)
+    .filter(
+      ({ parent_id }) => (!parent_id && !parent) || parent_id === parent?.id,
+    )
     .map(p => ({
       id: p.id,
       name: p.name,
