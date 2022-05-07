@@ -40,7 +40,7 @@ BEGIN
     INSERT INTO track_genres (track_id, genre_id) VALUES (another_one_bites_the_dust_id, rock_id);
 
     INSERT INTO playlists (name, kind, position) VALUES ('Stuff', 'folder', 1) RETURNING id INTO folder_id;
-    INSERT INTO playlists (name, kind, position) VALUES ('50s', 'crate', 1) RETURNING id INTO rock_n_roll_crate_id;
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('50s', 'crate', 1, folder_id) RETURNING id INTO rock_n_roll_crate_id;
     INSERT INTO playlists (name, position) VALUES ('Rock', 2) RETURNING id INTO rock_playlist_id;
     INSERT INTO playlist_tracks (playlist_id, track_id) VALUES (rock_n_roll_crate_id, jailhouse_rock_id);
     INSERT INTO playlist_tracks (playlist_id, track_id, track_number) VALUES (rock_playlist_id, another_one_bites_the_dust_id, 1);
