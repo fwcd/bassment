@@ -10,7 +10,8 @@ DECLARE jailhouse_rock_id INTEGER;
 DECLARE we_will_rock_you_id INTEGER;
 DECLARE another_one_bites_the_dust_id INTEGER;
 DECLARE rock_id INTEGER;
-DECLARE folder_id INTEGER;
+DECLARE stuff_id INTEGER;
+DECLARE set_logs_id INTEGER;
 DECLARE rock_n_roll_crate_id INTEGER;
 DECLARE rock_playlist_id INTEGER;
 BEGIN
@@ -39,9 +40,16 @@ BEGIN
     INSERT INTO track_genres (track_id, genre_id) VALUES (we_will_rock_you_id, rock_id);
     INSERT INTO track_genres (track_id, genre_id) VALUES (another_one_bites_the_dust_id, rock_id);
 
-    INSERT INTO playlists (name, kind, position) VALUES ('Stuff', 'folder', 1) RETURNING id INTO folder_id;
-    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('50s', 'crate', 1, folder_id) RETURNING id INTO rock_n_roll_crate_id;
-    INSERT INTO playlists (name, position) VALUES ('Rock', 2) RETURNING id INTO rock_playlist_id;
+    INSERT INTO playlists (name, kind, position) VALUES ('Stuff', 'folder', 1) RETURNING id INTO stuff_id;
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('50s', 'crate', 1, stuff_id) RETURNING id INTO rock_n_roll_crate_id;
+    INSERT INTO playlists (name, position) VALUES ('Rock', 3) RETURNING id INTO rock_playlist_id;
+    INSERT INTO playlists (name, position) VALUES ('Pop', 2);
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('80s', 'crate', 2, stuff_id);
+    INSERT INTO playlists (name, kind, position) VALUES ('Set Logs', 'folder', 4) RETURNING id INTO set_logs_id;
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('2022-01-01', 'set_log', 1, set_logs_id);
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('2022-02-04', 'set_log', 2, set_logs_id);
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('2022-02-05', 'set_log', 3, set_logs_id);
+    INSERT INTO playlists (name, kind, position, parent_id) VALUES ('2022-02-05', 'set_log', 4, set_logs_id);
     INSERT INTO playlist_tracks (playlist_id, track_id) VALUES (rock_n_roll_crate_id, jailhouse_rock_id);
     INSERT INTO playlist_tracks (playlist_id, track_id, track_number) VALUES (rock_playlist_id, another_one_bites_the_dust_id, 1);
     INSERT INTO playlist_tracks (playlist_id, track_id, track_number) VALUES (rock_playlist_id, jailhouse_rock_id, 2);
