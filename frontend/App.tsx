@@ -1,4 +1,5 @@
 import { AppContainer } from '@bassment/AppContainer';
+import { AuthContextProvider } from '@bassment/contexts/Auth';
 import React from 'react';
 import { StatusBar, useWindowDimensions, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -10,7 +11,9 @@ export function App() {
     <SafeAreaProvider>
       <View style={{ height: dimensions.height }}>
         <StatusBar />
-        <AppContainer />
+        <AuthContextProvider>
+          <AppContainer />
+        </AuthContextProvider>
       </View>
     </SafeAreaProvider>
   );
