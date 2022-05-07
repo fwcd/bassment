@@ -5,6 +5,7 @@ export function useThemedTextStyles() {
   const styles = useStyles();
   return StyleSheet.create({
     themedText: {
+      fontSize: styles.text.fontSize,
       color: styles.text.color,
     },
   });
