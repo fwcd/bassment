@@ -10,7 +10,7 @@ export function LoginScreen() {
     <View style={styles.login}>
       <ThemedText style={styles.title}>Bassment</ThemedText>
       <ThemedTextField placeholder="Username" />
-      <ThemedTextField placeholder="Password" />
+      <ThemedTextField placeholder="Password" secureTextEntry />
     </View>
   );
 }
