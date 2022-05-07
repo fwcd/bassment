@@ -1,4 +1,5 @@
 import { networkConstants } from '@bassment/constants';
+import { AuthTokenResponse } from '@bassment/contexts/Auth/Auth.protocol';
 import React, { createContext, ReactNode, useCallback, useState } from 'react';
 
 interface AuthContextState {
@@ -10,10 +11,6 @@ export interface AuthContextValue {
   token?: string;
 
   logIn(username: string, password: string): Promise<void>;
-}
-
-interface AuthTokenResponse {
-  token: string;
 }
 
 interface AuthContextProviderProps {
