@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 
 export function useTextStyles() {
   const theme = useTheme();
+  const scale = Platform.OS === 'web' ? 1 : 1.2;
   return {
-    fontSize: Platform.OS === 'web' ? 13 : 16,
+    headerSize: 26 * scale,
+    fontSize: 13 * scale,
     color: theme.colors.text,
   };
 }
