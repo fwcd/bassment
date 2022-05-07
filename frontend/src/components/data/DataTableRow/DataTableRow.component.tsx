@@ -18,7 +18,13 @@ export function DataTableRow(props: DataTableRowProps) {
   const onPress = props.onPress;
 
   return (
-    <View style={[styles.row, props.even ? styles.evenRow : styles.oddRow]}>
+    <View
+      style={[
+        styles.row,
+        ...(props.item
+          ? [props.even ? styles.evenRow : styles.oddRow]
+          : [styles.headerRow]),
+      ]}>
       {props.headers.map((h, j) => (
         <DataTableCell
           header={h}

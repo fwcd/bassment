@@ -8,8 +8,11 @@ export function useDataTableRowStyles() {
       flex: 1,
       flexDirection: 'row',
     },
-    evenRow: {
+    headerRow: {
       backgroundColor: styles.color.field,
+    },
+    evenRow: {
+      backgroundColor: styles.color.secondaryField,
     },
     oddRow: {},
   });
