@@ -8,6 +8,7 @@ interface AuthContextState {
 }
 
 export interface AuthContextValue {
+  serverUrl: string;
   token?: string;
 
   logIn(username: string, password: string): Promise<void>;
@@ -18,6 +19,8 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContext = createContext<AuthContextValue>({
+  serverUrl: networkConstants.defaultServerUrl,
+
   async logIn(): Promise<void> {
     console.warn('No auth context available, not logging in!');
   },
@@ -51,9 +54,8 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
   );
 
   const value: AuthContextValue = {
-    get token() {
-      return state.token;
-    },
+    serverUrl: state.serverUrl,
+    token: state.token,
 
     async logIn(username: string, password: string): Promise<void> {
       const response: AuthTokenResponse = await authRequest('POST', '/login', {
