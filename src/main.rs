@@ -15,7 +15,8 @@ mod utils;
 
 use std::{io, env, path::PathBuf};
 
-use actix_web::{web, HttpServer, App};
+use actix_cors::Cors;
+use actix_web::{web, HttpServer, App, middleware::Condition};
 use clap::Parser;
 use diesel::{PgConnection, r2d2::{ConnectionManager, Pool}};
 use diesel_migrations::embed_migrations;
@@ -32,6 +33,11 @@ struct Args {
     /// Only serves the API/auth endpoints (without the frontend).
     #[clap(long)]
     api_only: bool,
+    /// Allows CORS requests from localhost:8080
+    /// (useful for letting the webpack-dev-server from the frontend
+    /// make API requests to a separately started backend server)
+    #[clap(long)]
+    local_cors: bool,
     /// The path to the built frontend to serve.
     #[clap(long, default_value = "./frontend/dist")]
     frontend_path: String,
@@ -89,8 +95,10 @@ async fn main() -> io::Result<()> {
         let frontend_path = Some(args.frontend_path.clone())
             .filter(|_| !args.api_only)
             .map(PathBuf::from);
+
         App::new()
             .wrap(TracingLogger::default())
+            .wrap(Condition::new(args.local_cors, Cors::default().supports_credentials().allowed_origin("localhost:8080")))
             .app_data(web::Data::new(pool.clone()))
             .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref())))
     })
