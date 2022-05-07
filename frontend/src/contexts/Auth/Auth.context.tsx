@@ -1,6 +1,8 @@
-import React, { createContext, ReactNode, useState } from 'react';
+import { networkConstants } from '@bassment/constants';
+import React, { createContext, ReactNode, useCallback, useState } from 'react';
 
 interface AuthContextState {
+  serverUrl: string;
   token?: string;
 }
 
@@ -8,6 +10,10 @@ interface AuthContextValue {
   token?: string;
 
   logIn(username: string, password: string): Promise<void>;
+}
+
+interface AuthTokenResponse {
+  token: string;
 }
 
 interface AuthContextProviderProps {
@@ -21,7 +27,31 @@ export const AuthContext = createContext<AuthContextValue>({
 });
 
 export function AuthContextProvider(props: AuthContextProviderProps) {
-  const [state, setState] = useState<AuthContextState>({});
+  const [state, setState] = useState<AuthContextState>({
+    // TODO: Make this customizable
+    serverUrl: networkConstants.defaultServerUrl,
+  });
+
+  const authRequest = useCallback(
+    async (method: string, endpoint: string, body: any) => {
+      const response = await fetch(`${state.serverUrl}/auth/v1${endpoint}`, {
+        method,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'User-Agent': networkConstants.userAgent,
+        },
+        body: JSON.stringify(body),
+      });
+      if (response.status >= 400) {
+        throw Error(
+          `Auth request failed with status ${response.status} ${response.statusText}`,
+        );
+      }
+      return await response.json();
+    },
+    [state.serverUrl],
+  );
 
   const value: AuthContextValue = {
     get token() {
@@ -29,7 +59,11 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
     },
 
     async logIn(username: string, password: string): Promise<void> {
-      // TODO
+      const response: AuthTokenResponse = await authRequest('POST', '/login', {
+        username,
+        password,
+      });
+      setState({ ...state, token: response.token });
     },
   };
 
