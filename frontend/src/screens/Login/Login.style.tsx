@@ -13,6 +13,11 @@ export function useLoginStyles() {
     item: {
       marginVertical: styles.layout.smallSpace,
     },
+    failed: {
+      paddingVertical: styles.layout.smallSpace,
+      paddingHorizontal: styles.layout.space,
+      backgroundColor: 'rgba(255, 69, 56, 0.2)',
+    },
     subItem: {
       marginVertical: styles.layout.smallSpace,
     },

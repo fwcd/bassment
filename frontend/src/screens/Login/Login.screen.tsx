@@ -9,16 +9,26 @@ import { View } from 'react-native';
 export function LoginScreen() {
   const styles = useLoginStyles();
   const auth = useContext(AuthContext);
+  const [failed, setFailed] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const signIn = useCallback(() => {
-    auth.logIn(username, password);
+  const signIn = useCallback(async () => {
+    try {
+      await auth.logIn(username, password);
+    } catch {
+      setFailed(true);
+    }
   }, [auth, username, password]);
 
   return (
     <View style={styles.login}>
       <ThemedText style={[styles.title, styles.item]}>Bassment</ThemedText>
+      {failed ? (
+        <ThemedText style={[styles.item, styles.failed]}>
+          Login failed!
+        </ThemedText>
+      ) : null}
       <View style={styles.item}>
         <View style={styles.subItem}>
           <ThemedTextField
