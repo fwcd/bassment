@@ -42,6 +42,9 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     updatePlaylists();
   }, [updatePlaylists]);
 
+  // TODO: Query artists, albums and genres from the API and render them (instead of the current dummy values)
+  // TODO: Link to TracksScreens with corresponding params for each item (e.g. passing the playlist/album/artist id)
+
   return (
     <DrawerContentScrollView style={styles.sidebar}>
       <SearchBar />
