@@ -10,6 +10,12 @@ export function useLoginStyles() {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    item: {
+      marginVertical: styles.layout.smallSpace,
+    },
+    subItem: {
+      marginVertical: styles.layout.smallSpace,
+    },
     title: {
       fontSize: styles.text.headerSize,
     },

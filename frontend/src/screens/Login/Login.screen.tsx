@@ -8,9 +8,15 @@ export function LoginScreen() {
   const styles = useLoginStyles();
   return (
     <View style={styles.login}>
-      <ThemedText style={styles.title}>Bassment</ThemedText>
-      <ThemedTextField placeholder="Username" />
-      <ThemedTextField placeholder="Password" secureTextEntry />
+      <ThemedText style={[styles.title, styles.item]}>Bassment</ThemedText>
+      <View style={styles.item}>
+        <View style={styles.subItem}>
+          <ThemedTextField placeholder="Username" />
+        </View>
+        <View style={styles.subItem}>
+          <ThemedTextField placeholder="Password" secureTextEntry />
+        </View>
+      </View>
     </View>
   );
 }
