@@ -13,6 +13,9 @@ export function useLoginStyles() {
     item: {
       marginVertical: styles.layout.smallSpace,
     },
+    field: {
+      width: 200,
+    },
     failed: {
       paddingVertical: styles.layout.smallSpace,
       paddingHorizontal: styles.layout.space,

@@ -6,5 +6,5 @@ interface ThemedTextFieldProps extends TextInputProps {}
 
 export function ThemedTextField(props: ThemedTextFieldProps) {
   const styles = useThemedTextFieldStyles();
-  return <TextInput style={styles.textField} {...props} />;
+  return <TextInput {...props} style={[styles.textField, props.style]} />;
 }

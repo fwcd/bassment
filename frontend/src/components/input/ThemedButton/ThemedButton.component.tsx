@@ -9,11 +9,11 @@ export function ThemedButton(props: ThemedButtonProps) {
   const styles = useThemedButtonStyles();
   return (
     <Pressable
+      {...props}
       style={({ pressed }) => [
         styles.button,
         ...(pressed ? [styles.pressed] : []),
-      ]}
-      {...props}>
+      ]}>
       <ThemedText selectable={false}>{props.children}</ThemedText>
     </Pressable>
   );

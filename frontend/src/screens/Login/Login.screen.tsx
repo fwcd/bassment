@@ -33,8 +33,11 @@ export function LoginScreen() {
         <View style={styles.subItem}>
           <ThemedTextField
             placeholder="Username"
+            autoCapitalize="none"
+            autoComplete="username"
             value={username}
             onChangeText={setUsername}
+            style={styles.field}
           />
         </View>
         <View style={styles.subItem}>
@@ -44,6 +47,7 @@ export function LoginScreen() {
             value={password}
             onChangeText={setPassword}
             onSubmitEditing={signIn}
+            style={styles.field}
           />
         </View>
       </View>
