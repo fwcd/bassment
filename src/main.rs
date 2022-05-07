@@ -33,11 +33,12 @@ struct Args {
     /// Only serves the API/auth endpoints (without the frontend).
     #[clap(long)]
     api_only: bool,
-    /// Allows CORS requests from localhost:8080
-    /// (useful for letting the webpack-dev-server from the frontend
-    /// make API requests to a separately started backend server)
+    /// Allows CORS requests very permissively.
+    /// Useful for letting the webpack-dev-server from the frontend
+    /// make API requests to a separately started backend server.
+    /// Don't use this in production!
     #[clap(long)]
-    local_cors: bool,
+    allow_cors: bool,
     /// The path to the built frontend to serve.
     #[clap(long, default_value = "./frontend/dist")]
     frontend_path: String,
@@ -98,7 +99,7 @@ async fn main() -> io::Result<()> {
 
         App::new()
             .wrap(TracingLogger::default())
-            .wrap(Condition::new(args.local_cors, Cors::default().supports_credentials().allowed_origin("localhost:8080")))
+            .wrap(Condition::new(args.allow_cors, Cors::permissive()))
             .app_data(web::Data::new(pool.clone()))
             .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref())))
     })
