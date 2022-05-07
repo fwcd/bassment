@@ -39,6 +39,11 @@ struct Args {
     /// Don't use this in production!
     #[clap(long)]
     allow_cors: bool,
+    /// Disables authentication for all routes.
+    /// Useful for development and quick prototyping.
+    /// Don't use this in production!
+    #[clap(long)]
+    allow_unauthenticated_access: bool,
     /// The path to the built frontend to serve.
     #[clap(long, default_value = "./frontend/dist")]
     frontend_path: String,
@@ -101,7 +106,7 @@ async fn main() -> io::Result<()> {
             .wrap(TracingLogger::default())
             .wrap(Condition::new(args.allow_cors, Cors::permissive()))
             .app_data(web::Data::new(pool.clone()))
-            .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref())))
+            .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref()), args.allow_unauthenticated_access))
     })
     .bind((args.host, args.port))?
     .run()

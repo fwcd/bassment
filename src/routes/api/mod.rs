@@ -6,12 +6,12 @@ mod settings;
 mod tracks;
 mod users;
 
-use actix_web::web;
+use actix_web::{web, middleware::Condition};
 use actix_web_httpauth::middleware::HttpAuthentication;
 
 use crate::middleware::auth::authenticate_user;
 
-pub fn config(cfg: &mut web::ServiceConfig) {
+pub fn config(cfg: &mut web::ServiceConfig, allow_unauthenticated_access: bool) {
     cfg.service(
         web::scope("/api/v1")
             .configure(albums::config)
@@ -21,6 +21,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .configure(settings::config)
             .configure(tracks::config)
             .configure(users::config)
-            .wrap(HttpAuthentication::bearer(authenticate_user))
+            .wrap(Condition::new(!allow_unauthenticated_access, HttpAuthentication::bearer(authenticate_user)))
     );
 }
