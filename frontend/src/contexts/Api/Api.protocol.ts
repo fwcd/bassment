@@ -1,4 +1,6 @@
+import { Playlist } from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
+import { Track } from '@bassment/models/Track';
 
 interface ApiTimestamp {
   // TODO: Type these
@@ -40,3 +42,33 @@ export interface ApiPlaylist {
 }
 
 // TODO: Other API structures
+
+/** Converts an API track to a model track. */
+export function fromApiTrack(track: ApiTrack): Track {
+  return {
+    id: track.id,
+    name: track.name,
+    year: track.year,
+    comment: track.comment,
+    durationMs: track.duration_ms,
+  };
+}
+
+/** Converts a list of API playlists to (hierarchial) model playlists. */
+export function fromApiPlaylists(
+  playlists: ApiPlaylist[],
+  parent?: ApiPlaylist,
+): Playlist[] {
+  return playlists
+    .filter(({ parent_id }) => parent_id === parent?.id)
+    .map(p => ({
+      id: p.id,
+      name: p.name,
+      kind: p.kind,
+      coverArtId: p.cover_art_id,
+      position: p.position,
+      addedBy: p.added_by,
+      description: p.description,
+      children: fromApiPlaylists(playlists, p),
+    }));
+}
