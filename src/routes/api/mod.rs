@@ -7,14 +7,26 @@ mod settings;
 mod tracks;
 mod users;
 
-use actix_web::{web, middleware::Condition};
+use actix_web::{web, get, middleware::Condition, Responder};
 use actix_web_httpauth::middleware::HttpAuthentication;
+use serde::Serialize;
 
-use crate::middleware::auth::authenticate_user;
+use crate::{middleware::auth::authenticate_user, error::Result};
+
+#[derive(Debug, Serialize)]
+struct Pong {
+    message: String,
+}
+
+#[get("/ping")]
+async fn ping() -> Result<impl Responder> {
+    Ok(web::Json(Pong { message: "Pong!".to_owned() }))
+}
 
 pub fn config(cfg: &mut web::ServiceConfig, allow_unauthenticated_access: bool) {
     cfg.service(
         web::scope("/api/v1")
+            .service(ping)
             .configure(albums::config)
             .configure(artists::config)
             .configure(files::config)
