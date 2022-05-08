@@ -12,8 +12,8 @@ export function AlbumScreen() {
   const [tracks, setTracks] = useState<AnnotatedTrack[]>([]);
 
   const updateTracks = useCallback(async () => {
-    // TODO
-  }, []);
+    setTracks(await api.getAnnotatedAlbumTracks(route.params.id));
+  }, [api, route.params.id]);
 
   // Update the tracks on the initial render
   useEffect(() => {
