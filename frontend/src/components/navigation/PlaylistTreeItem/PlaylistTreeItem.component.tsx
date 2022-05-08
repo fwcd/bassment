@@ -1,13 +1,13 @@
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
-import { PlaylistTreeNode } from '@bassment/models/Playlist';
+import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import React from 'react';
 
 interface PlaylistTreeItemProps {
   playlist: PlaylistTreeNode;
   focusedId?: number;
-  onFocusId?: (id: number) => void;
+  onFocus?: (playlist: Playlist) => void;
 }
 
 export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
@@ -26,8 +26,8 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
         />
       )}
       onPress={() => {
-        if (props.onFocusId && playlist.id) {
-          props.onFocusId(playlist.id);
+        if (props.onFocus && playlist.id) {
+          props.onFocus(playlist);
         }
       }}>
       {playlist.children.map(child => (
@@ -35,7 +35,7 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
           key={child.id}
           playlist={child}
           focusedId={props.focusedId}
-          onFocusId={props.onFocusId}
+          onFocus={props.onFocus}
         />
       ))}
     </DrawerTreeItem>

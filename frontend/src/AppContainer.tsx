@@ -16,10 +16,10 @@ import { useWindowDimensions } from 'react-native';
 
 export type SidebarNavigatorParams = {
   tracks: {};
-  playlist: { id: number };
-  genre: { id: number };
-  album: { id: number };
-  artist: { id: number };
+  playlist: { name: string; id: number };
+  genre: { name: string; id: number };
+  album: { name: string; id: number };
+  artist: { name: string; id: number };
 };
 
 const SidebarDrawer = createDrawerNavigator<SidebarNavigatorParams>();
@@ -57,11 +57,39 @@ export function AppContainer() {
               width: 220,
             },
           }}>
-          <SidebarDrawer.Screen name="tracks" component={TracksScreen} />
-          <SidebarDrawer.Screen name="playlist" component={PlaylistScreen} />
-          <SidebarDrawer.Screen name="album" component={AlbumScreen} />
-          <SidebarDrawer.Screen name="artist" component={ArtistScreen} />
-          <SidebarDrawer.Screen name="genre" component={GenreScreen} />
+          <SidebarDrawer.Screen
+            name="tracks"
+            options={{ title: 'Tracks' }}
+            component={TracksScreen}
+          />
+          <SidebarDrawer.Screen
+            name="playlist"
+            options={({ route }) => ({
+              title: `Playlist: ${route.params?.name ?? '?'}`,
+            })}
+            component={PlaylistScreen}
+          />
+          <SidebarDrawer.Screen
+            name="album"
+            options={({ route }) => ({
+              title: `Album: ${route.params?.name ?? '?'}`,
+            })}
+            component={AlbumScreen}
+          />
+          <SidebarDrawer.Screen
+            name="artist"
+            options={({ route }) => ({
+              title: `Artist: ${route.params?.name ?? '?'}`,
+            })}
+            component={ArtistScreen}
+          />
+          <SidebarDrawer.Screen
+            name="genre"
+            options={({ route }) => ({
+              title: `Genre: ${route.params?.name ?? '?'}`,
+            })}
+            component={GenreScreen}
+          />
         </SidebarDrawer.Navigator>
       ) : (
         <LoginScreen />

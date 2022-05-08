@@ -102,7 +102,12 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               (route.params as SidebarNavigatorParams['artist']).id ===
                 artist.id
             }
-            onFocus={() => navigation.navigate('artist', { id: artist.id! })}
+            onFocus={() =>
+              navigation.navigate('artist', {
+                id: artist.id!,
+                name: artist.name ?? `${artist.id}`,
+              })
+            }
           />
         ))}
       </DrawerTreeItem>
@@ -119,7 +124,12 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               route.name === 'album' &&
               (route.params as SidebarNavigatorParams['album']).id === album.id
             }
-            onFocus={() => navigation.navigate('album', { id: album.id! })}
+            onFocus={() =>
+              navigation.navigate('album', {
+                id: album.id!,
+                name: album.name ?? `${album.id}`,
+              })
+            }
           />
         ))}
       </DrawerTreeItem>
@@ -136,7 +146,12 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               route.name === 'genre' &&
               (route.params as SidebarNavigatorParams['genre']).id === genre.id
             }
-            onFocus={() => navigation.navigate('genre', { id: genre.id! })}
+            onFocus={() =>
+              navigation.navigate('genre', {
+                id: genre.id!,
+                name: genre.name ?? `${genre.id}`,
+              })
+            }
           />
         ))}
       </DrawerTreeItem>
@@ -157,7 +172,12 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               ? (route.params as SidebarNavigatorParams['playlist']).id
               : undefined
           }
-          onFocusId={id => navigation.navigate('playlist', { id })}
+          onFocus={child =>
+            navigation.navigate('playlist', {
+              id: child.id!,
+              name: child.name ?? `${playlist.id}`,
+            })
+          }
         />
       ))}
       <Divider />
