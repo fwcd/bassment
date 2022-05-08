@@ -15,6 +15,13 @@ pub struct Album {
     pub description: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
+pub struct PartialAlbum {
+    pub id: i32,
+    pub name: String,
+}
+
 #[derive(Debug, Clone, Deserialize, Insertable)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "albums"]

@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Genre, NewGenre, UpdateGenre}, error::Result, db::DbConn};
+use crate::{models::{Genre, NewGenre, UpdateGenre, PartialGenre}, error::Result, db::DbConn};
 use crate::schema::genres::dsl::*;
 
 /// Fetches all genres from the database.
@@ -11,6 +11,15 @@ pub fn all(conn: &DbConn) -> Result<Vec<Genre>> {
 /// Looks up a genre by id.
 pub fn by_id(genre_id: i32, conn: &DbConn) -> Result<Option<Genre>> {
     Ok(genres.filter(id.eq(genre_id)).get_result(conn).optional()?)
+}
+
+/// Looks up a partial genre for a track id.
+pub fn partial_for_track_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialGenre>> {
+    use crate::schema::{genres, track_genres};
+    Ok(genres::table.inner_join(track_genres::table)
+        .select((genres::id, genres::name))
+        .filter(track_genres::track_id.eq(track_id))
+        .get_results(conn)?)
 }
 
 /// Inserts a genre into the database.
