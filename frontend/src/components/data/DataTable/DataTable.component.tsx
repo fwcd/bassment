@@ -49,7 +49,9 @@ export function DataTable(props: DataTableProps) {
     filter.length > 0
       ? data.filter(item =>
           Object.values(item).some(
-            v => typeof v === 'string' && v.includes(filter),
+            v =>
+              typeof v === 'string' &&
+              v.toLowerCase().includes(filter.toLowerCase().trim()),
           ),
         )
       : data;
