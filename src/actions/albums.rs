@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Album, NewAlbum, UpdateAlbum, PartialAlbum}, error::Result, db::DbConn};
+use crate::{models::{Album, NewAlbum, UpdateAlbum, PartialAlbum, AnnotatedTrack}, error::Result, db::DbConn, actions::tracks};
 
 /// Fetches all albums from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Album>> {
@@ -27,6 +27,15 @@ pub fn partial_for_track_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialA
         .select((albums::id, albums::name))
         .filter(track_albums::track_id.eq(track_id))
         .get_results(conn)?)
+}
+
+/// Fetches annotated tracks for an album by id.
+pub fn annotated_tracks_by_id(album_id: i32, conn: &DbConn) -> Result<Vec<AnnotatedTrack>> {
+    use crate::schema::track_albums;
+    let track_ids = track_albums::table.select(track_albums::track_id)
+        .filter(track_albums::album_id.eq(album_id))
+        .get_results(conn)?;
+    tracks::annotated_by_ids(&track_ids, conn)
 }
 
 /// Inserts an album into the database.

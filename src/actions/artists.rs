@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Artist, NewArtist, UpdateArtist, PartialArtist}, error::Result, db::DbConn};
+use crate::{models::{Artist, NewArtist, UpdateArtist, PartialArtist, AnnotatedTrack}, error::Result, db::DbConn, actions::tracks};
 
 /// Fetches all artists from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Artist>> {
@@ -27,6 +27,15 @@ pub fn partial_for_track_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialA
         .select((artists::id, artists::name))
         .filter(track_artists::track_id.eq(track_id))
         .get_results(conn)?)
+}
+
+/// Fetches annotated tracks for an artist by id.
+pub fn annotated_tracks_by_id(artist_id: i32, conn: &DbConn) -> Result<Vec<AnnotatedTrack>> {
+    use crate::schema::track_artists;
+    let track_ids = track_artists::table.select(track_artists::track_id)
+        .filter(track_artists::artist_id.eq(artist_id))
+        .get_results(conn)?;
+    tracks::annotated_by_ids(&track_ids, conn)
 }
 
 /// Inserts an artist into the database.
