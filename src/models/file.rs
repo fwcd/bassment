@@ -6,8 +6,8 @@ use serde::{Serialize, Deserialize};
 use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, DbEnum)]
+#[serde(rename_all = "camelCase")]
 #[DieselType = "File_kind"]
-#[serde(rename_all = "snake_case")]
 pub enum FileKind {
     Generic,
     Audio,
@@ -15,6 +15,7 @@ pub enum FileKind {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct FileInfo {
     pub id: i32,
     pub kind: FileKind,
@@ -24,6 +25,7 @@ pub struct FileInfo {
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "file_infos"]
 pub struct NewFileInfo {
     pub kind: FileKind,
@@ -32,6 +34,7 @@ pub struct NewFileInfo {
 }
 
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "file_infos"]
 pub struct UpdateFileInfo {
     pub kind: Option<FileKind>,

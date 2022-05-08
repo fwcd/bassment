@@ -6,8 +6,8 @@ use serde::{Serialize, Deserialize};
 use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, DbEnum)]
+#[serde(rename_all = "camelCase")]
 #[DieselType = "Cue_kind"]
-#[serde(rename_all = "snake_case")]
 pub enum CueKind {
     HotCue,
     MainCue,

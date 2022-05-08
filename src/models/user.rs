@@ -6,6 +6,7 @@ use serde::{Serialize, Deserialize};
 use crate::{schema::*, error::Result};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: i32,
     pub username: String,
@@ -23,7 +24,8 @@ impl User {
     }
 }
 
-#[derive(Debug, Clone, Insertable, AsChangeset)]
+#[derive(Debug, Clone, Insertable, AsChangeset, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "users"]
 pub struct NewUser<'a> {
     pub username: &'a str,

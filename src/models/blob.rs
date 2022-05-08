@@ -6,6 +6,7 @@ use crate::schema::*;
 use crate::utils::serde::deserialize_optional_field;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct Blob {
     pub id: i32,
     pub data: Vec<u8>,
@@ -15,6 +16,7 @@ pub struct Blob {
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "blobs"]
 pub struct NewBlob {
     pub data: Vec<u8>,
@@ -23,6 +25,7 @@ pub struct NewBlob {
 }
 
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "blobs"]
 pub struct UpdateBlob {
     pub data: Option<Vec<u8>>,

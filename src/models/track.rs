@@ -5,6 +5,7 @@ use serde::{Serialize, Deserialize};
 use crate::schema::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct Track {
     pub id: i32,
     pub name: String,
@@ -27,12 +28,14 @@ pub struct Track {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct TrackArtist {
     pub track_id: i32,
     pub artist_id: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct TrackAlbum {
     pub track_id: i32,
     pub album_id: i32,
@@ -40,6 +43,7 @@ pub struct TrackAlbum {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct TrackGenre {
     pub track_id: i32,
     pub genre_id: i32,
@@ -48,12 +52,14 @@ pub struct TrackGenre {
 // TODO: Add other fields to NewTrack and UpdateTrack
 
 #[derive(Debug, Clone, Deserialize, Insertable)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "tracks"]
 pub struct NewTrack {
     pub name: String,
 }
 
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "tracks"]
 pub struct UpdateTrack {
     pub name: Option<String>,

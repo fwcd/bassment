@@ -6,6 +6,7 @@ use crate::schema::*;
 use crate::utils::serde::deserialize_optional_field;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct Artist {
     pub id: i32,
     pub name: String,
@@ -15,6 +16,7 @@ pub struct Artist {
 }
 
 #[derive(Debug, Clone, Insertable, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "artists"]
 pub struct NewArtist {
     pub name: String,
@@ -23,6 +25,7 @@ pub struct NewArtist {
 }
 
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "artists"]
 pub struct UpdateArtist {
     pub name: Option<String>,

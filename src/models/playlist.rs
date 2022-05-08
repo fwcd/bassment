@@ -7,8 +7,8 @@ use crate::schema::*;
 use crate::utils::serde::deserialize_optional_field;
 
 #[derive(Debug, Clone, Serialize, Deserialize, DbEnum)]
+#[serde(rename_all = "camelCase")]
 #[DieselType = "Playlist_kind"]
-#[serde(rename_all = "snake_case")]
 pub enum PlaylistKind {
     Playlist,
     Folder,
@@ -17,6 +17,7 @@ pub enum PlaylistKind {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
 pub struct Playlist {
     pub id: i32,
     pub name: String,
@@ -30,6 +31,7 @@ pub struct Playlist {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PlaylistTreeNode {
     #[serde(flatten)]
     pub playlist: Playlist,
@@ -37,6 +39,7 @@ pub struct PlaylistTreeNode {
 }
 
 #[derive(Debug, Clone, Deserialize, Insertable)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "playlists"]
 pub struct NewPlaylist {
     pub name: String,
@@ -49,6 +52,7 @@ pub struct NewPlaylist {
 }
 
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
+#[serde(rename_all = "camelCase")]
 #[table_name = "playlists"]
 pub struct UpdatePlaylist {
     pub name: Option<String>,
