@@ -1,0 +1,1 @@
+export * from './ArtistTreeItem.component';
