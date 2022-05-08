@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Summarizes the number of rows for each content table in the db.
+
 set -e
 cd "$(dirname $0)"
 source helpers/use-db.sh

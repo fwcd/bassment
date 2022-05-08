@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Runs an npm script in the frontend directory.
+
+set -e
+cd "$(dirname $0)/../frontend"
+
+npm run $@

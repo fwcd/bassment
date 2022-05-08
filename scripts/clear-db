@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Clears all content from the database. Use with care.
+
 set -e
 cd "$(dirname $0)"
 source helpers/use-db.sh

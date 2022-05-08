@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Adds sample data to the database (make sure that it hasn't been added before,
+# otherwise the insertion will fail).
+
 set -e
 cd "$(dirname $0)"
 source helpers/use-db.sh
