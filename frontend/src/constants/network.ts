@@ -1,6 +1,6 @@
-import { Platform } from 'react-native';
+import { envConstants } from '@bassment/constants/env';
 
 export const networkConstants = {
-  defaultServerUrl: 'http://localhost:8090',
-  userAgent: `BassmentFrontend/0.0.1 (${Platform.OS}, ${Platform.Version})`,
+  defaultServerUrl: envConstants.isDev ? 'http://localhost:8090' : '/',
+  userAgent: `BassmentFrontend/0.0.1 (${envConstants.platform.os}, ${envConstants.platform.version})`,
 };

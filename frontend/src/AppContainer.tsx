@@ -1,4 +1,5 @@
 import { AppSidebar } from '@bassment/AppSidebar';
+import { envConstants } from '@bassment/constants/env';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { LoginScreen } from '@bassment/screens/Login';
 import { TracksScreen } from '@bassment/screens/Tracks';
@@ -6,7 +7,7 @@ import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { Platform, useWindowDimensions } from 'react-native';
+import { useWindowDimensions } from 'react-native';
 
 const Drawer = createDrawerNavigator();
 
@@ -23,7 +24,7 @@ export function AppContainer() {
           drawerContent={AppSidebar}
           screenOptions={{
             drawerType:
-              Platform.OS === 'web' || dimensions.width >= 600
+              envConstants.platform.os === 'web' || dimensions.width >= 600
                 ? 'permanent'
                 : 'slide',
             drawerStyle: {
