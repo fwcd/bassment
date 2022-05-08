@@ -93,3 +93,5 @@ scripts/bundle-frontend
 ```
 
 You can then run the backend server, now also serving the frontend, with vanilla `cargo run` and visit the entire web application at `http://localhost:8090` in your browser.
+
+<!-- TODO: Add instructions for mobile -->
