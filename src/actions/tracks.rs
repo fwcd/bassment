@@ -1,6 +1,4 @@
-use std::sync::Arc;
-
-use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
+use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 
 use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack}, error::Result, db::DbConn};
 use crate::schema::tracks::dsl::*;
@@ -17,8 +15,13 @@ pub fn by_id(track_id: i32, conn: &DbConn) -> Result<Option<Track>> {
     Ok(tracks.filter(id.eq(track_id)).get_result(conn).optional()?)
 }
 
+/// Looks up multiple tracks by id.
+pub fn by_ids(track_ids: &[i32], conn: &DbConn) -> Result<Vec<Track>> {
+    Ok(tracks.filter(id.eq(any(track_ids))).get_results(conn)?)
+}
+
 /// Fetches a track with annotations for the given track.
-fn annotated_for(track: Track, conn: &DbConn) -> Result<AnnotatedTrack> {
+pub fn annotated_for(track: Track, conn: &DbConn) -> Result<AnnotatedTrack> {
     let track_id = track.id;
     Ok(AnnotatedTrack {
         track,
@@ -35,6 +38,14 @@ pub fn annotated_by_id(track_id: i32, conn: &DbConn) -> Result<Option<AnnotatedT
     } else {
         Ok(None)
     }
+}
+
+/// Looks up multiple tracks with annotations by id.
+pub fn annotated_by_ids(track_ids: &[i32], conn: &DbConn) -> Result<Vec<AnnotatedTrack>> {
+    by_ids(track_ids, conn)?
+        .into_iter()
+        .map(|t| annotated_for(t, conn))
+        .collect::<Result<Vec<_>>>()
 }
 
 /// Fetches all tracks with annotations.

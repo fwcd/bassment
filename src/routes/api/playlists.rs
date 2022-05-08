@@ -30,6 +30,13 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(playlists))
 }
 
+#[get("/{id}/tracks/annotated")]
+async fn get_annotated_tracks_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let tracks = web::block(move || playlists::annotated_tracks_by_id(*id, &conn)).await??;
+    Ok(web::Json(tracks))
+}
+
 #[get("/trees/{id}")]
 async fn get_tree_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -51,6 +58,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_all_trees)
             .service(post)
             .service(get_by_id)
+            .service(get_annotated_tracks_by_id)
             .service(get_tree_by_id)
             .service(patch_by_id)
     );
