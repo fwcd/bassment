@@ -7,6 +7,7 @@ import { GenreTreeItem } from '@bassment/components/navigation/GenreTreeItem';
 import { PlaylistTreeItem } from '@bassment/components/navigation/PlaylistTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
 import { ApiContext } from '@bassment/contexts/Api';
+import { SearchContext } from '@bassment/contexts/Search';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialGenre } from '@bassment/models/Genre';
@@ -29,8 +30,8 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   });
 
   const api = useContext(ApiContext);
+  const { searchText, setSearchText } = useContext(SearchContext);
 
-  const [searchText, setSearchText] = useState('');
   const [playlists, setPlaylists] = useState<PlaylistTreeNode[]>([]);
   const [albums, setAlbums] = useState<PartialAlbum[]>([]);
   const [artists, setArtists] = useState<PartialArtist[]>([]);

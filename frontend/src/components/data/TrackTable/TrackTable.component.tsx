@@ -4,6 +4,7 @@ import React from 'react';
 
 interface TrackTableProps {
   tracks: AnnotatedTrack[];
+  filter?: string;
 }
 
 export function TrackTable(props: TrackTableProps) {
@@ -16,6 +17,7 @@ export function TrackTable(props: TrackTableProps) {
         Artist: track.artists.map(a => a.name).join(', '),
         Title: track.name,
       }))}
+      filter={props.filter}
     />
   );
 }

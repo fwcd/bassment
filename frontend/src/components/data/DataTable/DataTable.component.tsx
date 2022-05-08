@@ -7,7 +7,7 @@ import { FlatList } from 'react-native';
 interface DataTableProps {
   headers: string[];
   initialWidths?: number[];
-  searchText?: string;
+  filter?: string;
   data?: any;
 }
 
@@ -44,12 +44,12 @@ export function DataTable(props: DataTableProps) {
     );
   }
 
-  const searchText = props.searchText ?? '';
+  const filter = props.filter ?? '';
   const filteredData =
-    searchText.length > 0
+    filter.length > 0
       ? data.filter(item =>
           Object.values(item).some(
-            v => typeof v === 'string' && v.includes(searchText),
+            v => typeof v === 'string' && v.includes(filter),
           ),
         )
       : data;
