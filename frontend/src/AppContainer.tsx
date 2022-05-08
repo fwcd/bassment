@@ -1,12 +1,13 @@
 import { AppSidebar } from '@bassment/AppSidebar';
 import { envConstants } from '@bassment/constants/env';
+import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { LoginScreen } from '@bassment/screens/Login';
 import { TracksScreen } from '@bassment/screens/Tracks';
 import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
 const Drawer = createDrawerNavigator();
@@ -15,10 +16,23 @@ export function AppContainer() {
   const dimensions = useWindowDimensions();
   const theme = useDerivedTheme();
   const auth = useContext(AuthContext);
+  const api = useContext(ApiContext);
+
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  const updateLoggedIn = useCallback(async () => {
+    setLoggedIn(await api.isLoggedIn());
+  }, [api]);
+
+  // Re-check login status initially and when the token changes
+  // TODO: Handle expiry of the token, perhaps with a timer?
+  useEffect(() => {
+    updateLoggedIn();
+  }, [updateLoggedIn, auth.token]);
 
   return (
     <NavigationContainer theme={theme}>
-      {auth.token ? (
+      {isLoggedIn ? (
         <Drawer.Navigator
           initialRouteName="Test"
           drawerContent={AppSidebar}

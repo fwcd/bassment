@@ -15,6 +15,13 @@ import React, {
 export interface ApiContextValue {
   // TODO: Filtering, (batch) by-ID querying etc.
 
+  /**
+   * Checks whether the user is logged in (or the
+   * server permits unauthenticated access) by pinging
+   * the API.
+   */
+  isLoggedIn(): Promise<boolean>;
+
   /** Fetches all artists (as partial structures). */
   getPartialArtists(): Promise<PartialArtist[]>;
 
@@ -42,6 +49,7 @@ function noApiContext<T>(
 }
 
 export const ApiContext = createContext<ApiContextValue>({
+  isLoggedIn: async () => false,
   getPartialAlbums: noApiContext('partial albums', () => []),
   getPartialArtists: noApiContext('partial artists', () => []),
   getPartialGenres: noApiContext('partial genres', () => []),
@@ -79,6 +87,14 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
   );
 
   const value: ApiContextValue = {
+    async isLoggedIn(): Promise<boolean> {
+      try {
+        await apiRequest('GET', '/ping');
+        return true;
+      } catch {
+        return false;
+      }
+    },
     async getPartialArtists(): Promise<PartialArtist[]> {
       return await apiRequest('GET', '/artists/partial');
     },
