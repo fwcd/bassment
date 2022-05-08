@@ -7,6 +7,7 @@ import { FlatList } from 'react-native';
 interface DataTableProps {
   headers: string[];
   initialWidths?: number[];
+  searchText?: string;
   data?: any;
 }
 
@@ -43,11 +44,21 @@ export function DataTable(props: DataTableProps) {
     );
   }
 
+  const searchText = props.searchText ?? '';
+  const filteredData =
+    searchText.length > 0
+      ? data.filter(item =>
+          Object.values(item).some(
+            v => typeof v === 'string' && v.includes(searchText),
+          ),
+        )
+      : data;
+
   return (
     // TODO: Horizontal scroll?
     <FlatList
       style={styles.table}
-      data={data}
+      data={filteredData}
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <DataTableRow

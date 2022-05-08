@@ -30,6 +30,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
 
   const api = useContext(ApiContext);
 
+  const [searchText, setSearchText] = useState('');
   const [playlists, setPlaylists] = useState<PlaylistTreeNode[]>([]);
   const [albums, setAlbums] = useState<PartialAlbum[]>([]);
   const [artists, setArtists] = useState<PartialArtist[]>([]);
@@ -71,7 +72,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
 
   return (
     <DrawerContentScrollView style={styles.sidebar}>
-      <SearchBar />
+      <SearchBar value={searchText} onChangeText={setSearchText} />
       <DrawerTreeItem
         label="Tracks"
         icon={({ size, color }) => (
