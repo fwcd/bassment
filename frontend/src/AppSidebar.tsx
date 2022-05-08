@@ -94,8 +94,16 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="person-outline" size={size} color={color} />
         )}>
         {artists.map(artist => (
-          // TODO: Focus handling
-          <ArtistTreeItem key={artist.id} artist={artist} />
+          <ArtistTreeItem
+            key={artist.id}
+            artist={artist}
+            focused={
+              route.name === 'artist' &&
+              (route.params as SidebarNavigatorParams['artist']).id ===
+                artist.id
+            }
+            onFocus={() => navigation.navigate('artist', { id: artist.id! })}
+          />
         ))}
       </DrawerTreeItem>
       <DrawerTreeItem
@@ -104,8 +112,15 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="albums-outline" size={size} color={color} />
         )}>
         {albums.map(album => (
-          // TODO: Focus handling
-          <AlbumTreeItem key={album.id} album={album} />
+          <AlbumTreeItem
+            key={album.id}
+            album={album}
+            focused={
+              route.name === 'album' &&
+              (route.params as SidebarNavigatorParams['album']).id === album.id
+            }
+            onFocus={() => navigation.navigate('album', { id: album.id! })}
+          />
         ))}
       </DrawerTreeItem>
       <DrawerTreeItem
@@ -114,7 +129,15 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="star-outline" size={size} color={color} />
         )}>
         {genres.map(genre => (
-          <GenreTreeItem key={genre.id} genre={genre} />
+          <GenreTreeItem
+            key={genre.id}
+            genre={genre}
+            focused={
+              route.name === 'genre' &&
+              (route.params as SidebarNavigatorParams['genre']).id === genre.id
+            }
+            onFocus={() => navigation.navigate('genre', { id: genre.id! })}
+          />
         ))}
       </DrawerTreeItem>
       <DrawerTreeItem
@@ -134,9 +157,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               ? (route.params as SidebarNavigatorParams['playlist']).id
               : undefined
           }
-          onFocusId={id => {
-            navigation.navigate('playlist', { id });
-          }}
+          onFocusId={id => navigation.navigate('playlist', { id })}
         />
       ))}
       <Divider />

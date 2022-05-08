@@ -2,6 +2,9 @@ import { AppSidebar } from '@bassment/AppSidebar';
 import { envConstants } from '@bassment/constants/env';
 import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
+import { AlbumScreen } from '@bassment/screens/Album';
+import { GenreScreen } from '@bassment/screens/Artist';
+import { ArtistScreen } from '@bassment/screens/Genre';
 import { LoginScreen } from '@bassment/screens/Login';
 import { PlaylistScreen } from '@bassment/screens/Playlist';
 import { TracksScreen } from '@bassment/screens/Tracks';
@@ -13,9 +16,10 @@ import { useWindowDimensions } from 'react-native';
 
 export type SidebarNavigatorParams = {
   tracks: {};
-  playlist: {
-    id: number;
-  };
+  playlist: { id: number };
+  genre: { id: number };
+  album: { id: number };
+  artist: { id: number };
 };
 
 const SidebarDrawer = createDrawerNavigator<SidebarNavigatorParams>();
@@ -55,6 +59,9 @@ export function AppContainer() {
           }}>
           <SidebarDrawer.Screen name="tracks" component={TracksScreen} />
           <SidebarDrawer.Screen name="playlist" component={PlaylistScreen} />
+          <SidebarDrawer.Screen name="album" component={AlbumScreen} />
+          <SidebarDrawer.Screen name="artist" component={ArtistScreen} />
+          <SidebarDrawer.Screen name="genre" component={GenreScreen} />
         </SidebarDrawer.Navigator>
       ) : (
         <LoginScreen />
