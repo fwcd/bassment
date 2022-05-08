@@ -1,17 +1,19 @@
+import { SidebarNavigatorParams } from '@bassment/AppContainer';
 import { TracksView } from '@bassment/components/data/TracksView';
 import { ApiContext } from '@bassment/contexts/Api';
 import { AnnotatedTrack } from '@bassment/models/Track';
-import { useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 export function PlaylistScreen() {
+  const route: RouteProp<SidebarNavigatorParams, 'playlist'> = useRoute();
+
   const api = useContext(ApiContext);
-  const route = useRoute();
   const [tracks, setTracks] = useState<AnnotatedTrack[]>([]);
 
   const updateTracks = useCallback(async () => {
-    // TODO
-  }, []);
+    setTracks(await api.getAnnotatedPlaylistTracks(route.params.id));
+  }, [api, route.params.id]);
 
   // Update the tracks on the initial render
   useEffect(() => {

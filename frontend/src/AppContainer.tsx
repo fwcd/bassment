@@ -11,7 +11,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
-const Drawer = createDrawerNavigator();
+export type SidebarNavigatorParams = {
+  tracks: {};
+  playlist: {
+    id: number;
+  };
+};
+
+const SidebarDrawer = createDrawerNavigator<SidebarNavigatorParams>();
 
 export function AppContainer() {
   const dimensions = useWindowDimensions();
@@ -34,8 +41,8 @@ export function AppContainer() {
   return (
     <NavigationContainer theme={theme}>
       {isLoggedIn ? (
-        <Drawer.Navigator
-          initialRouteName="Tracks"
+        <SidebarDrawer.Navigator
+          initialRouteName="tracks"
           drawerContent={AppSidebar}
           screenOptions={{
             drawerType:
@@ -46,9 +53,9 @@ export function AppContainer() {
               width: 220,
             },
           }}>
-          <Drawer.Screen name="Tracks" component={TracksScreen} />
-          <Drawer.Screen name="Playlist" component={PlaylistScreen} />
-        </Drawer.Navigator>
+          <SidebarDrawer.Screen name="tracks" component={TracksScreen} />
+          <SidebarDrawer.Screen name="playlist" component={PlaylistScreen} />
+        </SidebarDrawer.Navigator>
       ) : (
         <LoginScreen />
       )}

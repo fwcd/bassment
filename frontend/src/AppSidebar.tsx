@@ -1,3 +1,4 @@
+import { SidebarNavigatorParams } from '@bassment/AppContainer';
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { SearchBar } from '@bassment/components/input/SearchBar';
 import { AlbumTreeItem } from '@bassment/components/navigation/AlbumTreeItem';
@@ -17,11 +18,14 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
-  const routeName = props.state.routeNames[props.state.index];
+  const route = props.state.routes[props.state.index];
+  const navigation: NavigationProp<SidebarNavigatorParams> = useNavigation();
+
   const globalStyles = useStyles();
   const styles = StyleSheet.create({
     sidebar: {
@@ -79,9 +83,9 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         icon={({ size, color }) => (
           <ThemedIcon name="musical-notes-outline" size={size} color={color} />
         )}
-        focused={routeName === 'Tracks'}
+        focused={route.name === 'tracks'}
         onPress={() => {
-          props.navigation.navigate('Tracks');
+          navigation.navigate('tracks', {});
         }}
       />
       <DrawerTreeItem
@@ -90,6 +94,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="person-outline" size={size} color={color} />
         )}>
         {artists.map(artist => (
+          // TODO: Focus handling
           <ArtistTreeItem key={artist.id} artist={artist} />
         ))}
       </DrawerTreeItem>
@@ -99,6 +104,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="albums-outline" size={size} color={color} />
         )}>
         {albums.map(album => (
+          // TODO: Focus handling
           <AlbumTreeItem key={album.id} album={album} />
         ))}
       </DrawerTreeItem>
@@ -120,7 +126,18 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       />
       <Divider />
       {playlists.map(playlist => (
-        <PlaylistTreeItem key={playlist.id} playlist={playlist} />
+        <PlaylistTreeItem
+          key={playlist.id}
+          playlist={playlist}
+          focusedId={
+            route.name === 'playlist'
+              ? (route.params as SidebarNavigatorParams['playlist']).id
+              : undefined
+          }
+          onFocusId={id => {
+            navigation.navigate('playlist', { id });
+          }}
+        />
       ))}
       <Divider />
       {/* TODO: Implement the buttons */}

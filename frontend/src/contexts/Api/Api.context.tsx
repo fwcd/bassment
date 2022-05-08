@@ -40,6 +40,9 @@ export interface ApiContextValue {
   /** Fetches all tracks with artist/album/genre annotations. */
   getAnnotatedTracks(): Promise<AnnotatedTrack[]>;
 
+  /** Fetches a playlist's tracks with annotations. */
+  getAnnotatedPlaylistTracks(playlistId: number): Promise<AnnotatedTrack[]>;
+
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 }
@@ -60,6 +63,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getPartialArtists: noApiContext('partial artists', () => []),
   getPartialGenres: noApiContext('partial genres', () => []),
   getAnnotatedTracks: noApiContext('annotated tracks', () => []),
+  getAnnotatedPlaylistTracks: noApiContext('annotated list tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
 });
 
@@ -112,6 +116,14 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getAnnotatedTracks(): Promise<AnnotatedTrack[]> {
       return await apiRequest('GET', '/tracks/annotated');
+    },
+    async getAnnotatedPlaylistTracks(
+      playlistId: number,
+    ): Promise<AnnotatedTrack[]> {
+      return await apiRequest(
+        'GET',
+        `/playlists/${playlistId}/tracks/annotated`,
+      );
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');

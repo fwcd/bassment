@@ -29,21 +29,23 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
     props.focused ?? false,
     props.isButton ?? false,
   );
+  const hasChildren =
+    props.children &&
+    (Array.isArray(props.children) ? props.children.length > 0 : true);
   return (
     <>
       <Pressable
         onPress={() =>
-          props.onPress ? props.onPress() : setExpanded(!isExpanded)
+          props.onPress && !hasChildren
+            ? props.onPress()
+            : setExpanded(!isExpanded)
         }
         style={({ pressed }) => ({
           opacity: pressed ? 0.5 : 1,
         })}>
         <View style={styles.item}>
           <View style={styles.icons}>
-            {props.children &&
-            (Array.isArray(props.children)
-              ? props.children.length > 0
-              : true) ? (
+            {hasChildren ? (
               <ThemedIcon
                 name={
                   isExpanded
