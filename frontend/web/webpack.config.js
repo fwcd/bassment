@@ -14,6 +14,9 @@ module.exports = {
     filename: 'app-[fullhash].bundle.js',
   },
   devtool: 'source-map',
+  devServer: {
+    historyApiFallback: true,
+  },
   module: {
     rules: [
       {
