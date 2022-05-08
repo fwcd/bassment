@@ -1,7 +1,11 @@
+use std::sync::Arc;
+
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Track, NewTrack, UpdateTrack}, error::Result, db::DbConn};
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack}, error::Result, db::DbConn};
 use crate::schema::tracks::dsl::*;
+
+use super::{artists, albums, genres};
 
 /// Fetches all tracks from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Track>> {
@@ -11,6 +15,34 @@ pub fn all(conn: &DbConn) -> Result<Vec<Track>> {
 /// Looks up a track by id.
 pub fn by_id(track_id: i32, conn: &DbConn) -> Result<Option<Track>> {
     Ok(tracks.filter(id.eq(track_id)).get_result(conn).optional()?)
+}
+
+/// Fetches a track with annotations for the given track.
+fn annotated_for(track: Track, conn: &DbConn) -> Result<AnnotatedTrack> {
+    let track_id = track.id;
+    Ok(AnnotatedTrack {
+        track,
+        artists: artists::partial_for_track_id(track_id, conn)?,
+        albums: albums::partial_for_track_id(track_id, conn)?,
+        genres: genres::partial_for_track_id(track_id, conn)?,
+    })
+}
+
+/// Looks up a track with annotations by id.
+pub fn annotated_by_id(track_id: i32, conn: &DbConn) -> Result<Option<AnnotatedTrack>> {
+    if let Some(track) = by_id(track_id, conn)? {
+        Ok(Some(annotated_for(track, conn)?))
+    } else {
+        Ok(None)
+    }
+}
+
+/// Fetches all tracks with annotations.
+pub fn all_annotated(conn: &DbConn) -> Result<Vec<AnnotatedTrack>> {
+    all(conn)?
+        .into_iter()
+        .map(|t| annotated_for(t, conn))
+        .collect::<Result<Vec<_>>>()
 }
 
 /// Inserts a track into the database.

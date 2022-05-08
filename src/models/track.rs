@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
 
-use super::{PartialGenre, PartialAlbum};
+use super::{PartialGenre, PartialAlbum, PartialArtist};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 #[serde(rename_all = "camelCase")]
@@ -34,7 +34,7 @@ pub struct Track {
 pub struct AnnotatedTrack {
     #[serde(flatten)]
     pub track: Track,
-    pub artists: Vec<PartialGenre>,
+    pub artists: Vec<PartialArtist>,
     pub albums: Vec<PartialAlbum>,
     pub genres: Vec<PartialGenre>,
 }
