@@ -8,8 +8,8 @@ interface AuthContextState {
 }
 
 export interface AuthContextValue {
-  serverUrl: string;
-  token?: string;
+  readonly serverUrl: string;
+  readonly token?: string;
 
   logIn(username: string, password: string): Promise<void>;
 }
