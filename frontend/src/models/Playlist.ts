@@ -8,6 +8,9 @@ export interface Playlist {
   position?: number | null;
   addedBy?: number | null;
   description?: string | null;
-  children: Playlist[];
   // TODO: More fields
+}
+
+export interface PlaylistTreeNode extends Playlist {
+  children: PlaylistTreeNode[];
 }

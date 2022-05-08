@@ -1,10 +1,4 @@
 import { networkConstants } from '@bassment/constants';
-import {
-  ApiPlaylist,
-  ApiTrack,
-  fromApiPlaylists,
-  fromApiTrack,
-} from '@bassment/contexts/Api/Api.protocol';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { Playlist } from '@bassment/models/Playlist';
 import { Track } from '@bassment/models/Track';
@@ -68,13 +62,11 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
 
   const value: ApiContextValue = {
     async getTracks(): Promise<Track[]> {
-      const apiTracks: ApiTrack[] = await apiRequest('GET', '/tracks');
-      return apiTracks.map(fromApiTrack);
+      return await apiRequest('GET', '/tracks');
     },
 
     async getPlaylists(): Promise<Playlist[]> {
-      const apiPlaylists: ApiPlaylist[] = await apiRequest('GET', '/playlists');
-      return fromApiPlaylists(apiPlaylists);
+      return await apiRequest('GET', '/playlists');
     },
   };
 
