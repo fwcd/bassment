@@ -8,6 +8,12 @@ pub fn all(conn: &DbConn) -> Result<Vec<Artist>> {
     Ok(artists.get_results(conn)?)
 }
 
+/// Fetches all artists partially.
+pub fn all_partial(conn: &DbConn) -> Result<Vec<PartialArtist>> {
+    use crate::schema::artists::dsl::*;
+    Ok(artists.select((id, name)).get_results(conn)?)
+}
+
 /// Looks up an artist by id.
 pub fn by_id(artist_id: i32, conn: &DbConn) -> Result<Option<Artist>> {
     use crate::schema::artists::dsl::*;

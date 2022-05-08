@@ -8,6 +8,12 @@ pub fn all(conn: &DbConn) -> Result<Vec<Album>> {
     Ok(albums.get_results(conn)?)
 }
 
+/// Fetches all albums partially.
+pub fn all_partial(conn: &DbConn) -> Result<Vec<PartialAlbum>> {
+    use crate::schema::albums::dsl::*;
+    Ok(albums.select((id, name)).get_results(conn)?)
+}
+
 /// Looks up an album by id.
 pub fn by_id(album_id: i32, conn: &DbConn) -> Result<Option<Album>> {
     use crate::schema::albums::dsl::*;

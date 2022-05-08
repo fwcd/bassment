@@ -9,6 +9,13 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
     Ok(web::Json(genres))
 }
 
+#[get("/partial")]
+async fn get_all_partial(pool: web::Data<DbPool>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let albums = web::block(move || genres::all_partial(&conn)).await??;
+    Ok(web::Json(albums))
+}
+
 #[post("")]
 async fn post(pool: web::Data<DbPool>, genre: web::Json<NewGenre>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -34,6 +41,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/genres")
             .service(get_all)
+            .service(get_all_partial)
             .service(post)
             .service(get_by_id)
             .service(patch_by_id)

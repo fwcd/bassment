@@ -8,6 +8,12 @@ pub fn all(conn: &DbConn) -> Result<Vec<Genre>> {
     Ok(genres.get_results(conn)?)
 }
 
+/// Fetches all genres partially.
+pub fn all_partial(conn: &DbConn) -> Result<Vec<PartialGenre>> {
+    use crate::schema::genres::dsl::*;
+    Ok(genres.select((id, name)).get_results(conn)?)
+}
+
 /// Looks up a genre by id.
 pub fn by_id(genre_id: i32, conn: &DbConn) -> Result<Option<Genre>> {
     Ok(genres.filter(id.eq(genre_id)).get_result(conn).optional()?)
