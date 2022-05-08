@@ -43,6 +43,15 @@ export interface ApiContextValue {
   /** Fetches a playlist's tracks with annotations. */
   getAnnotatedPlaylistTracks(playlistId: number): Promise<AnnotatedTrack[]>;
 
+  /** Fetches an artist's tracks with annotations. */
+  getAnnotatedArtistTracks(artistId: number): Promise<AnnotatedTrack[]>;
+
+  /** Fetches an album's tracks with annotations. */
+  getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]>;
+
+  /** Fetches a genre's tracks with annotations. */
+  getAnnotatedGenreTracks(genreId: number): Promise<AnnotatedTrack[]>;
+
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 }
@@ -64,6 +73,9 @@ export const ApiContext = createContext<ApiContextValue>({
   getPartialGenres: noApiContext('partial genres', () => []),
   getAnnotatedTracks: noApiContext('annotated tracks', () => []),
   getAnnotatedPlaylistTracks: noApiContext('annotated list tracks', () => []),
+  getAnnotatedArtistTracks: noApiContext('annotated artist tracks', () => []),
+  getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
+  getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
 });
 
@@ -124,6 +136,17 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
         'GET',
         `/playlists/${playlistId}/tracks/annotated`,
       );
+    },
+    async getAnnotatedArtistTracks(
+      artistId: number,
+    ): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', `/artists/${artistId}/tracks/annotated`);
+    },
+    async getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', `/albums/${albumId}/tracks/annotated`);
+    },
+    async getAnnotatedGenreTracks(genreId: number): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', `/genres/${genreId}/tracks/annotated`);
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
