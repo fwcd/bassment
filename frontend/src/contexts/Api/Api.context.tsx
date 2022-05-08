@@ -1,7 +1,7 @@
 import { networkConstants } from '@bassment/constants';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { PlaylistTreeNode } from '@bassment/models/Playlist';
-import { Track } from '@bassment/models/Track';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {
   createContext,
   ReactNode,
@@ -12,15 +12,15 @@ import React, {
 export interface ApiContextValue {
   // TODO: Filtering, (batch) by-ID querying etc.
 
-  /** Fetches all tracks. */
-  getTracks(): Promise<Track[]>;
+  /** Fetches all tracks with artist/album/genre annotations. */
+  getAnnotatedTracks(): Promise<AnnotatedTrack[]>;
 
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 }
 
 export const ApiContext = createContext<ApiContextValue>({
-  async getTracks(): Promise<Track[]> {
+  async getAnnotatedTracks(): Promise<AnnotatedTrack[]> {
     console.warn('No API context available for getting tracks!');
     return [];
   },
@@ -61,8 +61,8 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
   );
 
   const value: ApiContextValue = {
-    async getTracks(): Promise<Track[]> {
-      return await apiRequest('GET', '/tracks');
+    async getAnnotatedTracks(): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', '/tracks/annotated');
     },
 
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {

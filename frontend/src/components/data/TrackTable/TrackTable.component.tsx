@@ -1,19 +1,20 @@
 import { DataTable } from '@bassment/components/data/DataTable';
-import { Track } from '@bassment/models/Track';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import React from 'react';
 
 interface TrackTableProps {
-  tracks: Track[];
+  tracks: AnnotatedTrack[];
 }
 
 export function TrackTable(props: TrackTableProps) {
   return (
     <DataTable
-      headers={['Title', 'Artist']}
-      data={props.tracks.map(t => ({
-        key: t.id,
-        Title: t.name ?? '',
-        Artist: 'TODO', // TODO: Add artists, see also comments in Api.protocol.tsx
+      headers={['Album', 'Artist', 'Title']}
+      data={props.tracks.map(track => ({
+        key: track.id,
+        Album: track.albums.map(a => a.name).join(', '),
+        Artist: track.artists.map(a => a.name).join(', '),
+        Title: track.name,
       }))}
     />
   );
