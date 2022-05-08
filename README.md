@@ -20,8 +20,6 @@ While the backend server can serve the frontend from `frontend/dist` (after buil
 
 ### Backend
 
-<!-- TODO: Add instructions for setting up the frontend dev server (npm run web, etc.), bundling it for production (npm run build:web, etc.) and running the backend server for use in conjunction with the frontend dev server (cargo run -- --api-only --local-cors) -->
-
 To develop the backend server, make sure to have a Rust toolchain and PostgreSQL installed (the latter also running). Create a database and make sure that the `pgcrypto` extension is enabled (within the database). With sufficient privileges, you can enable it from `psql your_db_name` using
 
 ```sql
@@ -87,3 +85,11 @@ Now you can run the frontend with a dev server on `http://localhost:8080` (you p
 ```sh
 scripts/run-dev-frontend
 ```
+
+To bundle the frontend for production use into `frontend/dist`, run
+
+```sh
+scripts/bundle-frontend
+```
+
+You can then run the backend server, now also serving the frontend, with vanilla `cargo run` and visit the entire web application at `http://localhost:8090` in your browser.
