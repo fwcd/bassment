@@ -1,11 +1,11 @@
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
-import { Playlist } from '@bassment/models/Playlist';
+import { PlaylistTreeNode } from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import React from 'react';
 
 interface PlaylistTreeItemProps {
-  playlist: Playlist;
+  playlist: PlaylistTreeNode;
 }
 
 export function PlaylistTreeItem({ playlist }: PlaylistTreeItemProps) {

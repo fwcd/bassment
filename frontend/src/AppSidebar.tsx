@@ -4,7 +4,7 @@ import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistTreeItem } from '@bassment/components/navigation/PlaylistTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
 import { ApiContext } from '@bassment/contexts/Api';
-import { Playlist } from '@bassment/models/Playlist';
+import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { useStyles } from '@bassment/styles';
 import {
   DrawerContentComponentProps,
@@ -23,10 +23,10 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   });
 
   const api = useContext(ApiContext);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [playlists, setPlaylists] = useState<PlaylistTreeNode[]>([]);
 
   const updatePlaylists = useCallback(async () => {
-    setPlaylists(await api.getPlaylists());
+    setPlaylists(await api.getPlaylistTrees());
   }, [api]);
 
   const addPlaylist = useCallback(

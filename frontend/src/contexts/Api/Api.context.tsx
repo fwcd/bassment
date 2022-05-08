@@ -1,6 +1,6 @@
 import { networkConstants } from '@bassment/constants';
 import { AuthContext } from '@bassment/contexts/Auth';
-import { Playlist } from '@bassment/models/Playlist';
+import { PlaylistTreeNode } from '@bassment/models/Playlist';
 import { Track } from '@bassment/models/Track';
 import React, {
   createContext,
@@ -15,8 +15,8 @@ export interface ApiContextValue {
   /** Fetches all tracks. */
   getTracks(): Promise<Track[]>;
 
-  /** Fetches all playlists. */
-  getPlaylists(): Promise<Playlist[]>;
+  /** Fetches all playlist trees. */
+  getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 }
 
 export const ApiContext = createContext<ApiContextValue>({
@@ -25,8 +25,8 @@ export const ApiContext = createContext<ApiContextValue>({
     return [];
   },
 
-  async getPlaylists(): Promise<Playlist[]> {
-    console.warn('No API context available for getting playlists!');
+  async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
+    console.warn('No API context available for getting playlist trees!');
     return [];
   },
 });
@@ -65,8 +65,8 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       return await apiRequest('GET', '/tracks');
     },
 
-    async getPlaylists(): Promise<Playlist[]> {
-      return await apiRequest('GET', '/playlists');
+    async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
+      return await apiRequest('GET', '/playlists/trees');
     },
   };
 
