@@ -34,31 +34,24 @@ Create a database and a `.env` file in this repo that points to the database:
 DATABASE_URL=postgres://your_username:your_password@localhost/your_db_name
 ```
 
-To start the server, run `cargo run`. By default, the server will run on `http://localhost:8090` (to permit running it simultaneously with the frontend dev server). For development, there are a bunch of convenient options: If you want to run the backend separately from the frontend and permit CORS requests from a frontend dev server (you probably do, `webpack-dev-server` uses `http://localhost:8080`), start it with the following options:
-
-```sh
-cargo run -- \
-  --api-only \   # disable serving the frontend on /
-  --allow-cors   # allow CORS requests (don't use in prod!)
-```
-
-For convenience, there exists a script that invokes `cargo` exactly in this way:
+To start the server, run
 
 ```sh
 scripts/run-dev-backend
 ```
 
-On the first run, the server will automatically run all of the migrations and generate a root user, whose password is output to the console. If, at any point, you wish to regenerate this root user, pass `--regenerate-root` to the server (e.g. as invoked via `cargo run`).
+By default, the server will run on `http://localhost:8090` in API-only mode and allow CORS requests (to permit running it simultaneously with the frontend dev server).
+
+> You can of course also use `cargo run` manually. Note that the default configuration is more geared towards production use, however, therefore check out `cargo run -- --help` to view the list of flags.
+
+On the first run, the server will automatically run all of the migrations and generate a root user, whose password is output to the console. If, at any point, you wish to regenerate this root user, pass `--regenerate-root` to the server.
 
 > Note that the Diesel CLI, which can be installed using `cargo install diesel_cli --no-default-features --features postgres` (see [here](https://diesel.rs/guides/getting-started)), might also be useful. The Diesel CLI lets you e.g. run migrations with `diesel migration run` and undo them with `diesel migration revert`.
 
-Since all API routes are gated behind authentication (you need to log in via `/auth/v1/login`), it can sometimes be cumbersome to manually copy-and-paste tokens to `curl` while developing. Therefore the server also supports the flag `--allows-unauthenticated-access` for disabling authentication (obviously do not use this production):
+Since all API routes are gated behind authentication (you need to log in via `/auth/v1/login`), it can sometimes be cumbersome to manually copy-and-paste tokens to `curl` while developing. Therefore the server also supports the flag `--allow-unauthenticated-access` for disabling authentication (obviously do not use this production):
 
 ```sh
-cargo run -- \
-  --api-only \                   # disable serving the frontend on /
-  --allow-cors \                 # allow CORS requests (don't use in prod!)
-  --allow-unauthenticated-access # disable auth (don't use in prod!)
+scripts/run-dev-backend --allow-unauthenticated-access
 ```
 
 We can verify that this works correctly by sending a simple API request with `curl`:
