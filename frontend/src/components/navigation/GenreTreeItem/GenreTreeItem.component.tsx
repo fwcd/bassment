@@ -3,9 +3,9 @@ import { PartialGenre } from '@bassment/models/Genre';
 import React from 'react';
 
 interface GenreTreeItemProps {
-  artist: PartialGenre;
+  genre: PartialGenre;
 }
 
-export function GenreTreeItem({ artist }: GenreTreeItemProps) {
-  return <DrawerTreeItem label={artist.name ?? 'Unnamed Genre'} />;
+export function GenreTreeItem({ genre }: GenreTreeItemProps) {
+  return <DrawerTreeItem label={genre.name ?? 'Unnamed Genre'} />;
 }

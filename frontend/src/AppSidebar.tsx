@@ -1,9 +1,15 @@
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { SearchBar } from '@bassment/components/input/SearchBar';
+import { AlbumTreeItem } from '@bassment/components/navigation/AlbumTreeItem';
+import { ArtistTreeItem } from '@bassment/components/navigation/ArtistTreeItem';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
+import { GenreTreeItem } from '@bassment/components/navigation/GenreTreeItem';
 import { PlaylistTreeItem } from '@bassment/components/navigation/PlaylistTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
 import { ApiContext } from '@bassment/contexts/Api';
+import { PartialAlbum } from '@bassment/models/Album';
+import { PartialArtist } from '@bassment/models/Artist';
+import { PartialGenre } from '@bassment/models/Genre';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { useStyles } from '@bassment/styles';
 import {
@@ -23,10 +29,26 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   });
 
   const api = useContext(ApiContext);
+
   const [playlists, setPlaylists] = useState<PlaylistTreeNode[]>([]);
+  const [albums, setAlbums] = useState<PartialAlbum[]>([]);
+  const [artists, setArtists] = useState<PartialArtist[]>([]);
+  const [genres, setGenres] = useState<PartialGenre[]>([]);
 
   const updatePlaylists = useCallback(async () => {
     setPlaylists(await api.getPlaylistTrees());
+  }, [api]);
+
+  const updateAlbums = useCallback(async () => {
+    setAlbums(await api.getPartialAlbums());
+  }, [api]);
+
+  const updateArtists = useCallback(async () => {
+    setArtists(await api.getPartialArtists());
+  }, [api]);
+
+  const updateGenres = useCallback(async () => {
+    setGenres(await api.getPartialGenres());
   }, [api]);
 
   const addPlaylist = useCallback(
@@ -37,12 +59,14 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     [updatePlaylists],
   );
 
-  // Update the playlists on the initial render
+  // Update the playlists, albums etc. on the initial render
   useEffect(() => {
     updatePlaylists();
-  }, [updatePlaylists]);
+    updateAlbums();
+    updateArtists();
+    updateGenres();
+  }, [updateAlbums, updateArtists, updateGenres, updatePlaylists]);
 
-  // TODO: Query artists, albums and genres from the API and render them (instead of the current dummy values)
   // TODO: Link to TracksScreens with corresponding params for each item (e.g. passing the playlist/album/artist id)
 
   return (
@@ -63,39 +87,41 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         icon={({ size, color }) => (
           <ThemedIcon name="person-outline" size={size} color={color} />
         )}>
-        <DrawerTreeItem label="Pop" onPress={() => {}} />
-        <DrawerTreeItem label="House" onPress={() => {}} />
+        {artists.map(artist => (
+          <ArtistTreeItem key={artist.id} artist={artist} />
+        ))}
       </DrawerTreeItem>
       <DrawerTreeItem
         label="Albums"
         icon={({ size, color }) => (
           <ThemedIcon name="albums-outline" size={size} color={color} />
         )}>
-        <DrawerTreeItem label="Test 1" onPress={() => {}} />
-        <DrawerTreeItem label="Test 2">
-          <DrawerTreeItem label="Nested 1" onPress={() => {}} />
-        </DrawerTreeItem>
-        <DrawerTreeItem label="Test 3" onPress={() => {}} />
+        {albums.map(album => (
+          <AlbumTreeItem key={album.id} album={album} />
+        ))}
       </DrawerTreeItem>
       <DrawerTreeItem
         label="Genres"
         icon={({ size, color }) => (
           <ThemedIcon name="star-outline" size={size} color={color} />
         )}>
-        <DrawerTreeItem label="Pop" onPress={() => {}} />
-        <DrawerTreeItem label="House" onPress={() => {}} />
+        {genres.map(genre => (
+          <GenreTreeItem key={genre.id} genre={genre} />
+        ))}
       </DrawerTreeItem>
       <DrawerTreeItem
         label="Streams"
         icon={({ size, color }) => (
+          // TODO: Implement streams
           <ThemedIcon name="radio-outline" size={size} color={color} />
         )}
       />
       <Divider />
-      {playlists.map(p => (
-        <PlaylistTreeItem key={p.id} playlist={p} />
+      {playlists.map(playlist => (
+        <PlaylistTreeItem key={playlist.id} playlist={playlist} />
       ))}
       <Divider />
+      {/* TODO: Implement the buttons */}
       <DrawerTreeItem
         label="Add Playlist"
         isButton

@@ -3,9 +3,9 @@ import { PartialAlbum } from '@bassment/models/Album';
 import React from 'react';
 
 interface AlbumTreeItemProps {
-  artist: PartialAlbum;
+  album: PartialAlbum;
 }
 
-export function AlbumTreeItem({ artist }: AlbumTreeItemProps) {
-  return <DrawerTreeItem label={artist.name ?? 'Unnamed Album'} />;
+export function AlbumTreeItem({ album }: AlbumTreeItemProps) {
+  return <DrawerTreeItem label={album.name ?? 'Unnamed Album'} />;
 }
