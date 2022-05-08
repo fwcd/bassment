@@ -7,7 +7,7 @@ import { FlatList } from 'react-native';
 interface DataTableProps {
   headers: string[];
   initialWidths?: number[];
-  data?: { [key: string]: string }[];
+  data?: any;
 }
 
 enum Order {
@@ -51,6 +51,7 @@ export function DataTable(props: DataTableProps) {
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <DataTableRow
+          key={'_headers'}
           headers={headers}
           even
           icons={
@@ -90,6 +91,7 @@ export function DataTable(props: DataTableProps) {
       }
       renderItem={({ item, index: i }) => (
         <DataTableRow
+          key={item.key ?? i}
           headers={headers}
           even={i % 2 === 1}
           item={item}

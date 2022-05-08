@@ -11,6 +11,7 @@ export function TrackTable(props: TrackTableProps) {
     <DataTable
       headers={['Title', 'Artist']}
       data={props.tracks.map(t => ({
+        key: t.id,
         Title: t.name ?? '',
         Artist: 'TODO', // TODO: Add artists, see also comments in Api.protocol.tsx
       }))}

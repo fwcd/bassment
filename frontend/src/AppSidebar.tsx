@@ -93,7 +93,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       />
       <Divider />
       {playlists.map(p => (
-        <PlaylistTreeItem playlist={p} />
+        <PlaylistTreeItem key={p.id} playlist={p} />
       ))}
       <Divider />
       <DrawerTreeItem

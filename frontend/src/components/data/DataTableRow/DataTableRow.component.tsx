@@ -27,6 +27,7 @@ export function DataTableRow(props: DataTableRowProps) {
       ]}>
       {props.headers.map((h, j) => (
         <DataTableCell
+          key={h}
           header={h}
           index={j}
           icon={props.icons ? props.icons[j] : null}

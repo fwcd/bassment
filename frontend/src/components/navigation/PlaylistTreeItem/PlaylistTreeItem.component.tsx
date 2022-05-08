@@ -11,6 +11,7 @@ interface PlaylistTreeItemProps {
 export function PlaylistTreeItem({ playlist }: PlaylistTreeItemProps) {
   return (
     <DrawerTreeItem
+      key={playlist.id}
       label={playlist.name ?? 'Unnamed Playlist'}
       icon={({ size, color }) => (
         <PlaylistKindIcon
@@ -20,7 +21,7 @@ export function PlaylistTreeItem({ playlist }: PlaylistTreeItemProps) {
         />
       )}>
       {playlist.children.map(child => (
-        <PlaylistTreeItem playlist={child} />
+        <PlaylistTreeItem key={child.id} playlist={child} />
       ))}
     </DrawerTreeItem>
   );
