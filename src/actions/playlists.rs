@@ -5,7 +5,9 @@ use crate::schema::playlists::dsl::*;
 
 /// Fetches all playlists from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Playlist>> {
-    Ok(playlists.get_results(conn)?)
+    let mut fetched = playlists.get_results(conn)?;
+    fetched.sort_by_key(|p: &Playlist| p.position);
+    Ok(fetched)
 }
 
 /// Looks up a playlist by id.
@@ -15,9 +17,11 @@ pub fn by_id(playlist_id: i32, conn: &DbConn) -> Result<Option<Playlist>> {
 
 /// Fetches a playlist tree for a playlist.
 fn tree_for(playlist: Playlist, conn: &DbConn) -> Result<PlaylistTreeNode> {
-    let children = playlists
+    let mut fetched = playlists
         .filter(parent_id.eq(playlist.id))
-        .get_results(conn)?
+        .get_results(conn)?;
+    fetched.sort_by_key(|p: &Playlist| p.position);
+    let children = fetched
         .into_iter()
         .map(|p| tree_for(p, conn))
         .collect::<Result<Vec<_>>>()?;
@@ -31,6 +35,18 @@ pub fn tree_by_id(playlist_id: i32, conn: &DbConn) -> Result<Option<PlaylistTree
     } else {
         Ok(None)
     }
+}
+
+/// Fetches all playlist trees from the database.
+pub fn all_trees(conn: &DbConn) -> Result<Vec<PlaylistTreeNode>> {
+    let mut fetched = playlists
+        .filter(parent_id.is_null())
+        .get_results(conn)?;
+    fetched.sort_by_key(|p: &Playlist| p.position);
+    fetched
+        .into_iter()
+        .map(|p| tree_for(p, conn))
+        .collect::<Result<Vec<_>>>()
 }
 
 /// Inserts a playlist into the database.
