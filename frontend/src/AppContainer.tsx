@@ -10,7 +10,7 @@ import { PlaylistScreen } from '@bassment/screens/Playlist';
 import { TracksScreen } from '@bassment/screens/Tracks';
 import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
@@ -42,8 +42,14 @@ export function AppContainer() {
     updateLoggedIn();
   }, [updateLoggedIn, auth.token]);
 
+  const linking: LinkingOptions<SidebarNavigatorParams> = {
+    prefixes: [
+      'bassment://', // TODO: Register bassment scheme in the native mobile apps
+    ],
+  };
+
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       {isLoggedIn ? (
         <SidebarDrawer.Navigator
           initialRouteName="tracks"
@@ -62,6 +68,7 @@ export function AppContainer() {
             options={{ title: 'Tracks' }}
             component={TracksScreen}
           />
+          {/* TODO: Should we cache the id -> name mappings somewhere in the API context context or similar and derive the name from the id? */}
           <SidebarDrawer.Screen
             name="playlist"
             options={({ route }) => ({
