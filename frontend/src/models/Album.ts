@@ -1,9 +1,9 @@
-export interface PartialArtist {
+export interface PartialAlbum {
   id?: number;
   name?: string;
 }
 
-export interface Artist extends PartialArtist {
+export interface Album extends PartialAlbum {
   coverArtId?: number | null;
   description?: string | null;
 }
