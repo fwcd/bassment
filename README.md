@@ -38,7 +38,7 @@ To start the server, run
 scripts/run-dev-backend
 ```
 
-By default, the server will run on `http://localhost:8090` in API-only mode and allow CORS requests (to permit running it simultaneously with the frontend dev server).
+By default, the server will run on `http://localhost:8090` in API-only mode and allow CORS requests (to permit requests from a frontend dev server running in parallel).
 
 > You can of course also use `cargo run` manually. Note that the default configuration is more geared towards production use, however, therefore check out `cargo run -- --help` to view the list of flags.
 
