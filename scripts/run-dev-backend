@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Runs the backend (API-only) for development.
+
+set -e
+cd "$(dirname $0)/.."
+
+cargo run -- --api-only --allow-cors $@

@@ -42,6 +42,12 @@ cargo run -- \
   --allow-cors   # allow CORS requests (don't use in prod!)
 ```
 
+For convenience, there exists a script that invokes `cargo` exactly in this way:
+
+```sh
+scripts/run-dev-backend
+```
+
 On the first run, the server will automatically run all of the migrations and generate a root user, whose password is output to the console. If, at any point, you wish to regenerate this root user, pass `--regenerate-root` to the server (e.g. as invoked via `cargo run`).
 
 > Note that the Diesel CLI, which can be installed using `cargo install diesel_cli --no-default-features --features postgres` (see [here](https://diesel.rs/guides/getting-started)), might also be useful. The Diesel CLI lets you e.g. run migrations with `diesel migration run` and undo them with `diesel migration revert`.
@@ -71,4 +77,20 @@ content-type: application/json
 date: Sun, 08 May 2022 19:42:42 GMT
 
 []
+```
+
+### Frontend
+
+To develop the frontend, you can either use `npm` in the `frontend` directory directly or the convenience scripts mentioned in the following paragraphs from the repository root.
+
+First, make sure to have the npm dependencies installed:
+
+```sh
+scripts/bootstrap-frontend
+```
+
+Now you can run the frontend with a dev server on `http://localhost:8080` (you probably want to have the backend running in API-only mode simultaneously for it to do anything useful):
+
+```sh
+scripts/run-dev-frontend
 ```

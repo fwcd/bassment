@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Installs npm dependencies in the frontend.
+
+set -e
+cd "$(dirname $0)/../frontend"
+
+npm install

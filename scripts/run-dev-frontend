@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Runs the frontend for development.
+
+set -e
+cd "$(dirname $0)/../frontend"
+
+npm run web
