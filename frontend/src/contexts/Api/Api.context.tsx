@@ -15,6 +15,12 @@ import React, {
 export interface ApiContextValue {
   // TODO: Filtering, (batch) by-ID querying etc.
 
+  // TODO: Move the isLoggedIn route to the /auth/v1
+  //       routes in the backend and make it always
+  //       return a result, e.g. a boolean (instead
+  //       of relying on the 401 to detect the unauthorized
+  //       case).
+
   /**
    * Checks whether the user is logged in (or the
    * server permits unauthenticated access) by pinging
