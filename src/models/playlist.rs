@@ -29,6 +29,13 @@ pub struct Playlist {
     pub description: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlaylistTreeNode {
+    #[serde(flatten)]
+    pub playlist: Playlist,
+    pub children: Vec<PlaylistTreeNode>,
+}
+
 #[derive(Debug, Clone, Deserialize, Insertable)]
 #[table_name = "playlists"]
 pub struct NewPlaylist {
