@@ -3,6 +3,7 @@ import { envConstants } from '@bassment/constants/env';
 import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { LoginScreen } from '@bassment/screens/Login';
+import { PlaylistScreen } from '@bassment/screens/Playlist';
 import { TracksScreen } from '@bassment/screens/Tracks';
 import { useDerivedTheme } from '@bassment/styles/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -34,7 +35,7 @@ export function AppContainer() {
     <NavigationContainer theme={theme}>
       {isLoggedIn ? (
         <Drawer.Navigator
-          initialRouteName="Test"
+          initialRouteName="Tracks"
           drawerContent={AppSidebar}
           screenOptions={{
             drawerType:
@@ -46,6 +47,7 @@ export function AppContainer() {
             },
           }}>
           <Drawer.Screen name="Tracks" component={TracksScreen} />
+          <Drawer.Screen name="Playlist" component={PlaylistScreen} />
         </Drawer.Navigator>
       ) : (
         <LoginScreen />
