@@ -2,6 +2,7 @@ import { networkConstants } from '@bassment/constants';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
+import { PartialFileInfo } from '@bassment/models/FileInfo';
 import { PartialGenre } from '@bassment/models/Genre';
 import { PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
@@ -55,6 +56,9 @@ export interface ApiContextValue {
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 
+  /** Fetches associated audio files for a track. */
+  getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]>;
+
   /** Fetches the URL for a file by id. */
   getFileDataUrl(fileId: number): string;
 }
@@ -84,6 +88,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
   getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
+  getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileDataUrl: noApiContextSync('file url', () => ''),
 });
 
@@ -163,6 +168,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
+    },
+    async getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]> {
+      return await apiRequest('GET', `/tracks/${trackId}/audios`);
     },
     getFileDataUrl(fileId: number): string {
       return apiUrl(`/files/${fileId}/data`);

@@ -30,6 +30,13 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(track))
 }
 
+#[get("/{id}/audios")]
+async fn get_audios_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let track = web::block(move || tracks::audios_by_id(*id, &conn)).await??;
+    Ok(web::Json(track))
+}
+
 #[get("/annotated/{id}")]
 async fn get_annotated_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
     let conn = pool.get()?;

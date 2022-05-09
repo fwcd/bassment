@@ -4,9 +4,12 @@ export enum FileKind {
   CoverArt = 'coverArt',
 }
 
-export interface FileInfo {
+export interface PartialFileInfo {
   id?: number;
-  kind?: FileKind;
   name?: string;
   mediaType?: string;
+}
+
+export interface FileInfo {
+  kind?: FileKind;
 }

@@ -1,22 +1,24 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 
-use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack}, error::Result, db::DbConn};
-use crate::schema::tracks::dsl::*;
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo}, error::Result, db::DbConn};
 
 use super::{artists, albums, genres};
 
 /// Fetches all tracks from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Track>> {
+    use crate::schema::tracks::dsl::*;
     Ok(tracks.get_results(conn)?)
 }
 
 /// Looks up a track by id.
 pub fn by_id(track_id: i32, conn: &DbConn) -> Result<Option<Track>> {
+    use crate::schema::tracks::dsl::*;
     Ok(tracks.filter(id.eq(track_id)).get_result(conn).optional()?)
 }
 
 /// Looks up multiple tracks by id.
 pub fn by_ids(track_ids: &[i32], conn: &DbConn) -> Result<Vec<Track>> {
+    use crate::schema::tracks::dsl::*;
     Ok(tracks.filter(id.eq(any(track_ids))).get_results(conn)?)
 }
 
@@ -56,8 +58,18 @@ pub fn all_annotated(conn: &DbConn) -> Result<Vec<AnnotatedTrack>> {
         .collect::<Result<Vec<_>>>()
 }
 
+/// Looks up associated audio files by track id.
+pub fn audios_by_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialFileInfo>> {
+    use crate::schema::{track_audios, file_infos};
+    Ok(track_audios::table.inner_join(file_infos::table)
+        .filter(track_audios::track_id.eq(track_id))
+        .select((file_infos::id, file_infos::name, file_infos::media_type))
+        .get_results(conn)?)
+}
+
 /// Inserts a track into the database.
 pub fn insert(new_track: &NewTrack, conn: &DbConn) -> Result<Track> {
+    use crate::schema::tracks::dsl::*;
     Ok(diesel::insert_into(tracks)
         .values(new_track)
         .get_result(conn)?)
@@ -65,6 +77,7 @@ pub fn insert(new_track: &NewTrack, conn: &DbConn) -> Result<Track> {
 
 /// Updates a track in the database.
 pub fn update(track_id: i32, update_track: &UpdateTrack, conn: &DbConn) -> Result<Track> {
+    use crate::schema::tracks::dsl::*;
     Ok(diesel::update(tracks)
         .filter(id.eq(track_id))
         .set(update_track)

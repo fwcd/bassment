@@ -24,6 +24,14 @@ pub struct FileInfo {
     pub media_type: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
+pub struct PartialFileInfo {
+    pub id: i32,
+    pub name: String,
+    pub media_type: String,
+}
+
 #[derive(Debug, Clone, Insertable, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "file_infos"]

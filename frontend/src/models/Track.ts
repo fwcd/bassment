@@ -1,6 +1,5 @@
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
-import { FileInfo } from '@bassment/models/FileInfo';
 import { PartialGenre } from '@bassment/models/Genre';
 
 export interface Track {
@@ -16,5 +15,4 @@ export interface AnnotatedTrack extends Track {
   artists: PartialArtist[];
   albums: PartialAlbum[];
   genres: PartialGenre[];
-  audios: FileInfo[];
 }
