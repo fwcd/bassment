@@ -74,7 +74,7 @@ export function AudioPlayerContextProvider(
 
   return (
     <AudioPlayerContext.Provider value={value}>
-      <AudioPlayer url={audioUrl} />
+      <AudioPlayer isPlaying={isPlaying} url={audioUrl} />
       {props.children}
     </AudioPlayerContext.Provider>
   );

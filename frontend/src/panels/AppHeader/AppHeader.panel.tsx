@@ -16,7 +16,10 @@ export function AppHeader(props: DrawerHeaderProps) {
     <SafeAreaView>
       <View style={styles.header}>
         <View style={[styles.item, styles.sideItem]}>
-          <PlaybackControls />
+          <PlaybackControls
+            isPlaying={player.isPlaying}
+            setPlaying={playing => (player.isPlaying = playing)}
+          />
         </View>
         <PlaybackView
           style={[styles.item, styles.playback]}

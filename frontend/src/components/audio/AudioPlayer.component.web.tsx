@@ -1,7 +1,16 @@
 import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer.props';
-import React from 'react';
+import React, { createRef, useEffect } from 'react';
 
 export function AudioPlayer(props: AudioPlayerProps) {
-  // TODO
-  return <audio src={props.url} />;
+  const elementRef = createRef<HTMLAudioElement>();
+
+  useEffect(() => {
+    if (props.isPlaying) {
+      elementRef.current?.play();
+    } else {
+      elementRef.current?.pause();
+    }
+  }, [elementRef, props.isPlaying]);
+
+  return <audio src={props.url} ref={elementRef} />;
 }
