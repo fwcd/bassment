@@ -1,7 +1,7 @@
 import { CoverArtView } from '@bassment/components/data/CoverArtView';
 import { TrackInfoView } from '@bassment/components/data/TrackInfoView';
-import { PlaybackProgress } from '@bassment/components/extended/PlaybackProgress';
-import { usePlaybackViewStyles } from '@bassment/components/extended/PlaybackView/PlaybackView.style';
+import { PlaybackProgress } from '@bassment/components/combined/PlaybackProgress';
+import { usePlaybackViewStyles } from '@bassment/components/combined/PlaybackView/PlaybackView.style';
 import { NowPlaying } from '@bassment/models/NowPlaying';
 import React from 'react';
 import { View, ViewStyle } from 'react-native';

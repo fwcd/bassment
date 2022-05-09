@@ -12,14 +12,14 @@ import React, {
   useState,
 } from 'react';
 
-export interface AudioPlayerValue {
+export interface AudioPlayerContextValue {
   readonly nowPlaying?: NowPlaying;
   isPlaying: boolean;
 
   play(track: AnnotatedTrack): void;
 }
 
-export const AudioPlayerContext = createContext<AudioPlayerValue>({
+export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   isPlaying: false,
   play: () => {},
 });
@@ -40,7 +40,7 @@ export function AudioPlayerContextProvider(
     undefined,
   );
 
-  const value: AudioPlayerValue = {
+  const value: AudioPlayerContextValue = {
     nowPlaying,
     get isPlaying() {
       return isPlaying;

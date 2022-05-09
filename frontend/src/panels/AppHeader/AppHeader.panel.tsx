@@ -1,5 +1,5 @@
 import { ThemedText } from '@bassment/components/display/ThemedText';
-import { PlaybackView } from '@bassment/components/extended/PlaybackView';
+import { PlaybackView } from '@bassment/components/combined/PlaybackView';
 import { PlaybackControls } from '@bassment/components/input/PlaybackControls';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { useAppHeaderStyles } from '@bassment/panels/AppHeader/AppHeader.style';
