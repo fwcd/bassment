@@ -1,3 +1,4 @@
+import { AppHeader } from '@bassment/AppHeader';
 import { AppSidebar } from '@bassment/AppSidebar';
 import { envConstants } from '@bassment/constants/env';
 import { ApiContext } from '@bassment/contexts/Api';
@@ -55,6 +56,7 @@ export function AppContainer() {
           initialRouteName="tracks"
           drawerContent={AppSidebar}
           screenOptions={{
+            header: props => <AppHeader {...props} />,
             drawerType:
               envConstants.platform.os === 'web' || dimensions.width >= 600
                 ? 'permanent'
