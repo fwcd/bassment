@@ -5,13 +5,17 @@ use crate::{models::{Artist, NewArtist, UpdateArtist, PartialArtist, AnnotatedTr
 /// Fetches all artists from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Artist>> {
     use crate::schema::artists::dsl::*;
-    Ok(artists.get_results(conn)?)
+    let mut fetched = artists.get_results(conn)?;
+    fetched.sort_by_key(|a: &Artist| a.name.clone());
+    Ok(fetched)
 }
 
 /// Fetches all artists partially.
 pub fn all_partial(conn: &DbConn) -> Result<Vec<PartialArtist>> {
     use crate::schema::artists::dsl::*;
-    Ok(artists.select((id, name)).get_results(conn)?)
+    let mut fetched = artists.select((id, name)).get_results(conn)?;
+    fetched.sort_by_key(|a: &PartialArtist| a.name.clone());
+    Ok(fetched)
 }
 
 /// Looks up an artist by id.

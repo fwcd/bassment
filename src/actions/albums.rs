@@ -5,13 +5,17 @@ use crate::{models::{Album, NewAlbum, UpdateAlbum, PartialAlbum, AnnotatedTrack}
 /// Fetches all albums from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Album>> {
     use crate::schema::albums::dsl::*;
-    Ok(albums.get_results(conn)?)
+    let mut fetched = albums.get_results(conn)?;
+    fetched.sort_by_key(|a: &Album| a.name.clone());
+    Ok(fetched)
 }
 
 /// Fetches all albums partially.
 pub fn all_partial(conn: &DbConn) -> Result<Vec<PartialAlbum>> {
     use crate::schema::albums::dsl::*;
-    Ok(albums.select((id, name)).get_results(conn)?)
+    let mut fetched = albums.select((id, name)).get_results(conn)?;
+    fetched.sort_by_key(|a: &PartialAlbum| a.name.clone());
+    Ok(fetched)
 }
 
 /// Looks up an album by id.
