@@ -2,13 +2,20 @@ import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTabl
 import { DataTableRow } from '@bassment/components/data/DataTableRow';
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import React, { useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Pressable } from 'react-native';
 
-interface DataTableProps {
+interface DataItem {
+  key: number;
+  [key: string]: any;
+}
+
+interface DataTableProps<T> {
   headers: string[];
   initialWidths?: number[];
   filter?: string;
-  data?: any;
+  selectedRowKey?: number;
+  onSelectRow?: (item?: T) => void;
+  data?: T[];
 }
 
 enum Order {
@@ -21,7 +28,7 @@ interface OrderedColumn {
   order: Order;
 }
 
-export function DataTable(props: DataTableProps) {
+export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
   const styles = useDataTableStyles();
   const headers = props.headers;
 
@@ -58,60 +65,77 @@ export function DataTable(props: DataTableProps) {
 
   return (
     // TODO: Horizontal scroll?
-    <FlatList
-      style={styles.table}
-      data={filteredData}
-      stickyHeaderIndices={[0]}
-      ListHeaderComponent={
-        <DataTableRow
-          key={'_headers'}
-          headers={headers}
-          even
-          icons={
-            orderedColumn
-              ? Array.from({ length: headers.length }, (_, i) => {
-                  if (i === orderedColumn.index) {
-                    let name: string;
-                    switch (orderedColumn.order) {
-                      case Order.Descending:
-                        name = 'chevron-down-outline';
-                        break;
-                      case Order.Ascending:
-                        name = 'chevron-up-outline';
-                        break;
+    <Pressable
+      style={styles.pressable}
+      onPressIn={() => {
+        if (props.onSelectRow) {
+          props.onSelectRow(undefined);
+        }
+      }}>
+      <FlatList
+        style={styles.table}
+        data={filteredData}
+        stickyHeaderIndices={[0]}
+        ListHeaderComponent={
+          <DataTableRow
+            key={'_headers'}
+            headers={headers}
+            even
+            icons={
+              orderedColumn
+                ? Array.from({ length: headers.length }, (_, i) => {
+                    if (i === orderedColumn.index) {
+                      let name: string;
+                      switch (orderedColumn.order) {
+                        case Order.Descending:
+                          name = 'chevron-down-outline';
+                          break;
+                        case Order.Ascending:
+                          name = 'chevron-up-outline';
+                          break;
+                      }
+                      return <ThemedIcon name={name} />;
                     }
-                    return <ThemedIcon name={name} />;
-                  }
-                  return null;
-                })
-              : undefined
-          }
-          onPress={j => {
-            if (orderedColumn && orderedColumn.index === j) {
-              const order = orderedColumn.order;
-              if (order === Order.Ascending) {
-                setOrderedColumn({ ...orderedColumn, order: Order.Descending });
-              } else if (order === Order.Descending) {
-                setOrderedColumn(null);
-              }
-            } else {
-              setOrderedColumn({ index: j, order: Order.Ascending });
+                    return null;
+                  })
+                : undefined
             }
-          }}
-          widths={widths}
-          setWidths={setWidths}
-        />
-      }
-      renderItem={({ item, index: i }) => (
-        <DataTableRow
-          key={item.key ?? i}
-          headers={headers}
-          even={i % 2 === 1}
-          item={item}
-          widths={widths}
-          setWidths={setWidths}
-        />
-      )}
-    />
+            onPress={j => {
+              if (orderedColumn && orderedColumn.index === j) {
+                const order = orderedColumn.order;
+                if (order === Order.Ascending) {
+                  setOrderedColumn({
+                    ...orderedColumn,
+                    order: Order.Descending,
+                  });
+                } else if (order === Order.Descending) {
+                  setOrderedColumn(null);
+                }
+              } else {
+                setOrderedColumn({ index: j, order: Order.Ascending });
+              }
+            }}
+            widths={widths}
+            setWidths={setWidths}
+          />
+        }
+        renderItem={({ item, index: i }) => (
+          <DataTableRow
+            key={item.key ?? i}
+            headers={headers}
+            even={i % 2 === 1}
+            selected={props.selectedRowKey === item.key}
+            item={item}
+            widths={widths}
+            setWidths={setWidths}
+            onPress={() => {
+              if (props.onSelectRow) {
+                props.onSelectRow(item);
+              }
+            }}
+          />
+        )}
+      />
+    </Pressable>
   );
 }

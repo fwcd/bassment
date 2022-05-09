@@ -35,7 +35,9 @@ export function DataTableCell(props: DataTableCellProps) {
   return (
     <>
       {props.onPress ? (
-        <Pressable onPress={props.onPress}>{cell}</Pressable>
+        <Pressable style={styles.pressable} onPressIn={props.onPress}>
+          {cell}
+        </Pressable>
       ) : (
         cell
       )}

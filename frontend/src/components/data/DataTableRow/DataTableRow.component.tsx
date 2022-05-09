@@ -8,6 +8,7 @@ interface DataTableRowProps {
   icons?: ReactNode[];
   item?: { [key: string]: string };
   even?: boolean;
+  selected?: boolean;
   onPress?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
@@ -21,9 +22,12 @@ export function DataTableRow(props: DataTableRowProps) {
     <View
       style={[
         styles.row,
-        ...(props.item
-          ? [props.even ? styles.evenRow : styles.oddRow]
-          : [styles.headerRow]),
+        props.item
+          ? props.even
+            ? styles.evenRow
+            : styles.oddRow
+          : styles.headerRow,
+        props.selected ? styles.selectedRow : [],
       ]}>
       {props.headers.map((h, j) => (
         <DataTableCell

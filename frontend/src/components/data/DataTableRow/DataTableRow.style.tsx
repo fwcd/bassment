@@ -13,6 +13,9 @@ export function useDataTableRowStyles() {
     evenRow: {
       backgroundColor: styles.color.secondaryField,
     },
+    selectedRow: {
+      backgroundColor: styles.color.selection,
+    },
     oddRow: {},
   });
 }
