@@ -56,6 +56,8 @@ export function AudioPlayerContextProvider(
   const trackId = nowPlaying?.track.id;
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
 
+  // TODO: Deal with the case where unauthenticated requests aren't allowed in the audio player
+
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
 
