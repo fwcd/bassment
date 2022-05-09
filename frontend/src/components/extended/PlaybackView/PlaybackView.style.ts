@@ -8,7 +8,7 @@ export function usePlaybackViewStyles() {
       width: '100%',
       height: '100%',
       padding: styles.layout.space,
-      backgroundColor: styles.color.field,
+      backgroundColor: styles.color.secondaryField,
     },
   });
 }

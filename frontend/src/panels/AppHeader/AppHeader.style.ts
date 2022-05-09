@@ -7,14 +7,17 @@ export function useAppHeaderStyles() {
     header: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: styles.layout.space,
       marginHorizontal: styles.layout.smallSpace,
     },
     item: {
-      flex: 1,
+      flex: 2,
       flexDirection: 'row',
     },
+    sideItem: {
+      padding: styles.layout.space,
+    },
     playback: {
+      flex: 3,
       alignItems: 'center',
     },
     title: {

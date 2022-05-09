@@ -11,7 +11,7 @@ export function AppHeader(props: DrawerHeaderProps) {
 
   return (
     <View style={styles.header}>
-      <View style={styles.item}>
+      <View style={[styles.item, styles.sideItem]}>
         <PlaybackControls />
       </View>
       <PlaybackView
@@ -19,7 +19,7 @@ export function AppHeader(props: DrawerHeaderProps) {
         // TODO: Proper track
         track={{ name: 'Test', artists: [], genres: [], albums: [] }}
       />
-      <ThemedText style={[styles.item, styles.title]}>
+      <ThemedText style={[styles.item, styles.sideItem, styles.title]}>
         {props.options.headerTitle ?? props.options.title ?? props.route.name}
       </ThemedText>
     </View>
