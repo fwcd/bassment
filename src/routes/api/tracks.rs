@@ -66,6 +66,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_all_annotated)
             .service(post)
             .service(get_by_id)
+            .service(get_audios_by_id)
+            .service(put_audio_by_id)
             .service(get_annotated_by_id)
             .service(patch_by_id)
     );
