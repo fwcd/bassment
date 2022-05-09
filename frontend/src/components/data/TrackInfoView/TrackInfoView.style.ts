@@ -5,5 +5,8 @@ export function useTrackInfoViewStyles() {
     info: {
       flexDirection: 'column',
     },
+    title: {
+      fontWeight: 'bold',
+    },
   });
 }
