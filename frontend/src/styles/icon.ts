@@ -5,5 +5,6 @@ export function useIconStyles() {
   return {
     color: theme.dark ? 'white' : 'black',
     size: 16,
+    largeSize: 26,
   };
 }

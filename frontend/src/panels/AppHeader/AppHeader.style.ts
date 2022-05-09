@@ -5,11 +5,18 @@ export function useAppHeaderStyles() {
   const styles = useStyles();
   return StyleSheet.create({
     header: {
-      padding: styles.layout.largeSpace,
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: styles.layout.space,
       marginHorizontal: styles.layout.smallSpace,
     },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     title: {
-      fontSize: 16,
+      fontSize: styles.text.largeFontSize,
       fontWeight: 'bold',
     },
   });

@@ -3,10 +3,13 @@ import { useThemedButtonStyles } from '@bassment/components/input/ThemedButton/T
 import React from 'react';
 import { Pressable, PressableProps } from 'react-native';
 
-interface ThemedButtonProps extends PressableProps {}
+interface ThemedButtonProps extends PressableProps {
+  hasBackground?: boolean;
+}
 
 export function ThemedButton(props: ThemedButtonProps) {
-  const styles = useThemedButtonStyles();
+  const styles = useThemedButtonStyles(props.hasBackground ?? true);
+
   return (
     <Pressable
       {...props}
