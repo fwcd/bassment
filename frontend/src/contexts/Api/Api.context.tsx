@@ -54,16 +54,23 @@ export interface ApiContextValue {
 
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
+
+  /** Fetches the URL for a file by id. */
+  getFileDataUrl(fileId: number): string;
+}
+
+function noApiContextSync<T>(resource: string, defaultValue: () => T): () => T {
+  return () => {
+    console.warn(`No API context available for getting ${resource}!`);
+    return defaultValue();
+  };
 }
 
 function noApiContext<T>(
   resource: string,
   defaultValue: () => T,
 ): () => Promise<T> {
-  return async () => {
-    console.warn(`No API context available for getting ${resource}!`);
-    return defaultValue();
-  };
+  return async () => noApiContextSync(resource, defaultValue)();
 }
 
 export const ApiContext = createContext<ApiContextValue>({
@@ -77,6 +84,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
   getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
+  getFileDataUrl: noApiContextSync('file url', () => ''),
 });
 
 interface ApiContextProviderProps {
@@ -86,9 +94,14 @@ interface ApiContextProviderProps {
 export function ApiContextProvider(props: ApiContextProviderProps) {
   const auth = useContext(AuthContext);
 
+  const apiUrl = useCallback(
+    (endpoint: string) => `${auth.serverUrl}/api/v1${endpoint}`,
+    [auth.serverUrl],
+  );
+
   const apiRequest = useCallback(
     async (method: string, endpoint: string, body?: any) => {
-      const response = await fetch(`${auth.serverUrl}/api/v1${endpoint}`, {
+      const response = await fetch(apiUrl(endpoint), {
         method,
         headers: {
           Authorization: `Bearer ${auth.token!}`,
@@ -105,7 +118,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       }
       return await response.json();
     },
-    [auth.serverUrl, auth.token],
+    [apiUrl, auth.token],
   );
 
   const value: ApiContextValue = {
@@ -150,6 +163,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
+    },
+    getFileDataUrl(fileId: number): string {
+      return apiUrl(`/files/${fileId}/data`);
     },
   };
 

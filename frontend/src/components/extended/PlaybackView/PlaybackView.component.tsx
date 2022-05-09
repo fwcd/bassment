@@ -2,12 +2,12 @@ import { CoverArtView } from '@bassment/components/data/CoverArtView';
 import { TrackInfoView } from '@bassment/components/data/TrackInfoView';
 import { PlaybackProgress } from '@bassment/components/extended/PlaybackProgress';
 import { usePlaybackViewStyles } from '@bassment/components/extended/PlaybackView/PlaybackView.style';
-import { AnnotatedTrack } from '@bassment/models/Track';
+import { NowPlaying } from '@bassment/models/NowPlaying';
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
 
 interface PlaybackViewProps {
-  track: AnnotatedTrack;
+  nowPlaying?: NowPlaying;
   style?: ViewStyle | ViewStyle[];
 }
 
@@ -18,8 +18,16 @@ export function PlaybackView(props: PlaybackViewProps) {
     <View style={[styles.view, props.style]}>
       <CoverArtView style={styles.coverArt} />
       <View style={styles.playback}>
-        <TrackInfoView style={styles.info} track={props.track} />
-        <PlaybackProgress elapsedMs={12_000} totalMs={30_000} />
+        {props.nowPlaying ? (
+          <>
+            <TrackInfoView style={styles.info} track={props.nowPlaying.track} />
+            {/* TODO: Proper playback progress data */}
+            <PlaybackProgress
+              elapsedMs={props.nowPlaying.elapsedMs}
+              totalMs={props.nowPlaying.track.durationMs ?? 0}
+            />
+          </>
+        ) : null}
       </View>
     </View>
   );

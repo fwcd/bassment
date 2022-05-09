@@ -1,9 +1,17 @@
 import { AudioPlayer } from '@bassment/components/audio';
-import React, { createContext, ReactNode, useState } from 'react';
+import { ApiContext } from '@bassment/contexts/Api';
+import { NowPlaying } from '@bassment/models/NowPlaying';
+import { TrackQueue } from '@bassment/models/TrackQueue';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-export interface AudioPlayerValue {}
+export interface AudioPlayerValue {
+  readonly nowPlaying?: NowPlaying;
+  isPlaying: boolean;
+}
 
-export const AudioPlayerContext = createContext<AudioPlayerValue>({});
+export const AudioPlayerContext = createContext<AudioPlayerValue>({
+  isPlaying: false,
+});
 
 interface AudioPlayerContextProviderProps {
   children: ReactNode;
@@ -12,12 +20,31 @@ interface AudioPlayerContextProviderProps {
 export function AudioPlayerContextProvider(
   props: AudioPlayerContextProviderProps,
 ) {
-  const [url, setUrl] = useState<string | undefined>(undefined);
-  const value: AudioPlayerValue = {};
+  const api = useContext(ApiContext);
+  const [isPlaying, setPlaying] = useState(false);
+  const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
+  const [nowPlaying, setNowPlaying] = useState<NowPlaying | undefined>(
+    undefined,
+  );
+
+  const value: AudioPlayerValue = {
+    nowPlaying,
+    get isPlaying() {
+      return isPlaying;
+    },
+    set isPlaying(playing: boolean) {
+      setPlaying(playing);
+    },
+  };
+
+  const audioFile = nowPlaying?.track.audios?.find(() => true);
 
   return (
     <AudioPlayerContext.Provider value={value}>
-      <AudioPlayer url={url} />
+      {/* TODO: More advanced logic for picking the file, e.g. by quality/file type? */}
+      <AudioPlayer
+        url={audioFile?.id ? api.getFileDataUrl(audioFile.id) : undefined}
+      />
       {props.children}
     </AudioPlayerContext.Provider>
   );
