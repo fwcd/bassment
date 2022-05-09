@@ -12,6 +12,10 @@ export function usePlaybackViewStyles() {
     coverArt: {
       height: '100%',
     },
+    playback: {
+      flexGrow: 1,
+      flexDirection: 'column',
+    },
     info: {
       padding: styles.layout.space,
     },

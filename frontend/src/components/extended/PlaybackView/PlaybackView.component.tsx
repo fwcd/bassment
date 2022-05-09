@@ -1,5 +1,6 @@
 import { CoverArtView } from '@bassment/components/data/CoverArtView';
 import { TrackInfoView } from '@bassment/components/data/TrackInfoView';
+import { PlaybackProgress } from '@bassment/components/extended/PlaybackProgress';
 import { usePlaybackViewStyles } from '@bassment/components/extended/PlaybackView/PlaybackView.style';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React from 'react';
@@ -16,7 +17,10 @@ export function PlaybackView(props: PlaybackViewProps) {
   return (
     <View style={[styles.view, props.style]}>
       <CoverArtView style={styles.coverArt} />
-      <TrackInfoView style={styles.info} track={props.track} />
+      <View style={styles.playback}>
+        <TrackInfoView style={styles.info} track={props.track} />
+        <PlaybackProgress />
+      </View>
     </View>
   );
 }
