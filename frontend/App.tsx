@@ -1,5 +1,6 @@
 import { AppContainer } from '@bassment/AppContainer';
 import { ApiContextProvider } from '@bassment/contexts/Api';
+import { AudioPlayerContextProvider } from '@bassment/contexts/AudioPlayer';
 import { AuthContextProvider } from '@bassment/contexts/Auth';
 import { SearchContextProvider } from '@bassment/contexts/Search';
 import React from 'react';
@@ -15,7 +16,9 @@ export function App() {
         <AuthContextProvider>
           <ApiContextProvider>
             <SearchContextProvider>
-              <AppContainer />
+              <AudioPlayerContextProvider>
+                <AppContainer />
+              </AudioPlayerContextProvider>
             </SearchContextProvider>
           </ApiContextProvider>
         </AuthContextProvider>
