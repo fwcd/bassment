@@ -13,9 +13,12 @@ import React, {
 } from 'react';
 
 export interface AudioPlayerContextValue {
+  /** The currently playing track and playback state. */
   readonly nowPlaying?: NowPlaying;
+  /** Whether playback is active. */
   isPlaying: boolean;
 
+  /** Plays the given track immediately. */
   play(track: AnnotatedTrack): void;
 }
 

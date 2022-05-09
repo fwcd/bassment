@@ -8,9 +8,12 @@ interface AuthContextState {
 }
 
 export interface AuthContextValue {
+  /** The Bassment server URL (or path prefix, e.g. if the same origin is used). */
   readonly serverUrl: string;
+  /** The API access token. */
   readonly token?: string;
 
+  /** Logs into the Bassment server with the given credentials. */
   logIn(username: string, password: string): Promise<void>;
 }
 
