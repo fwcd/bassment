@@ -1,7 +1,8 @@
 import { useDataTableCellStyles } from '@bassment/components/data/DataTableCell/DataTableCell.style';
 import { ThemedText } from '@bassment/components/display/ThemedText';
+import { Clickable } from '@bassment/components/input/Clickable';
 import React, { ReactNode, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
@@ -10,7 +11,7 @@ interface DataTableCellProps {
   header: string;
   icon?: ReactNode;
   item?: { [key: string]: string };
-  onPress?: () => void;
+  onClick?: () => void;
   rowEven?: boolean;
   widths: number[];
   setWidths?: (widths: number[]) => void;
@@ -34,10 +35,8 @@ export function DataTableCell(props: DataTableCellProps) {
 
   return (
     <>
-      {props.onPress ? (
-        <Pressable style={styles.pressable} onPressIn={props.onPress}>
-          {cell}
-        </Pressable>
+      {props.onClick ? (
+        <Clickable onClick={props.onClick}>{cell}</Clickable>
       ) : (
         cell
       )}

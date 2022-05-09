@@ -1,8 +1,9 @@
 import { DataTableCell } from '@bassment/components/data/DataTableCell';
 import { useDataTableRowStyles } from '@bassment/components/data/DataTableRow/DataTableRow.style';
+import { Clickable } from '@bassment/components/input/Clickable';
 import { Hoverable } from '@bassment/components/input/Hoverable';
 import React, { ReactNode, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 interface DataTableRowProps {
   headers: string[];
@@ -11,15 +12,15 @@ interface DataTableRowProps {
   even?: boolean;
   hoverable?: boolean;
   selected?: boolean;
-  onPress?: () => void;
-  onPressCell?: (index: number) => void;
+  onClick?: () => void;
+  onClickCell?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
 }
 
 export function DataTableRow(props: DataTableRowProps) {
   const styles = useDataTableRowStyles();
-  const { onPressCell } = props;
+  const { onClickCell } = props;
   const [hovered, setHovered] = useState(false);
 
   let row = (
@@ -42,7 +43,7 @@ export function DataTableRow(props: DataTableRowProps) {
           icon={props.icons ? props.icons[j] : null}
           item={props.item}
           rowEven={props.even}
-          onPress={onPressCell ? () => onPressCell(j) : undefined}
+          onClick={onClickCell ? () => onClickCell(j) : undefined}
           widths={props.widths}
           setWidths={props.setWidths}
         />
@@ -60,8 +61,8 @@ export function DataTableRow(props: DataTableRowProps) {
     );
   }
 
-  if (props.onPress) {
-    row = <Pressable onPressIn={props.onPress}>{row}</Pressable>;
+  if (props.onClick) {
+    row = <Clickable onClick={props.onClick}>{row}</Clickable>;
   }
 
   return row;

@@ -2,7 +2,7 @@ import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTabl
 import { DataTableRow } from '@bassment/components/data/DataTableRow';
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import React, { useState } from 'react';
-import { FlatList, Pressable } from 'react-native';
+import { FlatList } from 'react-native';
 
 interface DataItem {
   key: number;
@@ -65,78 +65,70 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
 
   return (
     // TODO: Horizontal scroll?
-    <Pressable
-      style={styles.pressable}
-      onPressIn={() => {
-        if (props.onSelectRow) {
-          props.onSelectRow(undefined);
-        }
-      }}>
-      <FlatList
-        style={styles.table}
-        data={filteredData}
-        stickyHeaderIndices={[0]}
-        ListHeaderComponent={
-          <DataTableRow
-            key={'_headers'}
-            headers={headers}
-            even
-            icons={
-              orderedColumn
-                ? Array.from({ length: headers.length }, (_, i) => {
-                    if (i === orderedColumn.index) {
-                      let name: string;
-                      switch (orderedColumn.order) {
-                        case Order.Descending:
-                          name = 'chevron-down-outline';
-                          break;
-                        case Order.Ascending:
-                          name = 'chevron-up-outline';
-                          break;
-                      }
-                      return <ThemedIcon name={name} />;
+    <FlatList
+      style={styles.table}
+      data={filteredData}
+      stickyHeaderIndices={[0]}
+      ListHeaderComponent={
+        <DataTableRow
+          key={'_headers'}
+          headers={headers}
+          even
+          icons={
+            orderedColumn
+              ? Array.from({ length: headers.length }, (_, i) => {
+                  if (i === orderedColumn.index) {
+                    let name: string;
+                    switch (orderedColumn.order) {
+                      case Order.Descending:
+                        name = 'chevron-down-outline';
+                        break;
+                      case Order.Ascending:
+                        name = 'chevron-up-outline';
+                        break;
                     }
-                    return null;
-                  })
-                : undefined
+                    return <ThemedIcon name={name} />;
+                  }
+                  return null;
+                })
+              : undefined
+          }
+          onClickCell={j => {
+            if (orderedColumn && orderedColumn.index === j) {
+              const order = orderedColumn.order;
+              if (order === Order.Ascending) {
+                setOrderedColumn({
+                  ...orderedColumn,
+                  order: Order.Descending,
+                });
+              } else if (order === Order.Descending) {
+                setOrderedColumn(null);
+              }
+            } else {
+              setOrderedColumn({ index: j, order: Order.Ascending });
             }
-            onPressCell={j => {
-              if (orderedColumn && orderedColumn.index === j) {
-                const order = orderedColumn.order;
-                if (order === Order.Ascending) {
-                  setOrderedColumn({
-                    ...orderedColumn,
-                    order: Order.Descending,
-                  });
-                } else if (order === Order.Descending) {
-                  setOrderedColumn(null);
-                }
-              } else {
-                setOrderedColumn({ index: j, order: Order.Ascending });
-              }
-            }}
-            widths={widths}
-            setWidths={setWidths}
-          />
-        }
-        renderItem={({ item, index: i }) => (
-          <DataTableRow
-            key={item.key ?? i}
-            headers={headers}
-            even={i % 2 === 1}
-            selected={props.selectedRowKey === item.key}
-            hoverable
-            item={item}
-            widths={widths}
-            setWidths={setWidths}
-            onPress={() => {
-              if (props.onSelectRow) {
-                props.onSelectRow(item);
-              }
-            }}
-          />
-        )}
-      />
-    </Pressable>
+          }}
+          widths={widths}
+          setWidths={setWidths}
+        />
+      }
+      renderItem={({ item, index: i }) => (
+        <DataTableRow
+          key={item.key ?? i}
+          headers={headers}
+          even={i % 2 === 1}
+          selected={props.selectedRowKey === item.key}
+          hoverable
+          item={item}
+          widths={widths}
+          setWidths={setWidths}
+          onClick={() => {
+            if (props.onSelectRow) {
+              props.onSelectRow(item);
+            }
+          }}
+        />
+      )}
+    />
   );
 }

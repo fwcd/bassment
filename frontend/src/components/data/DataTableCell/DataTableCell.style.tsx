@@ -8,9 +8,6 @@ export function useDataTableCellStyles() {
       flexDirection: 'row',
       padding: styles.layout.smallSpace,
     },
-    pressable: {
-      cursor: 'unset',
-    } as any,
     borderHandle: {
       width: 4,
       cursor: 'col-resize',
