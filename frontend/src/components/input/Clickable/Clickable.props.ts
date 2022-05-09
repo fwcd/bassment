@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 export interface ClickableProps {
-  onClick: () => void;
+  onClick?: () => void;
+  onDoubleClick?: () => void;
   children: ReactNode;
 }
