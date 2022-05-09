@@ -13,6 +13,7 @@ interface DataTableRowProps {
   hoverable?: boolean;
   selected?: boolean;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   onClickCell?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
@@ -61,8 +62,12 @@ export function DataTableRow(props: DataTableRowProps) {
     );
   }
 
-  if (props.onClick) {
-    row = <Clickable onClick={props.onClick}>{row}</Clickable>;
+  if (props.onClick || props.onDoubleClick) {
+    row = (
+      <Clickable onClick={props.onClick} onDoubleClick={props.onDoubleClick}>
+        {row}
+      </Clickable>
+    );
   }
 
   return row;

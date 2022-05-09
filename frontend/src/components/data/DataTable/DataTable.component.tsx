@@ -15,6 +15,7 @@ interface DataTableProps<T> {
   filter?: string;
   selectedRowKey?: number;
   onSelectRow?: (item?: T) => void;
+  onDoubleClickRow?: (item?: T) => void;
   data?: T[];
 }
 
@@ -125,6 +126,11 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
           onClick={() => {
             if (props.onSelectRow) {
               props.onSelectRow(item);
+            }
+          }}
+          onDoubleClick={() => {
+            if (props.onDoubleClickRow) {
+              props.onDoubleClickRow(item);
             }
           }}
         />
