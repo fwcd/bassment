@@ -11,7 +11,10 @@ export function useDataTableRowStyles() {
       backgroundColor: styles.color.field,
     },
     evenRow: {
-      backgroundColor: styles.color.secondaryField,
+      // backgroundColor: styles.color.secondaryField,
+    },
+    hoveredRow: {
+      backgroundColor: styles.color.hover,
     },
     selectedRow: {
       backgroundColor: styles.color.selection,

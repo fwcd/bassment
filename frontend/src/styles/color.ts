@@ -10,5 +10,6 @@ export function useColorStyles() {
     field: theme.dark ? '#292929' : '#e8e8e8',
     secondaryField: theme.dark ? '#191919' : '#eeeeee',
     selection: `rgba(255, 200, 115, ${theme.dark ? '0.2' : '0.5'})`,
+    hover: `rgba(255, 200, 115, ${theme.dark ? '0.1' : '0.3'})`,
   };
 }

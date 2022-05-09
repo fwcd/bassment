@@ -100,7 +100,7 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
                   })
                 : undefined
             }
-            onPress={j => {
+            onPressCell={j => {
               if (orderedColumn && orderedColumn.index === j) {
                 const order = orderedColumn.order;
                 if (order === Order.Ascending) {
@@ -125,10 +125,11 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
             headers={headers}
             even={i % 2 === 1}
             selected={props.selectedRowKey === item.key}
+            hoverable
             item={item}
             widths={widths}
             setWidths={setWidths}
-            onPress={() => {
+            onPressCell={() => {
               if (props.onSelectRow) {
                 props.onSelectRow(item);
               }

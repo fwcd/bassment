@@ -1,6 +1,7 @@
 import { DataTableCell } from '@bassment/components/data/DataTableCell';
 import { useDataTableRowStyles } from '@bassment/components/data/DataTableRow/DataTableRow.style';
-import React, { ReactNode } from 'react';
+import { Hoverable } from '@bassment/components/input/Hoverable';
+import React, { ReactNode, useState } from 'react';
 import { View } from 'react-native';
 
 interface DataTableRowProps {
@@ -8,17 +9,19 @@ interface DataTableRowProps {
   icons?: ReactNode[];
   item?: { [key: string]: string };
   even?: boolean;
+  hoverable?: boolean;
   selected?: boolean;
-  onPress?: (index: number) => void;
+  onPressCell?: (index: number) => void;
   widths: number[];
   setWidths?: (widths: number[]) => void;
 }
 
 export function DataTableRow(props: DataTableRowProps) {
   const styles = useDataTableRowStyles();
-  const onPress = props.onPress;
+  const { onPressCell } = props;
+  const [hovered, setHovered] = useState(false);
 
-  return (
+  const row = (
     <View
       style={[
         styles.row,
@@ -27,6 +30,7 @@ export function DataTableRow(props: DataTableRowProps) {
             ? styles.evenRow
             : styles.oddRow
           : styles.headerRow,
+        hovered ? styles.hoveredRow : [],
         props.selected ? styles.selectedRow : [],
       ]}>
       {props.headers.map((h, j) => (
@@ -37,11 +41,23 @@ export function DataTableRow(props: DataTableRowProps) {
           icon={props.icons ? props.icons[j] : null}
           item={props.item}
           rowEven={props.even}
-          onPress={onPress ? () => onPress(j) : undefined}
+          onPress={onPressCell ? () => onPressCell(j) : undefined}
           widths={props.widths}
           setWidths={props.setWidths}
         />
       ))}
     </View>
   );
+
+  if (props.hoverable) {
+    return (
+      <Hoverable
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}>
+        {row}
+      </Hoverable>
+    );
+  } else {
+    return row;
+  }
 }
