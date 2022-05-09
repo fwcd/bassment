@@ -129,7 +129,7 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
             item={item}
             widths={widths}
             setWidths={setWidths}
-            onPressCell={() => {
+            onPress={() => {
               if (props.onSelectRow) {
                 props.onSelectRow(item);
               }
