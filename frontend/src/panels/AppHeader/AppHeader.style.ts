@@ -8,6 +8,7 @@ export function useAppHeaderStyles() {
       flexDirection: 'row',
       alignItems: 'center',
       marginHorizontal: styles.layout.smallSpace,
+      height: 50,
     },
     item: {
       flex: 2,
