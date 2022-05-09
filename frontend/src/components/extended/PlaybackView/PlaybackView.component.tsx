@@ -19,7 +19,7 @@ export function PlaybackView(props: PlaybackViewProps) {
       <CoverArtView style={styles.coverArt} />
       <View style={styles.playback}>
         <TrackInfoView style={styles.info} track={props.track} />
-        <PlaybackProgress />
+        <PlaybackProgress elapsedMs={12_000} totalMs={30_000} />
       </View>
     </View>
   );
