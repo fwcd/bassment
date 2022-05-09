@@ -5,7 +5,6 @@ export function useDrawerTreeItemStyles(focused: boolean, isButton: boolean) {
   const styles = useStyles();
   return StyleSheet.create({
     item: {
-      flex: 1,
       flexDirection: 'row',
       padding: styles.layout.smallSpace,
       margin: styles.layout.tinySpace,

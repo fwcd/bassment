@@ -1,18 +1,14 @@
 import { useStyles } from '@bassment/styles';
 import { StyleSheet } from 'react-native';
 
-export function useDataTableRowStyles() {
+export function usePlaybackViewStyles() {
   const styles = useStyles();
   return StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-    },
-    headerRow: {
+    view: {
+      width: '100%',
+      height: '100%',
+      padding: styles.layout.space,
       backgroundColor: styles.color.field,
     },
-    evenRow: {
-      backgroundColor: styles.color.secondaryField,
-    },
-    oddRow: {},
   });
 }

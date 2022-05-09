@@ -8,7 +8,8 @@ export function useTextStyles() {
   return {
     headerSize: 26 * scale,
     fontSize: 13 * scale,
-    largeFontSize: 22 * scale,
+    titleFontSize: 22 * scale,
+    subtitleFontSize: 18 * scale,
     color: theme.colors.text,
   };
 }
