@@ -1,5 +1,5 @@
-import { AppHeader } from '@bassment/AppHeader';
-import { AppSidebar } from '@bassment/AppSidebar';
+import { AppHeader } from '@bassment/panels/AppHeader';
+import { AppSidebar } from '@bassment/panels/AppSidebar';
 import { envConstants } from '@bassment/constants/env';
 import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
