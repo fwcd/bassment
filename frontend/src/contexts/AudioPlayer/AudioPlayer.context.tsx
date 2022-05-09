@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@bassment/components/audio';
+import { AudioPlayer } from '@bassment/components/audio/AudioPlayer';
 import { ApiContext } from '@bassment/contexts/Api';
 import { NowPlaying } from '@bassment/models/NowPlaying';
 import { AnnotatedTrack } from '@bassment/models/Track';

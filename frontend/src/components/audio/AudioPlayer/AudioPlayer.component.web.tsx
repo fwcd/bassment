@@ -1,4 +1,4 @@
-import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer.props';
+import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer/AudioPlayer.props';
 import React, { createRef, useEffect } from 'react';
 
 export function AudioPlayer(props: AudioPlayerProps) {

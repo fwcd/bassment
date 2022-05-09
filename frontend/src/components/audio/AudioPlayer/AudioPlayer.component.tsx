@@ -1,4 +1,4 @@
-import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer.props';
+import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer/AudioPlayer.props';
 import React from 'react';
 import { View } from 'react-native';
 
