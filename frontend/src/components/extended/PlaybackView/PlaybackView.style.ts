@@ -7,8 +7,13 @@ export function usePlaybackViewStyles() {
     view: {
       width: '100%',
       height: '100%',
-      padding: styles.layout.space,
       backgroundColor: styles.color.secondaryField,
+    },
+    coverArt: {
+      height: '100%',
+    },
+    info: {
+      padding: styles.layout.space,
     },
   });
 }
