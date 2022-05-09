@@ -18,6 +18,7 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
       key={playlist.id}
       label={playlist.name ?? 'Unnamed Playlist'}
       focused={props.focusedId !== undefined && props.focusedId === playlist.id}
+      isExpandedInitially
       icon={({ size, color }) => (
         <PlaylistKindIcon
           kind={playlist.kind ?? PlaylistKind.Playlist}
