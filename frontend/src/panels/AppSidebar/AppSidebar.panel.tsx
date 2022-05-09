@@ -13,25 +13,18 @@ import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialGenre } from '@bassment/models/Genre';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
-import { useStyles } from '@bassment/styles';
+import { useAppSidebarStyles } from '@bassment/panels/AppSidebar/AppSidebar.style';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
   const navigation: NavigationProp<SidebarNavigatorParams> = useNavigation();
-
-  const globalStyles = useStyles();
-  const styles = StyleSheet.create({
-    sidebar: {
-      marginHorizontal: globalStyles.layout.smallSpace,
-    },
-  });
+  const styles = useAppSidebarStyles();
 
   const api = useContext(ApiContext);
   const { searchText, setSearchText } = useContext(SearchContext);
