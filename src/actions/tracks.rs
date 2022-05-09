@@ -68,12 +68,12 @@ pub fn audios_by_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialFileInfo>
 }
 
 /// Inserts a new track audio by id.
-pub fn insert_audio(track_id: i32, audio_id: i32, conn: &DbConn) -> Result<()> {
+pub fn insert_audio(track_id: i32, file_id: i32, conn: &DbConn) -> Result<()> {
     use crate::schema::track_audios;
     // TODO: insert_or_ignore_into doesn't seem to satisfy all bounds
     //       (with our Postgres connection), why?
     diesel::insert_into(track_audios::table)
-        .values(TrackAudio { track_id, resource_id: audio_id })
+        .values(TrackAudio { track_id, file_id })
         .execute(conn)?;
     Ok(())
 }

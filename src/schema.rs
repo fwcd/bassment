@@ -162,9 +162,9 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
-    track_audios (track_id, resource_id) {
+    track_audios (track_id, file_id) {
         track_id -> Int4,
-        resource_id -> Int4,
+        file_id -> Int4,
     }
 }
 
@@ -233,7 +233,7 @@ joinable!(track_albums -> albums (album_id));
 joinable!(track_albums -> tracks (track_id));
 joinable!(track_artists -> artists (artist_id));
 joinable!(track_artists -> tracks (track_id));
-joinable!(track_audios -> file_infos (resource_id));
+joinable!(track_audios -> file_infos (file_id));
 joinable!(track_audios -> tracks (track_id));
 joinable!(track_genres -> genres (genre_id));
 joinable!(track_genres -> tracks (track_id));

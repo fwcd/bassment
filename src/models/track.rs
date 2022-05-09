@@ -69,7 +69,7 @@ pub struct TrackGenre {
 #[serde(rename_all = "camelCase")]
 pub struct TrackAudio {
     pub track_id: i32,
-    pub resource_id: i32,
+    pub file_id: i32,
 }
 
 // TODO: Add other fields to NewTrack and UpdateTrack
