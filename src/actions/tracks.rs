@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 
-use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo}, error::Result, db::DbConn};
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio}, error::Result, db::DbConn};
 
 use super::{artists, albums, genres};
 
@@ -65,6 +65,17 @@ pub fn audios_by_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialFileInfo>
         .filter(track_audios::track_id.eq(track_id))
         .select((file_infos::id, file_infos::name, file_infos::media_type))
         .get_results(conn)?)
+}
+
+/// Inserts a new track audio by id.
+pub fn insert_audio(track_id: i32, audio_id: i32, conn: &DbConn) -> Result<()> {
+    use crate::schema::track_audios;
+    // TODO: insert_or_ignore_into doesn't seem to satisfy all bounds
+    //       (with our Postgres connection), why?
+    diesel::insert_into(track_audios::table)
+        .values(TrackAudio { track_id, resource_id: audio_id })
+        .execute(conn)?;
+    Ok(())
 }
 
 /// Inserts a track into the database.

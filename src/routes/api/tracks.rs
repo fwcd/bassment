@@ -1,4 +1,4 @@
-use actix_web::{get, web, Responder, post, patch};
+use actix_web::{get, web, Responder, post, patch, put, HttpResponse};
 
 use crate::{actions::tracks, db::DbPool, error::{Result, Error}, models::{NewTrack, UpdateTrack}};
 
@@ -35,6 +35,14 @@ async fn get_audios_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result
     let conn = pool.get()?;
     let track = web::block(move || tracks::audios_by_id(*id, &conn)).await??;
     Ok(web::Json(track))
+}
+
+#[put("/{id}/audios/{file_id}")]
+async fn put_audio_by_id(pool: web::Data<DbPool>, ids: web::Path<(i32, i32)>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let (id, file_id) = *ids;
+    web::block(move || tracks::insert_audio(id, file_id, &conn)).await??;
+    Ok(HttpResponse::Ok())
 }
 
 #[get("/annotated/{id}")]

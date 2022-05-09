@@ -39,26 +39,37 @@ pub struct AnnotatedTrack {
     pub genres: Vec<PartialGenre>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
+#[table_name = "track_artists"]
 #[serde(rename_all = "camelCase")]
 pub struct TrackArtist {
     pub track_id: i32,
     pub artist_id: i32,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
+#[table_name = "track_albums"]
 #[serde(rename_all = "camelCase")]
 pub struct TrackAlbum {
     pub track_id: i32,
     pub album_id: i32,
-    pub position: i32,
+    pub track_number: i32,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
+#[table_name = "track_genres"]
 #[serde(rename_all = "camelCase")]
 pub struct TrackGenre {
     pub track_id: i32,
     pub genre_id: i32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
+#[table_name = "track_audios"]
+#[serde(rename_all = "camelCase")]
+pub struct TrackAudio {
+    pub track_id: i32,
+    pub resource_id: i32,
 }
 
 // TODO: Add other fields to NewTrack and UpdateTrack
