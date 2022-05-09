@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf, io};
 
-use actix_web::{get, web, Responder, post, patch, put, HttpResponse};
+use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 
 use crate::{actions::{files, settings}, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo, FileInfo}};
 
@@ -104,6 +104,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_by_id)
             .service(patch_by_id)
             .service(get_data_by_id)
-            .service(put_data_by_id)
+            .service(web::scope("")
+                .service(put_data_by_id)
+                .app_data(PayloadConfig::new(80_000_000))) // Limit body to 80 MB
     );
 }
