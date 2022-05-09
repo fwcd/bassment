@@ -1,6 +1,7 @@
 import { AudioPlayer } from '@bassment/components/audio';
 import { ApiContext } from '@bassment/contexts/Api';
 import { NowPlaying } from '@bassment/models/NowPlaying';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import { TrackQueue } from '@bassment/models/TrackQueue';
 import React, {
   createContext,
@@ -14,10 +15,13 @@ import React, {
 export interface AudioPlayerValue {
   readonly nowPlaying?: NowPlaying;
   isPlaying: boolean;
+
+  play(track: AnnotatedTrack): void;
 }
 
 export const AudioPlayerContext = createContext<AudioPlayerValue>({
   isPlaying: false,
+  play: () => {},
 });
 
 interface AudioPlayerContextProviderProps {
@@ -28,8 +32,10 @@ export function AudioPlayerContextProvider(
   props: AudioPlayerContextProviderProps,
 ) {
   const api = useContext(ApiContext);
-  const [isPlaying, setPlaying] = useState(false);
+
+  // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
+  const [isPlaying, setPlaying] = useState(false);
   const [nowPlaying, setNowPlaying] = useState<NowPlaying | undefined>(
     undefined,
   );
@@ -41,6 +47,9 @@ export function AudioPlayerContextProvider(
     },
     set isPlaying(playing: boolean) {
       setPlaying(playing);
+    },
+    play(track: AnnotatedTrack): void {
+      setNowPlaying({ track, elapsedMs: 0 });
     },
   };
 
