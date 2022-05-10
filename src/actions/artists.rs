@@ -53,9 +53,13 @@ pub fn insert(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
 /// Inserts or fetches an artist from the database.
 pub fn insert_or_get(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
     use crate::schema::artists::dsl::*;
+    // Unfortunately, Postgres doesn't return the existing row with
+    // on_conflict_do_nothing, so we have to work around this by perform an 'empty' update.
     Ok(diesel::insert_into(artists)
         .values(new_artist)
-        .on_conflict_do_nothing()
+        .on_conflict(name)
+        .do_update()
+        .set(name.eq(name))
         .get_result(conn)?)
 }
 

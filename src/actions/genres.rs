@@ -53,9 +53,12 @@ pub fn insert(new_genre: &NewGenre, conn: &DbConn) -> Result<Genre> {
 /// Inserts or fetches a genres from the database.
 pub fn insert_or_get(new_genre: &NewGenre, conn: &DbConn) -> Result<Genre> {
     use crate::schema::genres::dsl::*;
+    // Workaround for on_conflict_do_nothing, see artists::insert_or_get
     Ok(diesel::insert_into(genres)
         .values(new_genre)
-        .on_conflict_do_nothing()
+        .on_conflict(name)
+        .do_update()
+        .set(name.eq(name))
         .get_result(conn)?)
 }
 
