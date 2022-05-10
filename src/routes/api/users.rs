@@ -1,7 +1,6 @@
 use actix_web::{get, web, Responder};
-use actix_web_httpauth::middleware::HttpAuthentication;
 
-use crate::{actions::users, db::DbPool, error::Result, middleware::auth::authenticate_admin};
+use crate::{actions::users, db::DbPool, error::Result, middleware::auth::Authentication};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -14,7 +13,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/users")
             .service(get_all)
-            .wrap(HttpAuthentication::bearer(authenticate_admin))
+            .wrap(Authentication::admin())
     );
 }
 
