@@ -6,8 +6,20 @@ export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
   const onDragIn = useCallback(() => onDrag(true), [onDrag]);
   const onDragOut = useCallback(() => onDrag(false), [onDrag]);
 
+  const onDragOver: DragEventHandler = useCallback(event => {
+    // Prevent file from being opened
+    event.preventDefault();
+  }, []);
+
   const onDropEvent: DragEventHandler = useCallback(
     event => {
+      // Finish drag
+      onDrag(false);
+
+      // Prevent file from being opened
+      event.preventDefault();
+
+      // Extract the transferred data and process it
       const transfer = event.dataTransfer;
 
       if (transfer.files.length > 0) {
@@ -41,6 +53,7 @@ export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
       onDragEnter={onDragIn}
       onDragExit={onDragOut}
       onDragEnd={onDragOut}
+      onDragOver={onDragOver}
       onDrop={onDropEvent}>
       {children}
     </div>
