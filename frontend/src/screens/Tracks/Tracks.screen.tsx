@@ -16,5 +16,5 @@ export function TracksScreen() {
     updateTracks();
   }, [updateTracks]);
 
-  return <TracksView tracks={tracks} />;
+  return <TracksView tracks={tracks} updateTracks={updateTracks} />;
 }

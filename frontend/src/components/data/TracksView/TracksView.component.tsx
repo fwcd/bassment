@@ -9,9 +9,10 @@ import React, { useCallback, useContext } from 'react';
 
 interface TracksViewProps {
   tracks: AnnotatedTrack[];
+  updateTracks?: () => void;
 }
 
-export function TracksView({ tracks }: TracksViewProps) {
+export function TracksView({ tracks, updateTracks }: TracksViewProps) {
   const { searchText } = useContext(SearchContext);
   const api = useContext(ApiContext);
   const player = useContext(AudioPlayerContext);
@@ -28,9 +29,11 @@ export function TracksView({ tracks }: TracksViewProps) {
           await api.uploadAutotaggedTrack(drop.file);
         }
       }
-      // TODO: Trigger refresh of tracks?
+      if (updateTracks) {
+        updateTracks();
+      }
     },
-    [api],
+    [api, updateTracks],
   );
 
   // TODO: Other view on mobile

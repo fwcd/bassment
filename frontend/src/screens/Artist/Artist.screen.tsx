@@ -20,5 +20,5 @@ export function ArtistScreen() {
     updateTracks();
   }, [updateTracks]);
 
-  return <TracksView tracks={tracks} />;
+  return <TracksView tracks={tracks} updateTracks={updateTracks} />;
 }
