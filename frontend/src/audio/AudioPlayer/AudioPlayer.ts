@@ -7,6 +7,8 @@ export class AudioPlayer {
   readonly isPlaying: boolean = false;
   /** The elapsed milliseconds. */
   readonly elapsedMs: number = 0;
+  /** The total milliseconds of the current buffer. */
+  readonly totalMs: number = 0;
 
   /** Controls whether playback should be running. */
   async setPlaying(_isPlaying: boolean): Promise<void> {

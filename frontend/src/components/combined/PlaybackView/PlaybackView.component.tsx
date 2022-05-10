@@ -13,7 +13,6 @@ interface PlaybackViewProps {
 
 export function PlaybackView(props: PlaybackViewProps) {
   const styles = usePlaybackViewStyles();
-  console.log(props.nowPlaying?.track);
 
   return (
     <View style={[styles.view, props.style]}>
@@ -25,7 +24,7 @@ export function PlaybackView(props: PlaybackViewProps) {
             {/* TODO: Proper playback progress data */}
             <PlaybackProgress
               elapsedMs={props.nowPlaying.elapsedMs}
-              totalMs={props.nowPlaying.track.durationMs ?? 0}
+              totalMs={props.nowPlaying.totalMs}
             />
           </>
         ) : null}

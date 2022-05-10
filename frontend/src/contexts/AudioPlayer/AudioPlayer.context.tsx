@@ -70,7 +70,7 @@ export function AudioPlayerContextProvider(
     },
 
     play(track: AnnotatedTrack): void {
-      setNowPlaying({ track, elapsedMs: 0 });
+      setNowPlaying({ track, elapsedMs: 0, totalMs: track.durationMs ?? 0 });
     },
 
     seek(seekMs: number): void {
@@ -110,6 +110,7 @@ export function AudioPlayerContextProvider(
           setNowPlaying({
             ...nowPlaying,
             elapsedMs: playerRef.current.elapsedMs,
+            totalMs: playerRef.current.totalMs,
           });
         }
       }, 200);

@@ -23,6 +23,10 @@ export class AudioPlayer {
     }
   }
 
+  get totalMs(): number {
+    return (this.buffer?.duration ?? 0) * 1000;
+  }
+
   async setPlaying(isPlaying: boolean): Promise<void> {
     const buffer = this.buffer;
 
