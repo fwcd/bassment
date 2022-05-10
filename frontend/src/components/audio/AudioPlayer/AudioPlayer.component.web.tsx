@@ -8,6 +8,7 @@ export function AudioPlayer({
   onUpdatePlaying,
   onUpdateElapsedMs,
   onUpdateTotalMs,
+  onEnded,
 }: AudioPlayerProps) {
   const elementRef = createRef<HTMLAudioElement>();
 
@@ -65,7 +66,7 @@ export function AudioPlayer({
       onTimeUpdate={onTimeUpdate}
       onPlay={onPlay}
       onPause={onPause}
-      onEnded={onPause}
+      onEnded={onEnded}
     />
   );
 }

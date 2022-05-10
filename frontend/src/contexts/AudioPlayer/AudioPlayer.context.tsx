@@ -102,6 +102,17 @@ export function AudioPlayerContextProvider(
     setSeekMs(undefined);
   }, []);
 
+  const advanceQueue = useCallback(() => {
+    if (queue.tracks.length > 0) {
+      const next = queue.tracks[0];
+      setQueue({ tracks: queue.tracks.slice(1) });
+      setTrack(next);
+      setSeekMs(0);
+    } else {
+      setPlayingRequested(false);
+    }
+  }, [queue]);
+
   return (
     <AudioPlayerContext.Provider value={value}>
       <AudioPlayer
@@ -111,6 +122,7 @@ export function AudioPlayerContextProvider(
         onUpdatePlaying={updatePlaying}
         onUpdateElapsedMs={updateElapsedMs}
         onUpdateTotalMs={setTotalMs}
+        onEnded={advanceQueue}
       />
       {props.children}
     </AudioPlayerContext.Provider>
