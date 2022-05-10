@@ -1,6 +1,6 @@
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 
-use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo, FileInfo}};
+use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -12,7 +12,7 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
 #[post("")]
 async fn post(pool: web::Data<DbPool>, info: web::Json<NewFileInfo>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let new_info = web::block(move || files::insert(&info, &conn)).await??;
+    let new_info = web::block(move || files::insert(info.clone(), &conn)).await??;
     Ok(web::Json(new_info))
 }
 
@@ -24,14 +24,9 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
 }
 
 #[patch("/{id}")]
-async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, raw_info: web::Json<UpdateFileInfo>) -> Result<impl Responder> {
+async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, info: web::Json<UpdateFileInfo>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    // Sanitize names
-    let sanitized_info = UpdateFileInfo {
-        name: raw_info.name.as_ref().map(|n| n.replace("/", "-").replace("..", "")),
-        ..raw_info.clone()
-    };
-    let new_info = web::block(move || files::update_with_file(*id, &sanitized_info, &conn)).await??;
+    let new_info = web::block(move || files::update_with_file(*id, info.clone(), &conn)).await??;
     Ok(web::Json(new_info))
 }
 

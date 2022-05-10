@@ -2,7 +2,7 @@ use std::{path::PathBuf, fs, io};
 
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{FileInfo, NewFileInfo, UpdateFileInfo}, error::{Result, Error}, db::DbConn};
+use crate::{models::{FileInfo, NewFileInfo, UpdateFileInfo}, error::{Result, Error}, db::DbConn, utils::sanitize::sanitize};
 
 use super::settings;
 
@@ -19,16 +19,18 @@ pub fn by_id(file_id: i32, conn: &DbConn) -> Result<Option<FileInfo>> {
 }
 
 /// Inserts a file info into the database.
-pub fn insert(new_info: &NewFileInfo, conn: &DbConn) -> Result<FileInfo> {
+pub fn insert(mut new_info: NewFileInfo, conn: &DbConn) -> Result<FileInfo> {
     use crate::schema::file_infos::dsl::*;
+    new_info.name = sanitize(&new_info.name);
     Ok(diesel::insert_into(file_infos)
         .values(new_info)
         .get_result(conn)?)
 }
 
 /// Updates a file info in the database.
-fn update(file_id: i32, update_info: &UpdateFileInfo, conn: &DbConn) -> Result<FileInfo> {
+fn update(file_id: i32, mut update_info: UpdateFileInfo, conn: &DbConn) -> Result<FileInfo> {
     use crate::schema::file_infos::dsl::*;
+    update_info.name = update_info.name.map(|n| sanitize(&n));
     Ok(diesel::update(file_infos)
         .filter(id.eq(file_id))
         .set(update_info)
@@ -41,10 +43,10 @@ fn path_for(info: &FileInfo, conn: &DbConn) -> Result<PathBuf> {
 }
 
 /// Updates a file info along with the file on the file system.
-pub fn update_with_file(file_id: i32, update_info: &UpdateFileInfo, conn: &DbConn) -> Result<FileInfo> {
+pub fn update_with_file(file_id: i32, update_info: UpdateFileInfo, conn: &DbConn) -> Result<FileInfo> {
     // Update info in db
     let old_info = by_id(file_id, conn)?;
-    let new_info = update(file_id, &update_info, conn)?;
+    let new_info = update(file_id, update_info, conn)?;
     // Move file if needed
     if let Some(old_info) = old_info {
         let old_path = path_for(&old_info, &conn)?;
