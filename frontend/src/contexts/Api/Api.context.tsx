@@ -67,6 +67,9 @@ export interface ApiContextValue {
 
   /** Fetches the data for a file by id. */
   getFileData(fileId: number): Promise<ArrayBuffer>;
+
+  /** Uploads a track and lets the server tag it. */
+  uploadAutotaggedTrack(fileName: string, data: ArrayBuffer): Promise<void>;
 }
 
 function noApiContextSync<T>(resource: string, defaultValue: () => T): () => T {
@@ -98,6 +101,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
   getFileDataUrl: noApiContextSync('file data url', () => ''),
+  uploadAutotaggedTrack: noApiContext('autotagged track', () => {}),
 });
 
 interface ApiContextProviderProps {
@@ -109,6 +113,7 @@ interface ApiUrlOptions {
 }
 
 interface ApiRequestOptions {
+  contentType?: 'json' | 'multipart';
   acceptedFormat?: 'json' | 'binary';
   body?: any;
 }
@@ -125,33 +130,37 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
   );
 
   const apiRequest = useCallback(
-    async (
-      method: string,
-      endpoint: string,
-      inputOptions?: ApiRequestOptions,
-    ) => {
-      const options = {
-        ...inputOptions,
-        acceptedFormat: inputOptions?.acceptedFormat ?? 'json',
-      };
+    async (method: string, endpoint: string, options?: ApiRequestOptions) => {
+      const acceptedFormat = options?.acceptedFormat ?? 'json';
+      let contentType: string = options?.contentType ?? 'json';
+
+      switch (contentType) {
+        case 'json':
+          contentType = 'application/json';
+          break;
+        case 'multipart':
+          contentType = 'multipart/form-data';
+          break;
+      }
+
       const response = await fetch(apiUrl(endpoint), {
         method,
         headers: {
           Authorization: `Bearer ${auth.token!}`,
           'User-Agent': networkConstants.userAgent,
-          'Content-Type': 'application/json',
-          ...(options.acceptedFormat === 'json'
-            ? { Accept: 'application/json' }
-            : {}),
+          'Content-Type': contentType,
+          ...(acceptedFormat === 'json' ? { Accept: 'application/json' } : {}),
         },
         body: options?.body ? JSON.stringify(options.body) : undefined,
       });
+
       if (response.status >= 400) {
         throw Error(
           `API request failed with status ${response.status} ${response.statusText}`,
         );
       }
-      switch (options.acceptedFormat) {
+
+      switch (acceptedFormat) {
         case 'json':
           return await response.json();
         case 'binary':
@@ -218,6 +227,17 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     getFileDataUrl(fileId: number): string {
       return apiUrl(`/files/${fileId}/data`, {
         includeToken: true,
+      });
+    },
+    async uploadAutotaggedTrack(
+      fileName: string,
+      data: ArrayBuffer,
+    ): Promise<void> {
+      const formData = new FormData();
+      formData.append('file', new Blob([data]), fileName);
+      await apiRequest('POST', '/tracks/autotagged', {
+        contentType: 'multipart',
+        body: formData,
       });
     },
   };
