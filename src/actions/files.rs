@@ -89,7 +89,8 @@ pub fn update_data_by_id(file_id: i32, data: &[u8], conn: &DbConn) -> Result<()>
 }
 
 /// Inserts file info into the database and writes data to the file system.
-pub fn insert_with_file(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Result<()> {
+pub fn insert_with_file(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Result<FileInfo> {
     let info = insert(info, conn)?;
-    update_data_for(&info, data, conn)
+    update_data_for(&info, data, conn)?;
+    Ok(info)
 }

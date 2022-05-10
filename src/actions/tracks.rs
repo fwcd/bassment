@@ -107,14 +107,15 @@ pub fn insert_autotagged(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Resul
 
     // Insert file info into db and write to disk
     let file_name = info.name.clone();
-    files::insert_with_file(info, data, conn)?;
+    let file_info = files::insert_with_file(info, data, conn)?;
 
     // Insert track metadata into db
     // TODO: Artist, album, etc.
     let new_track = NewTrack {
         title: tag.title().map(|s| s.to_owned()).unwrap_or_else(|| file_name)
     };
-    insert(&new_track, conn)?;
+    let track = insert(&new_track, conn)?;
+    insert_audio(track.id, file_info.id, conn)?;
 
     Ok(())
 }
