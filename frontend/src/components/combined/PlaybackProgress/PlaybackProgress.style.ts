@@ -4,7 +4,7 @@ export function usePlaybackProgressStyles() {
   return StyleSheet.create({
     slider: {
       width: '100%',
-      height: 20,
+      height: 10,
       margin: 0,
     },
   });

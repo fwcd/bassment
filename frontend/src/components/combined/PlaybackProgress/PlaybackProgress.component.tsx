@@ -13,7 +13,6 @@ export function PlaybackProgress(props: PlaybackProgressProps) {
 
   return (
     <Slider
-      // TODO: Handle change
       value={props.elapsedMs}
       minimumValue={0}
       maximumValue={props.totalMs}

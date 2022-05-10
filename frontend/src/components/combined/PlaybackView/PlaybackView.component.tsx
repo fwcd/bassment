@@ -22,7 +22,6 @@ export function PlaybackView(props: PlaybackViewProps) {
         {props.nowPlaying ? (
           <>
             <TrackInfoView style={styles.info} track={props.nowPlaying.track} />
-            {/* TODO: Proper playback progress data */}
             <PlaybackProgress
               elapsedMs={props.nowPlaying.elapsedMs}
               totalMs={props.nowPlaying.totalMs}
