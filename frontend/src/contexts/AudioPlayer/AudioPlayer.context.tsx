@@ -41,6 +41,7 @@ export function AudioPlayerContextProvider(
 ) {
   const api = useContext(ApiContext);
   const playerRef = useRef<AudioPlayer>();
+  const timeoutRef = useRef<any>();
 
   // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
@@ -94,19 +95,27 @@ export function AudioPlayerContextProvider(
     const newAudioBuffer = audioFile?.id
       ? await api.getFileData(audioFile.id)
       : undefined; // TODO: Do the AudioPlayer implementations handle an empty buffer correctly?
-    playerRef.current?.setBuffer(newAudioBuffer);
+
+    if (playerRef.current) {
+      await playerRef.current.setBuffer(newAudioBuffer);
+      await playerRef.current.setPlaying(true);
+      setPlaying(playerRef.current.isPlaying);
+    }
   }, [api, trackId]);
 
   // Update the audio buffer whenever the current track changes
   useEffect(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
+    }
     updateAudioBuffer();
-    setPlaying(false);
   }, [updateAudioBuffer, trackId]);
 
   // Update the progress while playing continuously
   useEffect(() => {
     if (isPlaying && nowPlaying) {
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         if (playerRef.current) {
           setNowPlaying({
             ...nowPlaying,
