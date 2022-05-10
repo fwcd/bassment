@@ -27,6 +27,10 @@ RUN cargo build --release
 # === Prepare the final runtime ===
 FROM debian:buster-slim as runtime
 
+# Install native dependencies (for interfacing with Postgres)
+RUN apt-get update && apt-get install -y libpq-dev
+
+# Copy binary and bundled frontend to runtime image
 COPY LICENSE /usr/share/licenses/bassment
 COPY --from=backend-builder /opt/bassment/target/release/bassment /usr/local/bin/bassment
 COPY --from=frontend-builder /opt/bassment/frontend/dist /srv/bassment/frontend
