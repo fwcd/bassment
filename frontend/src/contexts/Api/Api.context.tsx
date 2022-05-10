@@ -59,8 +59,8 @@ export interface ApiContextValue {
   /** Fetches associated audio files for a track. */
   getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]>;
 
-  /** Fetches the URL for a file by id. */
-  getFileDataUrl(fileId: number): string;
+  /** Fetches the data for a file by id. */
+  getFileData(fileId: number): Promise<ArrayBuffer>;
 }
 
 function noApiContextSync<T>(resource: string, defaultValue: () => T): () => T {
@@ -89,7 +89,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
-  getFileDataUrl: noApiContextSync('file url', () => ''),
+  getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
 });
 
 interface ApiContextProviderProps {
@@ -105,14 +105,24 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
   );
 
   const apiRequest = useCallback(
-    async (method: string, endpoint: string, body?: any) => {
+    async (
+      method: string,
+      endpoint: string,
+      inputOptions?: { acceptedFormat?: 'json' | 'binary' },
+      body?: any,
+    ) => {
+      const options = {
+        acceptedFormat: inputOptions?.acceptedFormat ?? 'json',
+      };
       const response = await fetch(apiUrl(endpoint), {
         method,
         headers: {
           Authorization: `Bearer ${auth.token!}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
           'User-Agent': networkConstants.userAgent,
+          'Content-Type': 'application/json',
+          ...(options.acceptedFormat === 'json'
+            ? { Accept: 'application/json' }
+            : {}),
         },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -121,7 +131,12 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
           `API request failed with status ${response.status} ${response.statusText}`,
         );
       }
-      return await response.json();
+      switch (options.acceptedFormat) {
+        case 'json':
+          return await response.json();
+        case 'binary':
+          return await response.arrayBuffer();
+      }
     },
     [apiUrl, auth.token],
   );
@@ -172,8 +187,10 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     async getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]> {
       return await apiRequest('GET', `/tracks/${trackId}/audios`);
     },
-    getFileDataUrl(fileId: number): string {
-      return apiUrl(`/files/${fileId}/data`);
+    async getFileData(fileId: number): Promise<ArrayBuffer> {
+      return await apiRequest('GET', `/files/${fileId}/data`, {
+        acceptedFormat: 'binary',
+      });
     },
   };
 

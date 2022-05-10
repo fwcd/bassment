@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@bassment/components/audio/AudioPlayer';
+import { AudioPlayer } from '@bassment/audio/AudioPlayer';
 import { ApiContext } from '@bassment/contexts/Api';
 import { NowPlaying } from '@bassment/models/NowPlaying';
 import { AnnotatedTrack } from '@bassment/models/Track';
@@ -9,6 +9,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 
@@ -35,51 +36,55 @@ export function AudioPlayerContextProvider(
   props: AudioPlayerContextProviderProps,
 ) {
   const api = useContext(ApiContext);
+  const playerRef = useRef<AudioPlayer>();
 
   // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
-  const [isPlaying, setPlaying] = useState(false);
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying | undefined>(
-    undefined,
-  );
+  const [isPlaying, setPlaying] = useState<boolean>(false);
+  const [nowPlaying, setNowPlaying] = useState<NowPlaying>();
+  const trackId = nowPlaying?.track.id;
+
+  // Initialize our audio player (which conceptually operates in the 'imperative world')
+  useEffect(() => {
+    playerRef.current = new AudioPlayer();
+  }, []);
 
   const value: AudioPlayerContextValue = {
     nowPlaying,
     get isPlaying() {
       return isPlaying;
     },
-    set isPlaying(playing: boolean) {
-      setPlaying(playing);
+    set isPlaying(shouldPlay: boolean) {
+      (async () => {
+        if (playerRef.current) {
+          await playerRef.current.setPlaying(shouldPlay);
+          setPlaying(playerRef.current.isPlaying);
+        }
+      })();
     },
     play(track: AnnotatedTrack): void {
       setNowPlaying({ track, elapsedMs: 0 });
     },
   };
 
-  const trackId = nowPlaying?.track.id;
-  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined);
-
-  // TODO: Deal with the case where unauthenticated requests aren't allowed in the audio player
-
-  const updateAudioUrl = useCallback(async () => {
+  const updateAudioBuffer = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
-
     const audioFiles = trackId ? await api.getTrackAudioFiles(trackId) : [];
     const audioFile = audioFiles.find(() => true);
-    const newAudioUrl = audioFile?.id
-      ? api.getFileDataUrl(audioFile.id)
-      : undefined;
-
-    setAudioUrl(newAudioUrl);
+    const newAudioBuffer = audioFile?.id
+      ? await api.getFileData(audioFile.id)
+      : undefined; // TODO: Do the AudioPlayer implementations handle an empty buffer correctly?
+    playerRef.current?.setBuffer(newAudioBuffer);
   }, [api, trackId]);
 
+  // Update the audio buffer whenever the current track changes
   useEffect(() => {
-    updateAudioUrl();
-  }, [updateAudioUrl, trackId]);
+    updateAudioBuffer();
+    setPlaying(false);
+  }, [updateAudioBuffer, trackId]);
 
   return (
     <AudioPlayerContext.Provider value={value}>
-      <AudioPlayer isPlaying={isPlaying} url={audioUrl} />
       {props.children}
     </AudioPlayerContext.Provider>
   );
