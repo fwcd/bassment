@@ -15,9 +15,11 @@ export function Dropzone(props: DropzoneProps) {
 
   return (
     <Droppable>
-      {props.children}
-      <View style={styles.overlay}>
-        {props.label ? <ThemedText>{props.label}</ThemedText> : null}
+      <View style={[styles.item, styles.background]}>{props.children}</View>
+      <View style={[styles.item, styles.overlay]} pointerEvents="none">
+        {props.label ? (
+          <ThemedText style={styles.label}>{props.label}</ThemedText>
+        ) : null}
       </View>
     </Droppable>
   );

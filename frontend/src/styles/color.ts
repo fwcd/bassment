@@ -11,5 +11,8 @@ export function useColorStyles() {
     secondaryField: theme.dark ? '#191919' : '#eeeeee',
     selection: `rgba(255, 200, 115, ${theme.dark ? '0.2' : '0.5'})`,
     hover: `rgba(255, 200, 115, ${theme.dark ? '0.1' : '0.3'})`,
+    translucentZone: theme.dark
+      ? 'rgba(0, 0, 0, 0.8)'
+      : 'rgba(255, 255, 255, 0.8)',
   };
 }

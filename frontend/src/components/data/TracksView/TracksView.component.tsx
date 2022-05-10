@@ -1,4 +1,5 @@
 import { TrackTable } from '@bassment/components/data/TrackTable';
+import { Dropzone } from '@bassment/components/input/Dropzone';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { SearchContext } from '@bassment/contexts/Search';
 import { AnnotatedTrack } from '@bassment/models/Track';
@@ -14,10 +15,12 @@ export function TracksView(props: TracksViewProps) {
 
   // TODO: Other view on mobile
   return (
-    <TrackTable
-      tracks={props.tracks}
-      filter={searchText}
-      onPlay={player.play}
-    />
+    <Dropzone label="Drop tracks to upload!">
+      <TrackTable
+        tracks={props.tracks}
+        filter={searchText}
+        onPlay={player.play}
+      />
+    </Dropzone>
   );
 }
