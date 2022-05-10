@@ -43,13 +43,14 @@ export function AudioPlayerContextProvider(
   // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
   const [isPlaying, setPlaying] = useState<boolean>(false);
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying>();
-  const [audioUrl, setAudioUrl] = useState<string>();
+  const [elapsedMs, setElapsedMs] = useState<number>(0);
+  const [totalMs, setTotalMs] = useState<number>(0);
   const [seekMs, setSeekMs] = useState<number>(0);
-  const trackId = nowPlaying?.track.id;
+  const [track, setTrack] = useState<AnnotatedTrack>();
+  const [audioUrl, setAudioUrl] = useState<string>();
 
   const value: AudioPlayerContextValue = {
-    nowPlaying,
+    nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
 
     get isPlaying() {
       return isPlaying;
@@ -59,8 +60,9 @@ export function AudioPlayerContextProvider(
       setPlaying(playing);
     },
 
-    play(track: AnnotatedTrack): void {
-      setNowPlaying({ track, elapsedMs: 0, totalMs: track.durationMs ?? 0 });
+    play(newTrack: AnnotatedTrack): void {
+      setTrack(newTrack);
+      setSeekMs(0);
       setPlaying(true);
     },
 
@@ -71,7 +73,7 @@ export function AudioPlayerContextProvider(
 
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
-    const audioFiles = trackId ? await api.getTrackAudioFiles(trackId) : [];
+    const audioFiles = track?.id ? await api.getTrackAudioFiles(track.id) : [];
     const audioFile = audioFiles.find(() => true);
     const newAudioUrl = audioFile?.id
       ? api.getFileDataUrl(audioFile.id)
@@ -79,18 +81,24 @@ export function AudioPlayerContextProvider(
 
     setAudioUrl(newAudioUrl);
     setPlaying(newAudioUrl !== undefined);
-  }, [api, trackId]);
+  }, [api, track]);
 
   // Update the audio buffer whenever the current track changes
   useEffect(() => {
     updateAudioUrl();
-  }, [updateAudioUrl, trackId]);
+  }, [updateAudioUrl]);
 
-  // TODO: Progress & seeking
+  // TODO: Seeking
 
   return (
     <AudioPlayerContext.Provider value={value}>
-      <AudioPlayer isPlaying={isPlaying} url={audioUrl} />
+      <AudioPlayer
+        isPlaying={isPlaying}
+        url={audioUrl}
+        onUpdatePlaying={setPlaying}
+        onUpdateElapsedMs={setElapsedMs}
+        onUpdateTotalMs={setTotalMs}
+      />
       {props.children}
     </AudioPlayerContext.Provider>
   );
