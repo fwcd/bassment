@@ -1,22 +1,18 @@
 /** A value transferred via drag-n-drop. */
 interface BaseDrop {
-  type: string;
-}
-
-export interface DropFile {
-  name: string;
-  size: number;
-  content: () => Promise<ArrayBuffer>;
+  kind: string;
 }
 
 export interface FileDrop extends BaseDrop {
-  type: 'file';
-  files: DropFile[];
+  kind: 'file';
+  name?: string;
+  size?: number;
+  content?: ArrayBuffer;
 }
 
-export interface ItemDrop<D> extends BaseDrop {
-  type: 'item';
-  items: D[];
+export interface ValueDrop<V> extends BaseDrop {
+  kind: 'any';
+  value: V;
 }
 
-export type Drop = FileDrop | ItemDrop<any>;
+export type Drop = FileDrop | ValueDrop<any>;

@@ -7,14 +7,14 @@ import { View } from 'react-native';
 
 interface DropzoneProps {
   label?: string;
-  dropFilter?: (value: Drop) => boolean;
-  onDrop: (value: Drop) => void;
+  filterDrop?: (drops: Drop[]) => boolean;
+  onDrop: (drops: Drop[]) => void;
   children: ReactNode;
 }
 
 export function Dropzone({
   label,
-  dropFilter,
+  filterDrop,
   onDrop,
   children,
 }: DropzoneProps) {
@@ -22,21 +22,21 @@ export function Dropzone({
   const [isHovering, setHovering] = useState(false);
 
   const onDragCallback = useCallback(
-    (hovering: boolean, value?: Drop) => {
-      if (!dropFilter || (value && dropFilter(value))) {
+    (hovering: boolean, drops: Drop[]) => {
+      if (!filterDrop || filterDrop(drops)) {
         setHovering(hovering);
       }
     },
-    [dropFilter],
+    [filterDrop],
   );
 
   const onDropCallback = useCallback(
-    (value: Drop) => {
-      if (!dropFilter || dropFilter(value)) {
-        onDrop(value);
+    (drops: Drop[]) => {
+      if (!filterDrop || filterDrop(drops)) {
+        onDrop(drops);
       }
     },
-    [dropFilter, onDrop],
+    [filterDrop, onDrop],
   );
 
   return (

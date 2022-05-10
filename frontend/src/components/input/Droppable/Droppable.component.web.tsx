@@ -1,39 +1,40 @@
 import { DroppableProps } from '@bassment/components/input/Droppable/Droppable.props';
-import { Drop, DropFile } from '@bassment/models/Drop';
+import { Drop } from '@bassment/models/Drop';
 import React, { DragEventHandler, useCallback } from 'react';
 
 /** Converts a data transfer (from the DOM API) to a Drop (from our model). */
-function dropOf(transfer: DataTransfer): Drop | undefined {
-  if (transfer.files.length > 0) {
-    // Create a file drop
-    const files: DropFile[] = [];
-    for (let i = 0; i < transfer.files.length; i++) {
-      const file = transfer.files[i];
-      files.push({
-        name: file.name,
-        size: file.size,
-        content: file.arrayBuffer,
-      });
+async function dropsOf(transfer: DataTransfer): Promise<Drop[]> {
+  const drops: Drop[] = [];
+
+  for (let i = 0; i < transfer.items.length; i++) {
+    const item = transfer.items[i];
+    switch (item.kind) {
+      case 'file':
+        const file = item.getAsFile();
+        drops.push({
+          kind: 'file',
+          name: file?.name,
+          size: file?.size,
+          content: await file?.arrayBuffer(),
+        });
+        break;
+      default:
+        // TODO: More fine-grained drop types rather than just dumping the item in here
+        drops.push({ kind: 'any', value: item });
+        break;
     }
-    return { type: 'file', files };
-  } else if (transfer.items.length > 0) {
-    // Create an item drop
-    const items: any[] = [];
-    for (let i = 0; i < transfer.items.length; i++) {
-      items.push(transfer.items[i]);
-    }
-    return { type: 'item', items };
   }
-  return undefined;
+
+  return drops;
 }
 
 export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
   const onDragIn: DragEventHandler = useCallback(
-    event => onDrag(true, dropOf(event.dataTransfer)),
+    async event => onDrag(true, await dropsOf(event.dataTransfer)),
     [onDrag],
   );
   const onDragOut: DragEventHandler = useCallback(
-    event => onDrag(false, dropOf(event.dataTransfer)),
+    async event => onDrag(false, await dropsOf(event.dataTransfer)),
     [onDrag],
   );
 
@@ -43,18 +44,16 @@ export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
   }, []);
 
   const onDropEvent: DragEventHandler = useCallback(
-    event => {
-      // Finish drag
-      onDrag(false);
-
+    async event => {
       // Prevent file from being opened
       event.preventDefault();
 
-      // Extract the transferred data and process it
-      const drop = dropOf(event.dataTransfer);
-      if (drop) {
-        onDrop(drop);
-      }
+      // Extract the transferred data
+      const drops = await dropsOf(event.dataTransfer);
+
+      // Finish drag and notify drop handler
+      onDrag(false, drops);
+      onDrop(drops);
     },
     [onDrag, onDrop],
   );
