@@ -50,6 +50,15 @@ pub fn insert(new_genre: &NewGenre, conn: &DbConn) -> Result<Genre> {
         .get_result(conn)?)
 }
 
+/// Inserts or fetches a genres from the database.
+pub fn insert_or_get(new_genre: &NewGenre, conn: &DbConn) -> Result<Genre> {
+    use crate::schema::genres::dsl::*;
+    Ok(diesel::insert_into(genres)
+        .values(new_genre)
+        .on_conflict_do_nothing()
+        .get_result(conn)?)
+}
+
 /// Updates a genre in the database.
 pub fn update(genre_id: i32, update_genre: &UpdateGenre, conn: &DbConn) -> Result<Genre> {
     use crate::schema::genres::dsl::*;

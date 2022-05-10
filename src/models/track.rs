@@ -81,6 +81,14 @@ pub struct NewTrack {
     pub title: String,
 }
 
+impl NewTrack {
+    pub fn titled(title: &str) -> Self {
+        Self {
+            title: title.to_owned(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "tracks"]

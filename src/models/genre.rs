@@ -28,6 +28,14 @@ pub struct NewGenre {
     pub name: String,
 }
 
+impl NewGenre {
+    pub fn named(name: &str) -> Self {
+        Self {
+            name: name.to_owned(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "genres"]

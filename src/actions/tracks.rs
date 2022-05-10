@@ -3,7 +3,7 @@ use std::io::Cursor;
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 use id3::{Tag, TagLike};
 
-use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio, NewFileInfo}, error::Result, db::DbConn};
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio, NewFileInfo, TrackArtist, TrackAlbum, TrackGenre, NewArtist, NewGenre}, error::Result, db::DbConn};
 
 use super::{artists, albums, genres, files};
 
@@ -70,13 +70,44 @@ pub fn audios_by_id(track_id: i32, conn: &DbConn) -> Result<Vec<PartialFileInfo>
         .get_results(conn)?)
 }
 
-/// Inserts a new track audio by id.
+/// Inserts a new track-audio association by id. Ignores if exists.
 pub fn insert_audio(track_id: i32, file_id: i32, conn: &DbConn) -> Result<()> {
     use crate::schema::track_audios;
-    // TODO: insert_or_ignore_into doesn't seem to satisfy all bounds
-    //       (with our Postgres connection), why?
     diesel::insert_into(track_audios::table)
         .values(TrackAudio { track_id, file_id })
+        .on_conflict_do_nothing()
+        .execute(conn)?;
+    Ok(())
+}
+
+/// Inserts a new track-artist association by id. Ignores if exists.
+pub fn insert_artist(track_id: i32, artist_id: i32, conn: &DbConn) -> Result<()> {
+    use crate::schema::track_artists;
+    diesel::insert_into(track_artists::table)
+        .values(TrackArtist { track_id, artist_id })
+        .on_conflict_do_nothing()
+        .execute(conn)?;
+    Ok(())
+}
+
+/// Inserts a new track-genre association by id. Ignores if exists.
+pub fn insert_genre(track_id: i32, genre_id: i32, conn: &DbConn) -> Result<()> {
+    use crate::schema::track_genres;
+    diesel::insert_into(track_genres::table)
+        .values(TrackGenre { track_id, genre_id })
+        .on_conflict_do_nothing()
+        .execute(conn)?;
+    Ok(())
+}
+
+/// Inserts a new track-album association by id. Updates track number if exists.
+pub fn insert_album(track_id: i32, album_id: i32, track_number: i32, conn: &DbConn) -> Result<()> {
+    use crate::schema::track_albums;
+    diesel::insert_into(track_albums::table)
+        .values(TrackAlbum { track_id, album_id, track_number })
+        .on_conflict(track_albums::track_number)
+        .do_update()
+        .set(track_albums::track_number.eq(track_number))
         .execute(conn)?;
     Ok(())
 }
@@ -109,13 +140,31 @@ pub fn insert_autotagged(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Resul
     let file_name = info.name.clone();
     let file_info = files::insert_with_file(info, data, conn)?;
 
-    // Insert track metadata into db
-    // TODO: Artist, album, etc.
-    let new_track = NewTrack {
-        title: tag.title().map(|s| s.to_owned()).unwrap_or_else(|| file_name)
-    };
+    // Insert track and audio association into db
+    let new_track = NewTrack::titled(tag.title().unwrap_or_else(|| &file_name));
     let track = insert(&new_track, conn)?;
     insert_audio(track.id, file_info.id, conn)?;
+
+    // Insert artist into db if a tag exists
+    // TODO: Split artists by comma or using some other heuristic?
+    if let Some(artist_name) = tag.artist() {
+        let artist = artists::insert_or_get(&NewArtist::named(artist_name), conn)?;
+        insert_artist(track.id, artist.id, conn)?;
+    }
+
+    // Insert genre into db if a tag exists
+    // TODO: Can a tag have multiple genres? Perhaps split by comma?
+    if let Some(genre_name) = tag.genre() {
+        let genre = genres::insert_or_get(&NewGenre::named(genre_name), conn)?;
+        insert_genre(track.id, genre.id, conn)?;
+    }
+
+    // TODO: Insert cover art into db
+
+    // TODO: Insert (or ignore) album into db
+    //       This might be a bit trickier since albums don't have a unique
+    //       name constraint (since they aren't unique, at least not
+    //       across different artists)
 
     Ok(())
 }

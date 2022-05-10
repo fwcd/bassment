@@ -31,6 +31,16 @@ pub struct NewArtist {
     pub description: Option<String>,
 }
 
+impl NewArtist {
+    pub fn named(name: &str) -> Self {
+        Self {
+            name: name.to_owned(),
+            cover_art_id: None,
+            description: None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, AsChangeset, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "artists"]

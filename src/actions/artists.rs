@@ -50,6 +50,15 @@ pub fn insert(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
         .get_result(conn)?)
 }
 
+/// Inserts or fetches an artist from the database.
+pub fn insert_or_get(new_artist: &NewArtist, conn: &DbConn) -> Result<Artist> {
+    use crate::schema::artists::dsl::*;
+    Ok(diesel::insert_into(artists)
+        .values(new_artist)
+        .on_conflict_do_nothing()
+        .get_result(conn)?)
+}
+
 /// Updates an artist in the database.
 pub fn update(artist_id: i32, update_artist: &UpdateArtist, conn: &DbConn) -> Result<Artist> {
     use crate::schema::artists::dsl::*;
