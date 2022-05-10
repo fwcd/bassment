@@ -15,6 +15,8 @@ import React, {
 export interface AudioPlayerContextValue {
   /** The currently playing track and playback state. */
   readonly nowPlaying?: NowPlaying;
+  /** The next tracks to play. */
+  readonly queue?: TrackQueue;
   /** Whether playback is active. */
   isPlaying: boolean;
 
@@ -55,6 +57,7 @@ export function AudioPlayerContextProvider(
 
   const value: AudioPlayerContextValue = {
     nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
+    queue,
 
     get isPlaying() {
       return isPlaying;

@@ -169,6 +169,17 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         )}
       />
       <Divider />
+      <DrawerTreeItem
+        label="Queue"
+        icon={({ size, color }) => (
+          <ThemedIcon name="trail-sign-outline" size={size} color={color} />
+        )}
+        isFocused={route.name === 'queue'}
+        onPress={() => {
+          navigation.navigate('queue', {});
+        }}
+      />
+      <Divider />
       {playlists.map(playlist => (
         <PlaylistTreeItem
           key={playlist.id}
