@@ -21,11 +21,15 @@ export interface AudioPlayerContextValue {
 
   /** Plays the given track immediately. */
   play(track: AnnotatedTrack): void;
+
+  /** Seeks to the given offset in the current track. */
+  seek(elapsedMs: number): void;
 }
 
 export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   isPlaying: false,
   play: () => {},
+  seek: () => {},
 });
 
 interface AudioPlayerContextProviderProps {
@@ -51,9 +55,11 @@ export function AudioPlayerContextProvider(
 
   const value: AudioPlayerContextValue = {
     nowPlaying,
+
     get isPlaying() {
       return isPlaying;
     },
+
     set isPlaying(shouldPlay: boolean) {
       (async () => {
         if (playerRef.current) {
@@ -62,8 +68,21 @@ export function AudioPlayerContextProvider(
         }
       })();
     },
+
     play(track: AnnotatedTrack): void {
       setNowPlaying({ track, elapsedMs: 0 });
+    },
+
+    seek(seekMs: number): void {
+      (async () => {
+        if (playerRef.current && nowPlaying) {
+          await playerRef.current.seek(seekMs);
+          setNowPlaying({
+            ...nowPlaying,
+            elapsedMs: playerRef.current.elapsedMs,
+          });
+        }
+      })();
     },
   };
 
@@ -82,6 +101,20 @@ export function AudioPlayerContextProvider(
     updateAudioBuffer();
     setPlaying(false);
   }, [updateAudioBuffer, trackId]);
+
+  // Update the progress while playing continuously
+  useEffect(() => {
+    if (isPlaying && nowPlaying) {
+      setTimeout(() => {
+        if (playerRef.current) {
+          setNowPlaying({
+            ...nowPlaying,
+            elapsedMs: playerRef.current.elapsedMs,
+          });
+        }
+      }, 200);
+    }
+  }, [isPlaying, nowPlaying]);
 
   return (
     <AudioPlayerContext.Provider value={value}>

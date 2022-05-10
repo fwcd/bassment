@@ -4,7 +4,7 @@ export class AudioPlayer {
   private buffer?: AudioBuffer;
   private bufferSrc?: AudioBufferSourceNode;
   private startTime?: number;
-  private seekMs: number = 0;
+  private startMs: number = 0;
   private _isPlaying: boolean = false;
 
   constructor() {
@@ -13,6 +13,14 @@ export class AudioPlayer {
 
   get isPlaying(): boolean {
     return this._isPlaying;
+  }
+
+  get elapsedMs(): number {
+    if (this.startTime) {
+      return this.startMs + (this.audioCtx.currentTime - this.startTime) * 1000;
+    } else {
+      return this.startMs;
+    }
   }
 
   async setPlaying(isPlaying: boolean): Promise<void> {
@@ -24,14 +32,12 @@ export class AudioPlayer {
       if (isPlaying) {
         const bufferSrc = this.audioCtx.createBufferSource();
         bufferSrc.buffer = buffer;
-        bufferSrc.start(0, this.seekMs / 1000);
+        bufferSrc.start(0, this.startMs / 1000);
         bufferSrc.connect(this.audioCtx.destination);
         this.startTime = this.audioCtx.currentTime;
         this.bufferSrc = bufferSrc;
       } else {
-        if (this.startTime) {
-          this.seekMs += (this.audioCtx.currentTime - this.startTime) * 1000;
-        }
+        this.startMs = this.elapsedMs;
         this.startTime = undefined;
         this.bufferSrc = undefined;
       }
@@ -42,7 +48,7 @@ export class AudioPlayer {
 
   /** Seeks to the given position. */
   async seek(elapsedMs: number): Promise<void> {
-    this.seekMs = elapsedMs;
+    this.startMs = elapsedMs;
     this.setPlaying(this._isPlaying);
   }
 
@@ -51,7 +57,7 @@ export class AudioPlayer {
     return new Promise((resolve, reject) => {
       this.bufferSrc?.disconnect();
       this._isPlaying = false;
-      this.seekMs = 0;
+      this.startMs = 0;
 
       if (buffer) {
         this.audioCtx.decodeAudioData(
