@@ -1,8 +1,6 @@
-use std::{fs, path::PathBuf, io};
-
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 
-use crate::{actions::{files, settings}, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo, FileInfo}};
+use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo, FileInfo}};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -25,12 +23,6 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(info))
 }
 
-fn path_for(info: &FileInfo, pool: &DbPool) -> Result<PathBuf> {
-    let conn = pool.get()?;
-    let base_dir = settings::get(&conn)?.file_storage_base_directory;
-    return Ok(PathBuf::from(format!("{}/{}/{}", base_dir, info.id, info.name)));
-}
-
 #[patch("/{id}")]
 async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, raw_info: web::Json<UpdateFileInfo>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -39,20 +31,7 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, raw_info: web:
         name: raw_info.name.as_ref().map(|n| n.replace("/", "-").replace("..", "")),
         ..raw_info.clone()
     };
-    let new_info = web::block(move || {
-        // Update info in db
-        let old_info = files::by_id(*id, &conn)?;
-        let new_info = files::update(*id, &sanitized_info, &conn)?;
-        // Move file if needed
-        if let Some(old_info) = old_info {
-            let old_path = path_for(&old_info, &pool)?;
-            let new_path = path_for(&new_info, &pool)?;
-            if old_path != new_path && old_path.exists() {
-                fs::rename(old_path, new_path)?;
-            }
-        }
-        Result::<_>::Ok(new_info)
-    }).await??;
+    let new_info = web::block(move || files::update_with_file(*id, &sanitized_info, &conn)).await??;
     Ok(web::Json(new_info))
 }
 
@@ -61,19 +40,8 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, raw_info: web:
 
 #[get("/{id}/data")]
 async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
-    let pool_clone = pool.clone();
-    let (media_type, data) = web::block(move || {
-        // Find info in db
-        let conn = pool_clone.get()?;
-        let info = files::by_id(*id, &conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", id)))?;
-        // Read the actual file
-        let path = path_for(&info, &pool)?;
-        let data = fs::read(&path).map_err(|e| match e.kind() {
-            io::ErrorKind::NotFound => Error::NotFound(format!("Could not find file at {}", path.display())),
-            _ => e.into(),
-        })?;
-        Result::<_>::Ok((info.media_type, data))
-    }).await??;
+    let conn = pool.get()?;
+    let (data, media_type) = web::block(move || files::data_by_id(*id, &conn)).await??;
     Ok(HttpResponse::Ok()
         .content_type(media_type)
         .body(data))
@@ -81,18 +49,8 @@ async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<i
 
 #[put("/{id}/data")]
 async fn put_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, data: web::Bytes) -> Result<impl Responder> {
-    let pool_clone = pool.clone();
-    web::block(move || {
-        // Find info in db
-        let conn = pool_clone.get()?;
-        let info = files::by_id(*id, &conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", id)))?;
-        // Write the actual file + parent dirs
-        let path = path_for(&info, &pool)?;
-        let parent = path.parent().ok_or_else(|| Error::Internal(format!("No parent path")))?;
-        fs::create_dir_all(parent)?;
-        fs::write(path, &data)?;
-        Result::<_>::Ok(())
-    }).await??;
+    let conn = pool.get()?;
+    web::block(move || files::update_data_by_id(*id, &data, &conn)).await??;
     Ok("Success!")
 }
 
