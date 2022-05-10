@@ -105,10 +105,6 @@ export function AudioPlayerContextProvider(
 
   // Update the audio buffer whenever the current track changes
   useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
-    }
     updateAudioBuffer();
   }, [updateAudioBuffer, trackId]);
 
@@ -123,7 +119,8 @@ export function AudioPlayerContextProvider(
             totalMs: playerRef.current.totalMs,
           });
         }
-      }, 200);
+      }, 500);
+      return () => window.clearTimeout(timeoutRef.current);
     }
   }, [isPlaying, nowPlaying]);
 
