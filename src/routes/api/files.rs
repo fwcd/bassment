@@ -13,23 +13,16 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
 
 #[post("")]
 async fn post(pool: web::Data<DbPool>, mut multipart: Multipart) -> Result<impl Responder> {
-    // Read JSON field
-    let json_field = multipart.next().await.ok_or_else(|| Error::BadRequest("Multipart request needs JSON field".to_owned()))??;
-    if json_field.content_type().essence_str() != "application/json" {
-        return Err(Error::BadRequest("First field needs to be of content type application/json!".to_owned()).into());
-    }
-    let info: NewFileInfo = read_field_json(json_field).await?;
-
     // Read data field
     let data_field = multipart.next().await.ok_or_else(|| Error::BadRequest("Multipart request needs data field".to_owned()))??;
-    if data_field.content_type().essence_str() != &info.media_type {
-        return Err(Error::BadRequest("Data field content type needs to match the file info!".to_owned()).into())
-    }
+    let name = data_field.content_disposition().get_filename().ok_or_else(|| Error::BadRequest("No filename attached".to_owned()))?.to_owned();
+    let media_type = data_field.content_type().essence_str().to_owned();
     let data = read_field_data(data_field).await?;
 
-    // Put 
+    // Insert file info into db and store data on disk
     let conn = pool.get()?;
-    let new_info = web::block(move || files::insert_with_file(info.clone(), &data, &conn)).await??;
+    let info = NewFileInfo { name, media_type };
+    let new_info = web::block(move || files::insert_with_file(info, &data, &conn)).await??;
 
     Ok(web::Json(new_info))
 }

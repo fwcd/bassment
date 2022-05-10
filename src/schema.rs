@@ -69,7 +69,6 @@ table! {
 
     file_infos (id) {
         id -> Int4,
-        kind -> File_kind,
         last_modified_at -> Timestamp,
         name -> Text,
         media_type -> Text,
