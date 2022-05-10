@@ -1,0 +1,17 @@
+# Backend
+.git
+.github
+.vscode
+icons
+local
+screenshots
+scripts
+target
+.editorconfig
+.env
+.gitignore
+
+# Frontend
+frontend/__tests__
+frontend/dist
+frontend/node_modules
