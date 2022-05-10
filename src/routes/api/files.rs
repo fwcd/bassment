@@ -2,7 +2,7 @@ use actix_multipart::Multipart;
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 use futures_util::stream::StreamExt;
 
-use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}, utils::multipart::{read_field_json, read_field_data}, options::Options};
+use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}, utils::multipart::read_field_data, options::Options};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {

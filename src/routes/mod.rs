@@ -2,8 +2,6 @@ mod api;
 mod auth;
 mod frontend;
 
-use std::path::Path;
-
 use actix_web::web;
 
 use crate::options::Options;
