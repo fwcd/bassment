@@ -13,6 +13,7 @@ import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialGenre } from '@bassment/models/Genre';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
+import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import { useAppSidebarStyles } from '@bassment/panels/AppSidebar/AppSidebar.style';
 import {
   DrawerContentComponentProps,
@@ -33,6 +34,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   const [albums, setAlbums] = useState<PartialAlbum[]>([]);
   const [artists, setArtists] = useState<PartialArtist[]>([]);
   const [genres, setGenres] = useState<PartialGenre[]>([]);
+  const [newPlaylist, setNewPlaylist] = useState<Playlist>();
 
   const updatePlaylists = useCallback(async () => {
     setPlaylists(await api.getPlaylistTrees());
@@ -76,7 +78,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         icon={({ size, color }) => (
           <ThemedIcon name="musical-notes-outline" size={size} color={color} />
         )}
-        focused={route.name === 'tracks'}
+        isFocused={route.name === 'tracks'}
         onPress={() => {
           navigation.navigate('tracks', {});
         }}
@@ -90,7 +92,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ArtistTreeItem
             key={artist.id}
             artist={artist}
-            focused={
+            isFocused={
               route.name === 'artist' &&
               (route.params as SidebarNavigatorParams['artist']).id ===
                 artist.id
@@ -113,7 +115,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <AlbumTreeItem
             key={album.id}
             album={album}
-            focused={
+            isFocused={
               route.name === 'album' &&
               (route.params as SidebarNavigatorParams['album']).id === album.id
             }
@@ -135,7 +137,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <GenreTreeItem
             key={genre.id}
             genre={genre}
-            focused={
+            isFocused={
               route.name === 'genre' &&
               (route.params as SidebarNavigatorParams['genre']).id === genre.id
             }
@@ -173,11 +175,23 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           }
         />
       ))}
+      {/* TODO: Add context menus and let user insert playlists e.g. in folders */}
+      {newPlaylist ? (
+        <PlaylistTreeItem
+          playlist={newPlaylist}
+          onEdit={setNewPlaylist}
+          isEditable
+          isEditFocused
+        />
+      ) : null}
       <Divider />
       {/* TODO: Implement the buttons */}
       <DrawerTreeItem
         label="Add Playlist"
         isButton
+        onPress={() => {
+          setNewPlaylist({ kind: PlaylistKind.Playlist });
+        }}
         icon={({ size, color }) => (
           <ThemedIcon name="add-outline" size={size} color={color} />
         )}
@@ -185,6 +199,9 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <DrawerTreeItem
         label="Add Folder"
         isButton
+        onPress={() => {
+          setNewPlaylist({ kind: PlaylistKind.Crate });
+        }}
         icon={({ size, color }) => (
           <ThemedIcon name="add-outline" size={size} color={color} />
         )}

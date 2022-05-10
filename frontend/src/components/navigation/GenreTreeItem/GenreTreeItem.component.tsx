@@ -4,7 +4,7 @@ import React from 'react';
 
 interface GenreTreeItemProps {
   genre: PartialGenre;
-  focused?: boolean;
+  isFocused?: boolean;
   onFocus?: () => void;
 }
 
@@ -12,7 +12,7 @@ export function GenreTreeItem(props: GenreTreeItemProps) {
   return (
     <DrawerTreeItem
       label={props.genre.name ?? 'Unnamed Genre'}
-      focused={props.focused}
+      isFocused={props.isFocused}
       onPress={props.onFocus}
     />
   );

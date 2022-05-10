@@ -4,7 +4,7 @@ import React from 'react';
 
 interface ArtistTreeItemProps {
   artist: PartialArtist;
-  focused?: boolean;
+  isFocused?: boolean;
   onFocus?: () => void;
 }
 
@@ -12,7 +12,7 @@ export function ArtistTreeItem(props: ArtistTreeItemProps) {
   return (
     <DrawerTreeItem
       label={props.artist.name ?? 'Unnamed Artist'}
-      focused={props.focused}
+      isFocused={props.isFocused}
       onPress={props.onFocus}
     />
   );

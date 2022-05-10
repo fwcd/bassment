@@ -5,9 +5,14 @@ import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import React from 'react';
 
 interface PlaylistTreeItemProps {
-  playlist: PlaylistTreeNode;
+  playlist: PlaylistTreeNode | Playlist;
+  // TODO: Use ids for editable too to permit editing nested elements
+  isEditable?: boolean;
+  isEditFocused?: boolean;
   focusedId?: number;
   onFocus?: (playlist: Playlist) => void;
+  onEdit?: (playlist: Playlist) => void;
+  onSubmitEdit?: () => void;
 }
 
 export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
@@ -17,7 +22,11 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
     <DrawerTreeItem
       key={playlist.id}
       label={playlist.name ?? 'Unnamed Playlist'}
-      focused={props.focusedId !== undefined && props.focusedId === playlist.id}
+      isFocused={
+        props.focusedId !== undefined && props.focusedId === playlist.id
+      }
+      isEditable={props.isEditable}
+      isEditFocused={props.isEditFocused}
       isExpandedInitially
       icon={({ size, color }) => (
         <PlaylistKindIcon
@@ -26,19 +35,31 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
           color={color}
         />
       )}
-      onPress={() => {
-        if (props.onFocus && playlist.id) {
-          props.onFocus(playlist);
+      onPress={
+        playlist.id && !props.isEditable
+          ? () => {
+              if (props.onFocus) {
+                props.onFocus!(playlist);
+              }
+            }
+          : undefined
+      }
+      onEdit={name => {
+        if (props.onEdit) {
+          props.onEdit({ ...playlist, name });
         }
-      }}>
-      {playlist.children.map(child => (
-        <PlaylistTreeItem
-          key={child.id}
-          playlist={child}
-          focusedId={props.focusedId}
-          onFocus={props.onFocus}
-        />
-      ))}
+      }}
+      onSubmitEdit={props.onSubmitEdit}>
+      {'children' in playlist
+        ? playlist.children.map(child => (
+            <PlaylistTreeItem
+              key={child.id}
+              playlist={child}
+              focusedId={props.focusedId}
+              onFocus={props.onFocus}
+            />
+          ))
+        : null}
     </DrawerTreeItem>
   );
 }

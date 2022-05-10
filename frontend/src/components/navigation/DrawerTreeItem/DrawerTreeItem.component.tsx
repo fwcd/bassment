@@ -1,5 +1,6 @@
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { ThemedText } from '@bassment/components/display/ThemedText';
+import { ThemedTextField } from '@bassment/components/input/ThemedTextField';
 import { useDrawerTreeItemStyles } from '@bassment/components/navigation/DrawerTreeItem/DrawerTreeItem.style';
 import { useStyles } from '@bassment/styles';
 import React, { ReactNode, useState } from 'react';
@@ -13,10 +14,14 @@ interface IconProps {
 interface DrawerTreeItemProps {
   label: string;
   icon?: (params: IconProps) => ReactNode;
-  onPress?: () => void;
-  focused?: boolean;
+  isEditable?: boolean;
+  isEditFocused?: boolean;
+  isFocused?: boolean;
   isButton?: boolean;
   isExpandedInitially?: boolean;
+  onPress?: () => void;
+  onEdit?: (label: string) => void;
+  onSubmitEdit?: () => void;
   children?: ReactNode;
 }
 
@@ -26,14 +31,43 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
   );
   const globalStyles = useStyles();
   const styles = useDrawerTreeItemStyles(
-    props.focused ?? false,
+    props.isFocused ?? false,
     props.isButton ?? false,
   );
   const hasChildren =
     props.children &&
     (Array.isArray(props.children) ? props.children.length > 0 : true);
-  return (
-    <>
+
+  let item = (
+    <View style={styles.item}>
+      <View style={styles.icons}>
+        {hasChildren ? (
+          <ThemedIcon
+            name={
+              isExpanded ? 'chevron-down-outline' : 'chevron-forward-outline'
+            }
+            style={styles.chevron}
+          />
+        ) : (
+          <View style={styles.chevron} />
+        )}
+        {props.icon ? props.icon(globalStyles.icon) : []}
+      </View>
+      {props.isEditable ? (
+        <ThemedTextField
+          value={props.label}
+          autoFocus={props.isEditFocused}
+          onChangeText={props.onEdit}
+          onSubmitEditing={props.onSubmitEdit}
+        />
+      ) : (
+        <ThemedText>{props.label}</ThemedText>
+      )}
+    </View>
+  );
+
+  if (props.onPress || hasChildren) {
+    item = (
       <Pressable
         onPress={() =>
           props.onPress && !hasChildren
@@ -43,25 +77,14 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
         style={({ pressed }) => ({
           opacity: pressed ? 0.5 : 1,
         })}>
-        <View style={styles.item}>
-          <View style={styles.icons}>
-            {hasChildren ? (
-              <ThemedIcon
-                name={
-                  isExpanded
-                    ? 'chevron-down-outline'
-                    : 'chevron-forward-outline'
-                }
-                style={styles.chevron}
-              />
-            ) : (
-              <View style={styles.chevron} />
-            )}
-            {props.icon ? props.icon(globalStyles.icon) : []}
-          </View>
-          <ThemedText>{props.label}</ThemedText>
-        </View>
+        {item}
       </Pressable>
+    );
+  }
+
+  return (
+    <>
+      {item}
       {isExpanded ? (
         <View style={{ marginLeft: 10 }}>{props.children}</View>
       ) : (

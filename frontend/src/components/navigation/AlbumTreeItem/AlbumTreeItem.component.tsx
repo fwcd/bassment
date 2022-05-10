@@ -4,7 +4,7 @@ import React from 'react';
 
 interface AlbumTreeItemProps {
   album: PartialAlbum;
-  focused?: boolean;
+  isFocused?: boolean;
   onFocus?: () => void;
 }
 
@@ -12,7 +12,7 @@ export function AlbumTreeItem(props: AlbumTreeItemProps) {
   return (
     <DrawerTreeItem
       label={props.album.name ?? 'Unnamed Album'}
-      focused={props.focused}
+      isFocused={props.isFocused}
       onPress={props.onFocus}
     />
   );
