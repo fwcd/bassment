@@ -47,7 +47,7 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, info: web::Jso
 #[get("/{id}/data")]
 async fn get_data_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let (data, media_type) = web::block(move || files::data_by_id(*id, &conn)).await??;
+    let (media_type, data) = web::block(move || files::data_by_id(*id, &conn)).await??;
     Ok(HttpResponse::Ok()
         .content_type(media_type)
         .body(data))
