@@ -45,7 +45,7 @@ export function AudioPlayerContextProvider(
   const [isPlaying, setPlaying] = useState<boolean>(false);
   const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [totalMs, setTotalMs] = useState<number>(0);
-  const [seekMs, setSeekMs] = useState<number>(0);
+  const [seekMs, setSeekMs] = useState<number>();
   const [track, setTrack] = useState<AnnotatedTrack>();
   const [audioUrl, setAudioUrl] = useState<string>();
 
@@ -88,15 +88,19 @@ export function AudioPlayerContextProvider(
     updateAudioUrl();
   }, [updateAudioUrl]);
 
-  // TODO: Seeking
+  const updateElapsedMs = useCallback((newElapsedMs: number) => {
+    setElapsedMs(newElapsedMs);
+    setSeekMs(undefined);
+  }, []);
 
   return (
     <AudioPlayerContext.Provider value={value}>
       <AudioPlayer
         isPlaying={isPlaying}
         url={audioUrl}
+        seekMs={seekMs}
         onUpdatePlaying={setPlaying}
-        onUpdateElapsedMs={setElapsedMs}
+        onUpdateElapsedMs={updateElapsedMs}
         onUpdateTotalMs={setTotalMs}
       />
       {props.children}

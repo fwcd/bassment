@@ -4,12 +4,14 @@ import React, { createRef, useCallback, useEffect } from 'react';
 export function AudioPlayer({
   isPlaying,
   url,
+  seekMs,
   onUpdatePlaying,
   onUpdateElapsedMs,
   onUpdateTotalMs,
 }: AudioPlayerProps) {
   const elementRef = createRef<HTMLAudioElement>();
 
+  // Update duration when track changes
   useEffect(() => {
     if (
       onUpdateTotalMs &&
@@ -20,6 +22,7 @@ export function AudioPlayer({
     }
   }, [elementRef, url, onUpdateTotalMs]);
 
+  // Update play/pause state when isPlaying changes
   useEffect(() => {
     if (isPlaying && url) {
       elementRef.current?.play();
@@ -27,6 +30,13 @@ export function AudioPlayer({
       elementRef.current?.pause();
     }
   }, [elementRef, isPlaying, url]);
+
+  // Seek to position if it changes
+  useEffect(() => {
+    if (elementRef.current && seekMs) {
+      elementRef.current.currentTime = seekMs / 1000;
+    }
+  }, [elementRef, seekMs]);
 
   const onTimeUpdate = useCallback(() => {
     if (onUpdateElapsedMs && elementRef.current) {
