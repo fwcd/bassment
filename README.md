@@ -5,7 +5,10 @@
 
 Music library server with support for cue points, playlists, crates and more.
 
-<img alt="Icon" src="icons/icon-rounded.svg" width="100">
+<div align="center">
+  <p><img alt="Icon" src="icons/icon-rounded.svg" width="100"></p>
+  <p><img src="screenshots/web.png" width="1074"></p>
+</div>
 
 ## Repository Structure
 
