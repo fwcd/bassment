@@ -6,6 +6,7 @@ local
 # VSCode
 .vscode/**/*
 !.vscode/settings.json
+!.vscode/launch.json
 
 # Rust
 target

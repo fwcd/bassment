@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Launch Backend",
+      "program": "${workspaceFolder}/target/debug/bassment",
+      "args": [
+        "--api-only",
+        "--allow-cors",
+        "--allow-unauthenticated-access"
+      ],
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": []
+}
