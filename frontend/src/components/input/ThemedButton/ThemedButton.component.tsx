@@ -16,6 +16,7 @@ export function ThemedButton(props: ThemedButtonProps) {
       style={({ pressed }) => [
         styles.button,
         ...(pressed ? [styles.pressed] : []),
+        ...(props.disabled ? [styles.disabled] : []),
       ]}>
       <ThemedText selectable={false}>{props.children}</ThemedText>
     </Pressable>

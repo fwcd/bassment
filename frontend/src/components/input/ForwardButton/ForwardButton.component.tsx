@@ -11,7 +11,8 @@ export function ForwardButton(props: ForwardButtonProps) {
   const globalStyles = useStyles();
 
   return (
-    <ThemedButton hasBackground={false} onPress={props.onForward}>
+    // TODO: Undisable
+    <ThemedButton hasBackground={false} onPress={props.onForward} disabled>
       <ThemedIcon
         name={'play-forward-outline'}
         size={globalStyles.icon.largeSize}

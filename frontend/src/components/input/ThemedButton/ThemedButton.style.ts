@@ -13,5 +13,8 @@ export function useThemedButtonStyles(hasBackground: boolean) {
     pressed: {
       opacity: 0.5,
     },
+    disabled: {
+      opacity: 0.3,
+    },
   });
 }
