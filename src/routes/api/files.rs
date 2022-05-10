@@ -1,6 +1,8 @@
+use actix_multipart::Multipart;
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
+use futures_util::stream::StreamExt;
 
-use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}};
+use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}, utils::multipart::{read_field_json, read_field_data}};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -10,9 +12,25 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
 }
 
 #[post("")]
-async fn post(pool: web::Data<DbPool>, info: web::Json<NewFileInfo>) -> Result<impl Responder> {
+async fn post(pool: web::Data<DbPool>, mut multipart: Multipart) -> Result<impl Responder> {
+    // Read JSON field
+    let json_field = multipart.next().await.ok_or_else(|| Error::BadRequest("Multipart request needs JSON field".to_owned()))??;
+    if json_field.content_type().essence_str() != "application/json" {
+        return Err(Error::BadRequest("First field needs to be of content type application/json!".to_owned()).into());
+    }
+    let info: NewFileInfo = read_field_json(json_field).await?;
+
+    // Read data field
+    let data_field = multipart.next().await.ok_or_else(|| Error::BadRequest("Multipart request needs data field".to_owned()))??;
+    if data_field.content_type().essence_str() != &info.media_type {
+        return Err(Error::BadRequest("Data field content type needs to match the file info!".to_owned()).into())
+    }
+    let data = read_field_data(data_field).await?;
+
+    // Put 
     let conn = pool.get()?;
-    let new_info = web::block(move || files::insert(info.clone(), &conn)).await??;
+    let new_info = web::block(move || files::insert_with_file(info.clone(), &data, &conn)).await??;
+
     Ok(web::Json(new_info))
 }
 
@@ -53,12 +71,12 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/files")
             .service(get_all)
-            .service(post)
             .service(get_by_id)
             .service(patch_by_id)
             .service(get_data_by_id)
             .service(web::scope("")
+                .service(post)
                 .service(put_data_by_id)
-                .app_data(PayloadConfig::new(80_000_000))) // Limit body to 80 MB
+                .app_data(PayloadConfig::new(80_000_000))) // Limit bodies of upload routes to 80 MB
     );
 }

@@ -19,7 +19,7 @@ pub fn by_id(file_id: i32, conn: &DbConn) -> Result<Option<FileInfo>> {
 }
 
 /// Inserts a file info into the database.
-pub fn insert(mut new_info: NewFileInfo, conn: &DbConn) -> Result<FileInfo> {
+fn insert(mut new_info: NewFileInfo, conn: &DbConn) -> Result<FileInfo> {
     use crate::schema::file_infos::dsl::*;
     new_info.name = sanitize(&new_info.name);
     Ok(diesel::insert_into(file_infos)
@@ -71,14 +71,25 @@ pub fn data_by_id(file_id: i32, conn: &DbConn) -> Result<(String, Vec<u8>)> {
     Ok((info.media_type, data))
 }
 
-/// Uploads file data by id.
-pub fn update_data_by_id(file_id: i32, data: &[u8], conn: &DbConn) -> Result<()> {
-    // Find info in db
-    let info = by_id(file_id, conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", file_id)))?;
-    // Write the actual file + parent dirs
+/// Uploads file data given a file info.
+pub fn update_data_for(info: &FileInfo, data: &[u8], conn: &DbConn) -> Result<()> {
     let path = path_for(&info, conn)?;
     let parent = path.parent().ok_or_else(|| Error::Internal(format!("No parent path")))?;
     fs::create_dir_all(parent)?;
     fs::write(path, &data)?;
     Ok(())
+}
+
+/// Uploads file data by id.
+pub fn update_data_by_id(file_id: i32, data: &[u8], conn: &DbConn) -> Result<()> {
+    // Find info in db
+    let info = by_id(file_id, conn)?.ok_or_else(|| Error::NotFound(format!("Could not find file with id {}", file_id)))?;
+    // Write the actual file + parent dirs
+    update_data_for(&info, data, conn)
+}
+
+/// Inserts file info into the database and writes data to the file system.
+pub fn insert_with_file(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Result<()> {
+    let info = insert(info, conn)?;
+    update_data_for(&info, data, conn)
 }

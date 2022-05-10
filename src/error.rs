@@ -1,5 +1,6 @@
 use std::{io, fmt};
 
+use actix_multipart::MultipartError;
 use actix_web::{ResponseError, HttpResponse, http::StatusCode, error::BlockingError};
 use serde::{Serialize, Deserialize};
 
@@ -47,6 +48,14 @@ impl From<bcrypt::BcryptError> for Error {
 
 impl From<BlockingError> for Error {
     fn from(e: BlockingError) -> Self { Self::Internal(format!("Blocking error: {:?}", e)) }
+}
+
+impl From<MultipartError> for Error {
+    fn from(e: MultipartError) -> Self { Self::Internal(format!("Multipart error: {:?}", e)) }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(e: serde_json::Error) -> Self { Self::Internal(format!("JSON serialization error: {:?}", e)) }
 }
 
 impl From<String> for Error {
