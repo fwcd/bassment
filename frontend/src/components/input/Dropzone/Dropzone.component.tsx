@@ -1,7 +1,7 @@
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { Droppable } from '@bassment/components/input/Droppable';
 import { useDropzoneStyles } from '@bassment/components/input/Dropzone/Dropzone.style';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { View, ViewStyle } from 'react-native';
 
 interface DropzoneProps {
@@ -12,15 +12,18 @@ interface DropzoneProps {
 
 export function Dropzone(props: DropzoneProps) {
   const styles = useDropzoneStyles();
+  const [isHovering, setHovering] = useState(false);
 
   return (
-    <Droppable>
+    <Droppable onDrag={setHovering}>
       <View style={[styles.item, styles.background]}>{props.children}</View>
-      <View style={[styles.item, styles.overlay]} pointerEvents="none">
-        {props.label ? (
-          <ThemedText style={styles.label}>{props.label}</ThemedText>
-        ) : null}
-      </View>
+      {isHovering ? (
+        <View style={[styles.item, styles.overlay]} pointerEvents="none">
+          {props.label ? (
+            <ThemedText style={styles.label}>{props.label}</ThemedText>
+          ) : null}
+        </View>
+      ) : null}
     </Droppable>
   );
 }
