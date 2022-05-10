@@ -52,6 +52,7 @@ export function AudioPlayerContextProvider(
   // Initialize our audio player (which conceptually operates in the 'imperative world')
   useEffect(() => {
     playerRef.current = new AudioPlayer();
+    playerRef.current.addPlayingListener(setPlaying);
   }, []);
 
   const value: AudioPlayerContextValue = {

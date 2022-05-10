@@ -1,11 +1,21 @@
 /** A web implementation of an audio playing using the Web Audio API. */
 export class AudioPlayer {
   private readonly audioCtx: AudioContext;
+
   private buffer?: AudioBuffer;
   private bufferSrc?: AudioBufferSourceNode;
+
   private startTime?: number;
   private startMs: number = 0;
   private _isPlaying: boolean = false;
+
+  private listeners: ((isPlaying: boolean) => void)[] = [];
+  private endEventListener = () => {
+    this._isPlaying = false;
+    for (const listener of this.listeners) {
+      listener(this._isPlaying);
+    }
+  };
 
   constructor() {
     this.audioCtx = new AudioContext();
@@ -31,6 +41,7 @@ export class AudioPlayer {
     const buffer = this.buffer;
 
     if (buffer) {
+      this.bufferSrc?.removeEventListener('ended', this.endEventListener);
       this.bufferSrc?.disconnect();
 
       if (isPlaying) {
@@ -38,6 +49,7 @@ export class AudioPlayer {
         bufferSrc.buffer = buffer;
         bufferSrc.start(0, this.startMs / 1000);
         bufferSrc.connect(this.audioCtx.destination);
+        bufferSrc.addEventListener('ended', this.endEventListener);
         this.startTime = this.audioCtx.currentTime;
         this.bufferSrc = bufferSrc;
       } else {
@@ -83,8 +95,6 @@ export class AudioPlayer {
 
   /** Adds a listener for playback state. */
   addPlayingListener(listener: (isPlaying: boolean) => void): void {
-    this.bufferSrc?.addEventListener('ended', () => {
-      listener(/* isPlaying */ false);
-    });
+    this.listeners.push(listener);
   }
 }
