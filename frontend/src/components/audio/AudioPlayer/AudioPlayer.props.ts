@@ -1,5 +1,5 @@
 export interface AudioPlayerProps {
-  isPlaying?: boolean;
+  isPlayingRequested?: boolean;
   seekMs?: number;
   url?: string;
   onUpdateElapsedMs?: (elapsedMs: number) => void;

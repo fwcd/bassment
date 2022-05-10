@@ -2,7 +2,7 @@ import { AudioPlayerProps } from '@bassment/components/audio/AudioPlayer/AudioPl
 import React, { createRef, useCallback, useEffect } from 'react';
 
 export function AudioPlayer({
-  isPlaying,
+  isPlayingRequested,
   url,
   seekMs,
   onUpdatePlaying,
@@ -22,14 +22,16 @@ export function AudioPlayer({
     }
   }, [elementRef, url, onUpdateTotalMs]);
 
-  // Update play/pause state when isPlaying changes
+  // Update play/pause state when requested
   useEffect(() => {
-    if (isPlaying && url) {
-      elementRef.current?.play();
-    } else {
-      elementRef.current?.pause();
+    if (isPlayingRequested !== undefined) {
+      if (isPlayingRequested && url) {
+        elementRef.current?.play();
+      } else {
+        elementRef.current?.pause();
+      }
     }
-  }, [elementRef, isPlaying, url]);
+  }, [elementRef, isPlayingRequested, url]);
 
   // Seek to position if it changes
   useEffect(() => {
@@ -44,7 +46,13 @@ export function AudioPlayer({
     }
   }, [elementRef, onUpdateElapsedMs]);
 
-  const onEnded = useCallback(() => {
+  const onPlay = useCallback(() => {
+    if (onUpdatePlaying && elementRef.current) {
+      onUpdatePlaying(true);
+    }
+  }, [elementRef, onUpdatePlaying]);
+
+  const onPause = useCallback(() => {
     if (onUpdatePlaying && elementRef.current) {
       onUpdatePlaying(false);
     }
@@ -55,7 +63,9 @@ export function AudioPlayer({
       src={url}
       ref={elementRef}
       onTimeUpdate={onTimeUpdate}
-      onEnded={onEnded}
+      onPlay={onPlay}
+      onPause={onPause}
+      onEnded={onPause}
     />
   );
 }

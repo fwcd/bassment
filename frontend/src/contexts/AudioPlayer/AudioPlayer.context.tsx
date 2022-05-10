@@ -40,13 +40,17 @@ export function AudioPlayerContextProvider(
 ) {
   const api = useContext(ApiContext);
 
-  // TODO: Use queue
-  const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
+  // Actual player state
   const [isPlaying, setPlaying] = useState<boolean>(false);
   const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [totalMs, setTotalMs] = useState<number>(0);
-  const [seekMs, setSeekMs] = useState<number>();
+
+  // Requested state
   const [track, setTrack] = useState<AnnotatedTrack>();
+  const [isPlayingRequested, setPlayingRequested] = useState<boolean>();
+  // TODO: Use queue
+  const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
+  const [seekMs, setSeekMs] = useState<number>();
   const [audioUrl, setAudioUrl] = useState<string>();
 
   const value: AudioPlayerContextValue = {
@@ -57,13 +61,13 @@ export function AudioPlayerContextProvider(
     },
 
     set isPlaying(playing: boolean) {
-      setPlaying(playing);
+      setPlayingRequested(playing);
     },
 
     play(newTrack: AnnotatedTrack): void {
       setTrack(newTrack);
       setSeekMs(0);
-      setPlaying(true);
+      setPlayingRequested(true);
     },
 
     seek(newSeekMs: number): void {
@@ -80,13 +84,18 @@ export function AudioPlayerContextProvider(
       : undefined;
 
     setAudioUrl(newAudioUrl);
-    setPlaying(newAudioUrl !== undefined);
+    setPlayingRequested(newAudioUrl !== undefined);
   }, [api, track]);
 
   // Update the audio buffer whenever the current track changes
   useEffect(() => {
     updateAudioUrl();
   }, [updateAudioUrl]);
+
+  const updatePlaying = useCallback((newPlaying: boolean) => {
+    setPlaying(newPlaying);
+    setPlayingRequested(undefined);
+  }, []);
 
   const updateElapsedMs = useCallback((newElapsedMs: number) => {
     setElapsedMs(newElapsedMs);
@@ -96,10 +105,10 @@ export function AudioPlayerContextProvider(
   return (
     <AudioPlayerContext.Provider value={value}>
       <AudioPlayer
-        isPlaying={isPlaying}
+        isPlayingRequested={isPlayingRequested}
         url={audioUrl}
         seekMs={seekMs}
-        onUpdatePlaying={setPlaying}
+        onUpdatePlaying={updatePlaying}
         onUpdateElapsedMs={updateElapsedMs}
         onUpdateTotalMs={setTotalMs}
       />
