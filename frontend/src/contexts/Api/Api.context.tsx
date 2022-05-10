@@ -62,6 +62,9 @@ export interface ApiContextValue {
   /** Fetches associated audio files for a track. */
   getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]>;
 
+  /** Fetches the URL for a file by id. */
+  getFileDataUrl(fileId: number): string;
+
   /** Fetches the data for a file by id. */
   getFileData(fileId: number): Promise<ArrayBuffer>;
 }
@@ -94,6 +97,7 @@ export const ApiContext = createContext<ApiContextValue>({
   postPlaylist: noApiContext('playlist', () => {}),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
+  getFileDataUrl: noApiContextSync('file data url', () => ''),
 });
 
 interface ApiContextProviderProps {
@@ -196,9 +200,12 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       return await apiRequest('GET', `/tracks/${trackId}/audios`);
     },
     async getFileData(fileId: number): Promise<ArrayBuffer> {
-      return await apiRequest('GET', `/files/${fileId}/data`, {
+      return await apiRequest('GET', this.getFileDataUrl(fileId), {
         acceptedFormat: 'binary',
       });
+    },
+    getFileDataUrl(fileId: number): string {
+      return apiUrl(`/files/${fileId}/data`);
     },
   };
 
