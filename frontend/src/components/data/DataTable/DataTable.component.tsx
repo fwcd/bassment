@@ -47,8 +47,8 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
     const header = headers[orderedColumn.index];
     data.sort(
       orderedColumn.order === Order.Ascending
-        ? (x, y) => x[header].localeCompare(y[header])
-        : (x, y) => y[header].localeCompare(x[header]),
+        ? (x, y) => `${x[header]}`.localeCompare(`${y[header]}`)
+        : (x, y) => `${y[header]}`.localeCompare(`${x[header]}`),
     );
   }
 

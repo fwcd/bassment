@@ -12,5 +12,8 @@ export function useDataTableCellStyles() {
       width: 4,
       cursor: 'col-resize',
     } as any,
+    headerText: {
+      fontWeight: 'bold',
+    },
   });
 }

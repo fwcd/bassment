@@ -8,7 +8,7 @@ import { View } from 'react-native';
 interface DataTableRowProps {
   headers: string[];
   icons?: ReactNode[];
-  item?: { [key: string]: string };
+  item?: { [key: string]: string | number };
   even?: boolean;
   hoverable?: boolean;
   selected?: boolean;

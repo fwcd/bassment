@@ -10,7 +10,7 @@ interface DataTableCellProps {
   index: number;
   header: string;
   icon?: ReactNode;
-  item?: { [key: string]: string };
+  item?: { [key: string]: string | number };
   onClick?: () => void;
   rowEven?: boolean;
   widths: number[];
@@ -27,8 +27,8 @@ export function DataTableCell(props: DataTableCellProps) {
   const cell = (
     <View style={[styles.cell, { width: props.widths[j] }]}>
       {props.icon}
-      <ThemedText style={item ? [] : [{ fontWeight: 'bold' }]}>
-        {item ? item[props.header] : props.header}
+      <ThemedText style={item ? null : styles.headerText}>
+        {item ? `${item[props.header]}` : props.header}
       </ThemedText>
     </View>
   );

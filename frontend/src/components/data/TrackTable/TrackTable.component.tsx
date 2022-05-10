@@ -13,13 +13,16 @@ export function TrackTable(props: TrackTableProps) {
 
   return (
     <DataTable
-      headers={['Album', 'Artist', 'Title']}
+      headers={['ID', 'Album', 'Artist', 'Title', 'Genre']}
+      initialWidths={[40, 200, 200, 400, 200]}
       data={props.tracks.map(track => ({
         _track: track, // Internal property for keeping the track
         key: track.id!,
+        ID: track.id,
         Album: track.albums.map(a => a.name).join(', '),
         Artist: track.artists.map(a => a.name).join(', '),
         Title: track.title ?? '',
+        Genre: track.genres.map(g => g.name).join(', '),
       }))}
       filter={props.filter}
       selectedRowKey={selectedId}
