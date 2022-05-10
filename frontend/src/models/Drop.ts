@@ -5,9 +5,7 @@ interface BaseDrop {
 
 export interface FileDrop extends BaseDrop {
   kind: 'file';
-  name?: string;
-  size?: number;
-  content?: ArrayBuffer;
+  file?: File;
 }
 
 export interface ValueDrop<V> extends BaseDrop {

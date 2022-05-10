@@ -24,8 +24,8 @@ export function TracksView({ tracks }: TracksViewProps) {
   const onDrop = useCallback(
     async (drops: Drop[]) => {
       for (const drop of drops) {
-        if (drop.kind === 'file') {
-          await api.uploadAutotaggedTrack(drop.name!, drop.content!);
+        if (drop.kind === 'file' && drop.file) {
+          await api.uploadAutotaggedTrack(drop.file);
         }
       }
       // TODO: Trigger refresh of tracks?

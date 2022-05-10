@@ -10,13 +10,8 @@ async function dropsOf(transfer: DataTransfer): Promise<Drop[]> {
     const item = transfer.items[i];
     switch (item.kind) {
       case 'file':
-        const file = item.getAsFile();
-        drops.push({
-          kind: 'file',
-          name: file?.name,
-          size: file?.size,
-          content: await file?.arrayBuffer(),
-        });
+        const file = item.getAsFile() ?? undefined;
+        drops.push({ kind: 'file', file });
         break;
       default:
         // TODO: More fine-grained drop types rather than just dumping the item in here

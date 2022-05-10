@@ -69,7 +69,7 @@ export interface ApiContextValue {
   getFileData(fileId: number): Promise<ArrayBuffer>;
 
   /** Uploads a track and lets the server tag it. */
-  uploadAutotaggedTrack(fileName: string, data: ArrayBuffer): Promise<void>;
+  uploadAutotaggedTrack(file: File): Promise<void>;
 }
 
 function noApiContextSync<T>(resource: string, defaultValue: () => T): () => T {
@@ -134,24 +134,22 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       const acceptedFormat = options?.acceptedFormat ?? 'json';
       let contentType: string = options?.contentType ?? 'json';
 
-      switch (contentType) {
-        case 'json':
-          contentType = 'application/json';
-          break;
-        case 'multipart':
-          contentType = 'multipart/form-data';
-          break;
-      }
-
       const response = await fetch(apiUrl(endpoint), {
         method,
+        mode: 'cors',
         headers: {
           Authorization: `Bearer ${auth.token!}`,
           'User-Agent': networkConstants.userAgent,
-          'Content-Type': contentType,
+          ...(contentType === 'json'
+            ? { 'Content-Type': 'application/json' }
+            : {}),
           ...(acceptedFormat === 'json' ? { Accept: 'application/json' } : {}),
         },
-        body: options?.body ? JSON.stringify(options.body) : undefined,
+        body: options?.body
+          ? contentType === 'json'
+            ? JSON.stringify(options.body)
+            : options?.body
+          : undefined,
       });
 
       if (response.status >= 400) {
@@ -229,12 +227,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
         includeToken: true,
       });
     },
-    async uploadAutotaggedTrack(
-      fileName: string,
-      data: ArrayBuffer,
-    ): Promise<void> {
+    async uploadAutotaggedTrack(file: File): Promise<void> {
       const formData = new FormData();
-      formData.append('file', new Blob([data]), fileName);
+      formData.append('file', file, file.name);
       await apiRequest('POST', '/tracks/autotagged', {
         contentType: 'multipart',
         body: formData,
