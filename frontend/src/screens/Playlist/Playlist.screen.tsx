@@ -20,5 +20,5 @@ export function PlaylistScreen() {
     updateTracks();
   }, [updateTracks]);
 
-  return <TracksView tracks={tracks} updateTracks={updateTracks} />;
+  return <TracksView tracks={tracks} />;
 }

@@ -1,5 +1,7 @@
 import { TracksView } from '@bassment/components/data/TracksView';
+import { Dropzone } from '@bassment/components/input/Dropzone';
 import { ApiContext } from '@bassment/contexts/Api';
+import { Drop } from '@bassment/models/Drop';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -16,5 +18,29 @@ export function TracksScreen() {
     updateTracks();
   }, [updateTracks]);
 
-  return <TracksView tracks={tracks} updateTracks={updateTracks} />;
+  const filterDrop = useCallback(
+    (drops: Drop[]) => drops.some(d => d.kind === 'file'),
+    [],
+  );
+
+  const onDrop = useCallback(
+    async (drops: Drop[]) => {
+      for (const drop of drops) {
+        if (drop.kind === 'file' && drop.file) {
+          await api.uploadAutotaggedTrack(drop.file);
+        }
+      }
+      updateTracks();
+    },
+    [api, updateTracks],
+  );
+
+  return (
+    <Dropzone
+      label="Drop tracks to upload!"
+      filterDrop={filterDrop}
+      onDrop={onDrop}>
+      <TracksView tracks={tracks} />
+    </Dropzone>
+  );
 }
