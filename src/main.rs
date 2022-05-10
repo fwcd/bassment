@@ -4,10 +4,10 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 mod actions;
-mod constants;
 mod middleware;
 mod db;
 mod error;
+mod options;
 mod routes;
 #[allow(unused_imports)]
 mod schema;
@@ -25,6 +25,8 @@ use dotenv::dotenv;
 use tracing::{Level, info};
 use tracing_actix_web::TracingLogger;
 use tracing_subscriber::fmt::format::FmtSpan;
+
+use crate::options::Options;
 
 embed_migrations!();
 
@@ -54,6 +56,9 @@ struct Args {
     /// Regenerates the root user and prints the password.
     #[clap(long)]
     regenerate_root: bool,
+    /// The maximum upload size in bytes.
+    #[clap(long, default_value_t = 80_000_000)]
+    upload_limit: usize,
     /// The host to run on.
     #[clap(short, long, default_value = "127.0.0.1")]
     host: String,
@@ -99,15 +104,19 @@ async fn main() -> io::Result<()> {
     // Start server
     info!("Starting on {}:{}...", args.host, args.port);
     HttpServer::new(move || {
-        let frontend_path = Some(args.frontend_path.clone())
-            .filter(|_| !args.api_only)
-            .map(PathBuf::from);
+        let opts = Options {
+            frontend_path: Some(args.frontend_path.clone())
+                .filter(|_| !args.api_only)
+                .map(PathBuf::from),
+            allow_unauthenticated_access: args.allow_unauthenticated_access,
+            upload_limit: args.upload_limit,
+        };
 
         App::new()
             .wrap(TracingLogger::default())
             .wrap(Condition::new(args.allow_cors, Cors::permissive()))
             .app_data(web::Data::new(pool.clone()))
-            .configure(|c| routes::config(c, frontend_path.as_ref().map(|p| p.as_ref()), args.allow_unauthenticated_access))
+            .configure(|c| routes::config(c, &opts))
     })
     .bind((args.host, args.port))?
     .run()

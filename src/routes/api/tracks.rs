@@ -2,7 +2,7 @@ use actix_multipart::Multipart;
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 use futures_util::stream::StreamExt;
 
-use crate::{actions::tracks, db::DbPool, error::{Result, Error}, models::{NewTrack, UpdateTrack, NewFileInfo}, utils::multipart::read_field_data, constants::UPLOAD_LIMIT_BYTES};
+use crate::{actions::tracks, db::DbPool, error::{Result, Error}, models::{NewTrack, UpdateTrack, NewFileInfo}, utils::multipart::read_field_data, options::Options};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -77,7 +77,7 @@ async fn post_autotagged(pool: web::Data<DbPool>, mut multipart: Multipart) -> R
     Ok(web::Json(track))
 }
 
-pub fn config(cfg: &mut web::ServiceConfig) {
+pub fn config(cfg: &mut web::ServiceConfig, opts: &Options) {
     cfg.service(
         web::scope("/tracks")
             .service(get_all)
@@ -90,6 +90,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(patch_by_id)
             .service(web::scope("")
                 .service(post_autotagged)
-                .app_data(PayloadConfig::new(UPLOAD_LIMIT_BYTES)))
+                .app_data(PayloadConfig::new(opts.upload_limit)))
     );
 }

@@ -6,12 +6,14 @@ use std::path::Path;
 
 use actix_web::web;
 
-pub fn config(cfg: &mut web::ServiceConfig, frontend_path: Option<&Path>, allow_unauthenticated_access: bool) {
+use crate::options::Options;
+
+pub fn config(cfg: &mut web::ServiceConfig, opts: &Options) {
     cfg
-        .configure(|c| api::config(c, allow_unauthenticated_access))
+        .configure(|c| api::config(c, opts))
         .configure(auth::config);
     
-    if let Some(path) = frontend_path {
+    if let Some(ref path) = opts.frontend_path {
         frontend::config(cfg, path);
     }
 }
