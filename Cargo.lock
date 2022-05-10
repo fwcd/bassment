@@ -332,6 +332,7 @@ dependencies = [
  "diesel_migrations",
  "dotenv",
  "futures-util",
+ "id3",
  "jsonwebtoken",
  "once_cell",
  "passwords",
@@ -801,6 +802,17 @@ name = "httpdate"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4a1e36c821dbe04574f602848a19f742f4fb3c98d40449f11bcad18d6b17421"
+
+[[package]]
+name = "id3"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7a3598f9ed06d8a7ff358dc1a52f07f98d6625b996ad60588805b3d8cfd4d0cd"
+dependencies = [
+ "bitflags",
+ "byteorder",
+ "flate2",
+]
 
 [[package]]
 name = "idna"

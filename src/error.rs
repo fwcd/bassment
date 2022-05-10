@@ -58,6 +58,10 @@ impl From<serde_json::Error> for Error {
     fn from(e: serde_json::Error) -> Self { Self::Internal(format!("JSON serialization error: {:?}", e)) }
 }
 
+impl From<id3::Error> for Error {
+    fn from(e: id3::Error) -> Self { Self::Internal(format!("ID3 error: {:?}", e)) }
+}
+
 impl From<String> for Error {
     fn from(s: String) -> Self { Self::Internal(s) }
 }

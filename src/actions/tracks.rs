@@ -1,8 +1,11 @@
+use std::io::Cursor;
+
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
+use id3::{Tag, TagLike};
 
-use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio}, error::Result, db::DbConn};
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio, NewFileInfo}, error::Result, db::DbConn};
 
-use super::{artists, albums, genres};
+use super::{artists, albums, genres, files};
 
 /// Fetches all tracks from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Track>> {
@@ -93,4 +96,25 @@ pub fn update(track_id: i32, update_track: &UpdateTrack, conn: &DbConn) -> Resul
         .filter(id.eq(track_id))
         .set(update_track)
         .get_result(conn)?)
+}
+
+/// Inserts a track, audio and a file, automatically tagged with the ID3 data from the file.
+pub fn insert_autotagged(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Result<()> {
+    // Parse tags from binary data
+    // TODO: Support tags other than ID3
+    let cursor = Cursor::new(data);
+    let tag = Tag::read_from(cursor)?;
+
+    // Insert file info into db and write to disk
+    let file_name = info.name.clone();
+    files::insert_with_file(info, data, conn)?;
+
+    // Insert track metadata into db
+    // TODO: Artist, album, etc.
+    let new_track = NewTrack {
+        name: tag.title().map(|s| s.to_owned()).unwrap_or_else(|| file_name)
+    };
+    insert(&new_track, conn)?;
+
+    Ok(())
 }

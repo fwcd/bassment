@@ -1,6 +1,8 @@
-use actix_web::{get, web, Responder, post, patch, put, HttpResponse};
+use actix_multipart::Multipart;
+use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
+use futures_util::stream::StreamExt;
 
-use crate::{actions::tracks, db::DbPool, error::{Result, Error}, models::{NewTrack, UpdateTrack}};
+use crate::{actions::tracks, db::DbPool, error::{Result, Error}, models::{NewTrack, UpdateTrack, NewFileInfo}, utils::multipart::read_field_data, constants::UPLOAD_LIMIT_BYTES};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -59,6 +61,22 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, track: web::Js
     Ok(web::Json(track))
 }
 
+#[post("/autotagged")]
+async fn post_autotagged(pool: web::Data<DbPool>, mut multipart: Multipart) -> Result<impl Responder> {
+    // Read data field
+    let data_field = multipart.next().await.ok_or_else(|| Error::BadRequest("Multipart request needs data field".to_owned()))??;
+    let name = data_field.content_disposition().get_filename().ok_or_else(|| Error::BadRequest("No filename attached".to_owned()))?.to_owned();
+    let media_type = data_field.content_type().essence_str().to_owned();
+    let data = read_field_data(data_field).await?;
+
+    // Insert into db and write to disk
+    let conn = pool.get()?;
+    let info = NewFileInfo { name, media_type };
+    let track = web::block(move|| tracks::insert_autotagged(info, &data, &conn)).await??;
+
+    Ok(web::Json(track))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/tracks")
@@ -70,5 +88,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(put_audio_by_id)
             .service(get_annotated_by_id)
             .service(patch_by_id)
+            .service(web::scope("")
+                .service(post_autotagged)
+                .app_data(PayloadConfig::new(UPLOAD_LIMIT_BYTES)))
     );
 }

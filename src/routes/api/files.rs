@@ -2,7 +2,7 @@ use actix_multipart::Multipart;
 use actix_web::{get, web::{self, PayloadConfig}, Responder, post, patch, put, HttpResponse};
 use futures_util::stream::StreamExt;
 
-use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}, utils::multipart::{read_field_json, read_field_data}};
+use crate::{actions::files, db::DbPool, error::{Result, Error}, models::{NewFileInfo, UpdateFileInfo}, utils::multipart::{read_field_json, read_field_data}, constants::UPLOAD_LIMIT_BYTES};
 
 #[get("")]
 async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
@@ -70,6 +70,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(web::scope("")
                 .service(post)
                 .service(put_data_by_id)
-                .app_data(PayloadConfig::new(80_000_000))) // Limit bodies of upload routes to 80 MB
+                .app_data(PayloadConfig::new(UPLOAD_LIMIT_BYTES)))
     );
 }
