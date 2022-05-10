@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@bassment/audio/AudioPlayer';
+import { AudioPlayer } from '@bassment/components/audio/AudioPlayer';
 import { ApiContext } from '@bassment/contexts/Api';
 import { NowPlaying } from '@bassment/models/NowPlaying';
 import { AnnotatedTrack } from '@bassment/models/Track';
@@ -9,7 +9,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 
@@ -40,20 +39,14 @@ export function AudioPlayerContextProvider(
   props: AudioPlayerContextProviderProps,
 ) {
   const api = useContext(ApiContext);
-  const playerRef = useRef<AudioPlayer>();
-  const timeoutRef = useRef<any>();
 
   // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
   const [isPlaying, setPlaying] = useState<boolean>(false);
   const [nowPlaying, setNowPlaying] = useState<NowPlaying>();
+  const [audioUrl, setAudioUrl] = useState<string>();
+  const [seekMs, setSeekMs] = useState<number>(0);
   const trackId = nowPlaying?.track.id;
-
-  // Initialize our audio player (which conceptually operates in the 'imperative world')
-  useEffect(() => {
-    playerRef.current = new AudioPlayer();
-    playerRef.current.addPlayingListener(setPlaying);
-  }, []);
 
   const value: AudioPlayerContextValue = {
     nowPlaying,
@@ -62,71 +55,41 @@ export function AudioPlayerContextProvider(
       return isPlaying;
     },
 
-    set isPlaying(shouldPlay: boolean) {
-      (async () => {
-        if (playerRef.current) {
-          await playerRef.current.setPlaying(shouldPlay);
-          setPlaying(playerRef.current.isPlaying);
-        }
-      })();
+    set isPlaying(playing: boolean) {
+      setPlaying(playing);
     },
 
     play(track: AnnotatedTrack): void {
       setNowPlaying({ track, elapsedMs: 0, totalMs: track.durationMs ?? 0 });
+      setPlaying(true);
     },
 
-    seek(seekMs: number): void {
-      (async () => {
-        if (playerRef.current && nowPlaying) {
-          await playerRef.current.seek(seekMs);
-          setNowPlaying({
-            ...nowPlaying,
-            elapsedMs: playerRef.current.elapsedMs,
-            totalMs: playerRef.current.totalMs,
-          });
-        }
-      })();
+    seek(newSeekMs: number): void {
+      setSeekMs(newSeekMs);
     },
   };
 
-  const updateAudioBuffer = useCallback(async () => {
+  const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
     const audioFiles = trackId ? await api.getTrackAudioFiles(trackId) : [];
     const audioFile = audioFiles.find(() => true);
-    const newAudioBuffer = audioFile?.id
-      ? await api.getFileData(audioFile.id)
+    const newAudioUrl = audioFile?.id
+      ? api.getFileDataUrl(audioFile.id)
       : undefined; // TODO: Do the AudioPlayer implementations handle an empty buffer correctly?
 
-    if (playerRef.current) {
-      await playerRef.current.setBuffer(newAudioBuffer);
-      await playerRef.current.setPlaying(true);
-      setPlaying(playerRef.current.isPlaying);
-    }
+    setAudioUrl(newAudioUrl);
   }, [api, trackId]);
 
   // Update the audio buffer whenever the current track changes
   useEffect(() => {
-    updateAudioBuffer();
-  }, [updateAudioBuffer, trackId]);
+    updateAudioUrl();
+  }, [updateAudioUrl, trackId]);
 
-  // Update the progress while playing continuously
-  useEffect(() => {
-    if (isPlaying && nowPlaying) {
-      timeoutRef.current = setTimeout(() => {
-        if (playerRef.current) {
-          setNowPlaying({
-            ...nowPlaying,
-            elapsedMs: playerRef.current.elapsedMs,
-            totalMs: playerRef.current.totalMs,
-          });
-        }
-      }, 500);
-      return () => window.clearTimeout(timeoutRef.current);
-    }
-  }, [isPlaying, nowPlaying]);
+  // TODO: Progress & seeking
 
   return (
     <AudioPlayerContext.Provider value={value}>
+      <AudioPlayer isPlaying={isPlaying} url={audioUrl} />
       {props.children}
     </AudioPlayerContext.Provider>
   );
