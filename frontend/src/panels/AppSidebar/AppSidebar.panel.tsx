@@ -57,7 +57,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       setNewPlaylist({
         kind,
         name: '',
-        position: Math.max(...playlists.map(p => p.position ?? 0)) + 1,
+        position: Math.max(0, ...playlists.map(p => p.position ?? 0)) + 1,
       });
     },
     [playlists],
