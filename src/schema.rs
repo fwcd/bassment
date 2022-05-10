@@ -183,7 +183,7 @@ table! {
 
     tracks (id) {
         id -> Int4,
-        name -> Text,
+        title -> Text,
         year -> Nullable<Text>,
         comment -> Nullable<Text>,
         duration_ms -> Nullable<Int4>,

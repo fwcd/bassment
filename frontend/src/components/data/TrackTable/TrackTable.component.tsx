@@ -19,7 +19,7 @@ export function TrackTable(props: TrackTableProps) {
         key: track.id!,
         Album: track.albums.map(a => a.name).join(', '),
         Artist: track.artists.map(a => a.name).join(', '),
-        Title: track.name ?? '',
+        Title: track.title ?? '',
       }))}
       filter={props.filter}
       selectedRowKey={selectedId}

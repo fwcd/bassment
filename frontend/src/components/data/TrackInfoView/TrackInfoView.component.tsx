@@ -14,7 +14,7 @@ export function TrackInfoView(props: TrackInfoViewProps) {
   return (
     <View style={[styles.info, props.style]}>
       <ThemedText style={styles.title}>
-        {props.track.name ?? 'Unnamed Track'}
+        {props.track.title ?? 'Unnamed Track'}
       </ThemedText>
       <ThemedText>
         {props.track.artists.flatMap(a => (a.name ? [a.name] : [])).join(', ')}

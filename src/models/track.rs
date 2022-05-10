@@ -10,7 +10,7 @@ use super::{PartialGenre, PartialAlbum, PartialArtist};
 #[serde(rename_all = "camelCase")]
 pub struct Track {
     pub id: i32,
-    pub name: String,
+    pub title: String,
     pub year: Option<String>,
     pub comment: Option<String>,
     pub duration_ms: Option<i32>,
@@ -78,12 +78,12 @@ pub struct TrackAudio {
 #[serde(rename_all = "camelCase")]
 #[table_name = "tracks"]
 pub struct NewTrack {
-    pub name: String,
+    pub title: String,
 }
 
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "tracks"]
 pub struct UpdateTrack {
-    pub name: Option<String>,
+    pub title: Option<String>,
 }

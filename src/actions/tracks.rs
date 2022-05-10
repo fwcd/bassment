@@ -112,7 +112,7 @@ pub fn insert_autotagged(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Resul
     // Insert track metadata into db
     // TODO: Artist, album, etc.
     let new_track = NewTrack {
-        name: tag.title().map(|s| s.to_owned()).unwrap_or_else(|| file_name)
+        title: tag.title().map(|s| s.to_owned()).unwrap_or_else(|| file_name)
     };
     insert(&new_track, conn)?;
 

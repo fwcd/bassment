@@ -4,7 +4,7 @@ import { PartialGenre } from '@bassment/models/Genre';
 
 export interface Track {
   id?: number;
-  name?: string;
+  title?: string;
   year?: string | null;
   comment?: string | null;
   durationMs?: number | null;
