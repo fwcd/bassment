@@ -104,21 +104,34 @@ interface ApiContextProviderProps {
   children: ReactNode;
 }
 
+interface ApiUrlOptions {
+  includeToken?: boolean;
+}
+
+interface ApiRequestOptions {
+  acceptedFormat?: 'json' | 'binary';
+  body?: any;
+}
+
 export function ApiContextProvider(props: ApiContextProviderProps) {
   const auth = useContext(AuthContext);
 
   const apiUrl = useCallback(
-    (endpoint: string) => `${auth.serverUrl}/api/v1${endpoint}`,
-    [auth.serverUrl],
+    (endpoint: string, options?: ApiUrlOptions) =>
+      `${auth.serverUrl}/api/v1${endpoint}${
+        options?.includeToken ? `?token=${auth.token}` : ''
+      }`,
+    [auth.serverUrl, auth.token],
   );
 
   const apiRequest = useCallback(
     async (
       method: string,
       endpoint: string,
-      inputOptions?: { acceptedFormat?: 'json' | 'binary'; body?: any },
+      inputOptions?: ApiRequestOptions,
     ) => {
       const options = {
+        ...inputOptions,
         acceptedFormat: inputOptions?.acceptedFormat ?? 'json',
       };
       const response = await fetch(apiUrl(endpoint), {
@@ -131,9 +144,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
             ? { Accept: 'application/json' }
             : {}),
         },
-        body: inputOptions?.body
-          ? JSON.stringify(inputOptions.body)
-          : undefined,
+        body: options?.body ? JSON.stringify(options.body) : undefined,
       });
       if (response.status >= 400) {
         throw Error(
@@ -200,12 +211,14 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       return await apiRequest('GET', `/tracks/${trackId}/audios`);
     },
     async getFileData(fileId: number): Promise<ArrayBuffer> {
-      return await apiRequest('GET', this.getFileDataUrl(fileId), {
+      return await apiRequest('GET', `/files/${fileId}/data`, {
         acceptedFormat: 'binary',
       });
     },
     getFileDataUrl(fileId: number): string {
-      return apiUrl(`/files/${fileId}/data`);
+      return apiUrl(`/files/${fileId}/data`, {
+        includeToken: true,
+      });
     },
   };
 
