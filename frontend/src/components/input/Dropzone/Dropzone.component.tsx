@@ -1,30 +1,50 @@
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { Droppable } from '@bassment/components/input/Droppable';
 import { useDropzoneStyles } from '@bassment/components/input/Dropzone/Dropzone.style';
+import { Drop } from '@bassment/models/Drop';
 import React, { ReactNode, useCallback, useState } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 
 interface DropzoneProps {
   label?: string;
-  style?: ViewStyle | ViewStyle[];
+  dropFilter?: (value: Drop) => boolean;
+  onDrop: (value: Drop) => void;
   children: ReactNode;
 }
 
-export function Dropzone(props: DropzoneProps) {
+export function Dropzone({
+  label,
+  dropFilter,
+  onDrop,
+  children,
+}: DropzoneProps) {
   const styles = useDropzoneStyles();
   const [isHovering, setHovering] = useState(false);
 
-  // TODO
-  const onDrop = useCallback(() => {}, []);
+  const onDragCallback = useCallback(
+    (hovering: boolean, value?: Drop) => {
+      if (!dropFilter || (value && dropFilter(value))) {
+        setHovering(hovering);
+      }
+    },
+    [dropFilter],
+  );
+
+  const onDropCallback = useCallback(
+    (value: Drop) => {
+      if (!dropFilter || dropFilter(value)) {
+        onDrop(value);
+      }
+    },
+    [dropFilter, onDrop],
+  );
 
   return (
-    <Droppable onDrag={setHovering} onDrop={onDrop}>
-      <View style={[styles.item, styles.background]}>{props.children}</View>
+    <Droppable onDrag={onDragCallback} onDrop={onDropCallback}>
+      <View style={[styles.item, styles.background]}>{children}</View>
       {isHovering ? (
         <View style={[styles.item, styles.overlay]} pointerEvents="none">
-          {props.label ? (
-            <ThemedText style={styles.label}>{props.label}</ThemedText>
-          ) : null}
+          {label ? <ThemedText style={styles.label}>{label}</ThemedText> : null}
         </View>
       ) : null}
     </Droppable>
