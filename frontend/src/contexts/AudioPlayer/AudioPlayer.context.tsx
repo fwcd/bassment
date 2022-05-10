@@ -75,9 +75,10 @@ export function AudioPlayerContextProvider(
     const audioFile = audioFiles.find(() => true);
     const newAudioUrl = audioFile?.id
       ? api.getFileDataUrl(audioFile.id)
-      : undefined; // TODO: Do the AudioPlayer implementations handle an empty buffer correctly?
+      : undefined;
 
     setAudioUrl(newAudioUrl);
+    setPlaying(newAudioUrl !== undefined);
   }, [api, trackId]);
 
   // Update the audio buffer whenever the current track changes
