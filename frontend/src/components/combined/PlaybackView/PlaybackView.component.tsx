@@ -8,6 +8,7 @@ import { View, ViewStyle } from 'react-native';
 
 interface PlaybackViewProps {
   nowPlaying?: NowPlaying;
+  onSeek?: (elapsedMs: number) => void;
   style?: ViewStyle | ViewStyle[];
 }
 
@@ -25,6 +26,7 @@ export function PlaybackView(props: PlaybackViewProps) {
             <PlaybackProgress
               elapsedMs={props.nowPlaying.elapsedMs}
               totalMs={props.nowPlaying.totalMs}
+              onSeek={props.onSeek}
             />
           </>
         ) : null}

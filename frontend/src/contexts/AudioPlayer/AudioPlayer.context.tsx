@@ -80,6 +80,7 @@ export function AudioPlayerContextProvider(
           setNowPlaying({
             ...nowPlaying,
             elapsedMs: playerRef.current.elapsedMs,
+            totalMs: playerRef.current.totalMs,
           });
         }
       })();

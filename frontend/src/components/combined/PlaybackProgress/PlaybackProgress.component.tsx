@@ -5,6 +5,7 @@ import { usePlaybackProgressStyles } from '@bassment/components/combined/Playbac
 interface PlaybackProgressProps {
   elapsedMs: number;
   totalMs: number;
+  onSeek?: (elapsedMs: number) => void;
 }
 
 export function PlaybackProgress(props: PlaybackProgressProps) {
@@ -16,6 +17,12 @@ export function PlaybackProgress(props: PlaybackProgressProps) {
       value={props.elapsedMs}
       minimumValue={0}
       maximumValue={props.totalMs}
+      onValueChange={event => {
+        const value = typeof event === 'number' ? event : event[0];
+        if (props.onSeek) {
+          props.onSeek(value);
+        }
+      }}
       containerStyle={styles.slider}
       thumbTouchSize={{ width: 10, height: 10 }}
     />

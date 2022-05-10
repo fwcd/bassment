@@ -24,6 +24,7 @@ export function AppHeader(props: DrawerHeaderProps) {
         <PlaybackView
           style={[styles.item, styles.playback]}
           nowPlaying={player.nowPlaying}
+          onSeek={player.seek}
         />
         <ThemedText style={[styles.item, styles.sideItem, styles.title]}>
           {props.options.headerTitle ?? props.options.title ?? props.route.name}
