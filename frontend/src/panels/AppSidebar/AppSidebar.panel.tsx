@@ -52,13 +52,24 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     setGenres(await api.getPartialGenres());
   }, [api]);
 
-  const addPlaylist = useCallback(
-    async (playlist: Playlist) => {
-      // FIXME: Add playlist via API
-      await updatePlaylists();
+  const createNewPlaylist = useCallback(
+    (kind: PlaylistKind) => {
+      setNewPlaylist({
+        kind,
+        name: '',
+        position: Math.max(...playlists.map(p => p.position ?? 0)) + 1,
+      });
     },
-    [updatePlaylists],
+    [playlists],
   );
+
+  const addNewPlaylist = useCallback(async () => {
+    if (newPlaylist) {
+      await api.postPlaylist(newPlaylist);
+      await updatePlaylists();
+      setNewPlaylist(undefined);
+    }
+  }, [api, newPlaylist, updatePlaylists]);
 
   // Update the playlists, albums etc. on the initial render
   useEffect(() => {
@@ -180,17 +191,17 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         <PlaylistTreeItem
           playlist={newPlaylist}
           onEdit={setNewPlaylist}
+          onSubmitEdit={addNewPlaylist}
           isEditable
           isEditFocused
         />
       ) : null}
       <Divider />
-      {/* TODO: Implement the buttons */}
       <DrawerTreeItem
         label="Add Playlist"
         isButton
         onPress={() => {
-          setNewPlaylist({ kind: PlaylistKind.Playlist });
+          createNewPlaylist(PlaylistKind.Playlist);
         }}
         icon={({ size, color }) => (
           <ThemedIcon name="add-outline" size={size} color={color} />
@@ -200,7 +211,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         label="Add Folder"
         isButton
         onPress={() => {
-          setNewPlaylist({ kind: PlaylistKind.Crate });
+          createNewPlaylist(PlaylistKind.Folder);
         }}
         icon={({ size, color }) => (
           <ThemedIcon name="add-outline" size={size} color={color} />

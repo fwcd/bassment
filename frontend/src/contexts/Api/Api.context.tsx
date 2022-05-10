@@ -4,7 +4,7 @@ import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialFileInfo } from '@bassment/models/FileInfo';
 import { PartialGenre } from '@bassment/models/Genre';
-import { PlaylistTreeNode } from '@bassment/models/Playlist';
+import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {
   createContext,
@@ -56,6 +56,9 @@ export interface ApiContextValue {
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 
+  /** Creates a new playlist. */
+  postPlaylist(playlist: Playlist): Promise<void>;
+
   /** Fetches associated audio files for a track. */
   getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]>;
 
@@ -88,6 +91,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
   getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
+  postPlaylist: noApiContext('playlist', () => {}),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
 });
@@ -108,8 +112,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     async (
       method: string,
       endpoint: string,
-      inputOptions?: { acceptedFormat?: 'json' | 'binary' },
-      body?: any,
+      inputOptions?: { acceptedFormat?: 'json' | 'binary'; body?: any },
     ) => {
       const options = {
         acceptedFormat: inputOptions?.acceptedFormat ?? 'json',
@@ -124,7 +127,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
             ? { Accept: 'application/json' }
             : {}),
         },
-        body: body ? JSON.stringify(body) : undefined,
+        body: inputOptions?.body
+          ? JSON.stringify(inputOptions.body)
+          : undefined,
       });
       if (response.status >= 400) {
         throw Error(
@@ -183,6 +188,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
+    },
+    async postPlaylist(playlist: Playlist): Promise<void> {
+      return await apiRequest('POST', '/playlists', { body: playlist });
     },
     async getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]> {
       return await apiRequest('GET', `/tracks/${trackId}/audios`);
