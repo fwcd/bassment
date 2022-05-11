@@ -18,7 +18,10 @@ export interface AudioPlayerContextValue {
   /** The next tracks to play. */
   readonly queue?: TrackQueue;
   /** Whether playback is active. */
-  isPlaying: boolean;
+  readonly isPlaying: boolean;
+
+  /** Sets playback state. */
+  setPlaying(playing: boolean): void;
 
   /** Plays the given track immediately. */
   play(track: AnnotatedTrack): void;
@@ -29,6 +32,7 @@ export interface AudioPlayerContextValue {
 
 export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   isPlaying: false,
+  setPlaying: () => {},
   play: () => {},
   seek: () => {},
 });
@@ -63,15 +67,8 @@ export function AudioPlayerContextProvider(
   const value: AudioPlayerContextValue = {
     nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
     queue,
-
-    get isPlaying() {
-      return isPlaying;
-    },
-
-    set isPlaying(playing: boolean) {
-      setPlayingRequested(playing);
-    },
-
+    isPlaying,
+    setPlaying: setPlayingRequested,
     play,
     seek: setSeekMs,
   };

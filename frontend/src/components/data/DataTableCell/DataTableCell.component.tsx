@@ -1,58 +1,71 @@
 import { useDataTableCellStyles } from '@bassment/components/data/DataTableCell/DataTableCell.style';
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { Clickable } from '@bassment/components/input/Clickable';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 
 interface DataTableCellProps {
-  index: number;
+  colIndex: number;
   header: string;
   icon?: ReactNode;
   item?: { [key: string]: string | number };
-  onClick?: () => void;
-  rowEven?: boolean;
   widths: number[];
   setWidths?: (widths: number[]) => void;
+  onClick?: () => void;
 }
 
-export function DataTableCell(props: DataTableCellProps) {
+export function DataTableCell({
+  colIndex,
+  header,
+  icon,
+  item,
+  widths,
+  setWidths,
+  onClick,
+}: DataTableCellProps) {
   const styles = useDataTableCellStyles();
-  const { item, index: j } = props;
 
-  const [startWidth, setStartWidth] = useState(props.widths[j]);
+  const width = widths[colIndex];
+  const [startWidth, setStartWidth] = useState(width);
   const minWidth = 40;
 
   const cell = (
-    <View style={[styles.cell, { width: props.widths[j] }]}>
-      {props.icon}
+    <View style={[styles.cell, { width }]}>
+      {icon}
       <ThemedText style={item ? null : styles.headerText}>
-        {item ? `${item[props.header]}` : props.header}
+        {item ? `${item[header]}` : header}
       </ThemedText>
     </View>
   );
 
+  const onGestureEvent = useCallback(
+    ({ nativeEvent: event }) => {
+      if (setWidths) {
+        let newWidths = [...widths];
+        newWidths[colIndex] = Math.max(
+          minWidth,
+          startWidth + event.translationX,
+        );
+        setWidths(newWidths);
+      }
+    },
+    [setWidths, startWidth, colIndex, widths],
+  );
+
+  const onEnded = useCallback(() => {
+    setStartWidth(width);
+  }, [width]);
+
   return (
     <>
-      {props.onClick ? (
-        <Clickable onClick={props.onClick}>{cell}</Clickable>
-      ) : (
-        cell
-      )}
+      {onClick ? <Clickable onClick={onClick}>{cell}</Clickable> : cell}
       <PanGestureHandler
         minDist={0}
         activeOffsetX={0}
-        onGestureEvent={({ nativeEvent: event }) => {
-          if (props.setWidths) {
-            let widths = [...props.widths];
-            widths[j] = Math.max(minWidth, startWidth + event.translationX);
-            props.setWidths(widths);
-          }
-        }}
-        onEnded={() => {
-          setStartWidth(props.widths[j]);
-        }}>
+        onGestureEvent={onGestureEvent}
+        onEnded={onEnded}>
         <Animated.View style={styles.borderHandle} />
       </PanGestureHandler>
     </>

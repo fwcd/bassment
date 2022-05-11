@@ -1,7 +1,7 @@
 import { useDataTableStyles } from '@bassment/components/data/DataTable/DataTable.style';
 import { DataTableRow } from '@bassment/components/data/DataTableRow';
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList } from 'react-native';
 
 interface DataItem {
@@ -11,12 +11,12 @@ interface DataItem {
 
 interface DataTableProps<T> {
   headers: string[];
+  data?: T[];
   initialWidths?: number[];
   filter?: string;
   selectedRowKey?: number;
   onSelectRow?: (item?: T) => void;
   onDoubleClickRow?: (item?: T) => void;
-  data?: T[];
 }
 
 enum Order {
@@ -29,40 +29,89 @@ interface OrderedColumn {
   order: Order;
 }
 
-export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
+export function DataTable<T extends DataItem>({
+  headers,
+  data,
+  initialWidths,
+  filter,
+  selectedRowKey,
+  onSelectRow,
+  onDoubleClickRow,
+}: DataTableProps<T>) {
   const styles = useDataTableStyles();
-  const headers = props.headers;
 
   // TODO: Assert that initialWidths.length == headers.length
-  const [widths, setWidths] = useState(
-    props.initialWidths ?? headers.map(_ => 200),
-  );
+  const [widths, setWidths] = useState(initialWidths ?? headers.map(_ => 200));
   const [orderedColumn, setOrderedColumn] = useState<OrderedColumn | null>(
     null,
   );
 
   // Sort data if needed
-  let data = [...(props.data ?? [])];
+  let sortedData = [...(data ?? [])];
   if (orderedColumn) {
     const header = headers[orderedColumn.index];
-    data.sort(
+    sortedData.sort(
       orderedColumn.order === Order.Ascending
         ? (x, y) => `${x[header]}`.localeCompare(`${y[header]}`)
         : (x, y) => `${y[header]}`.localeCompare(`${x[header]}`),
     );
   }
 
-  const filter = props.filter ?? '';
   const filteredData =
-    filter.length > 0
-      ? data.filter(item =>
+    (filter?.length ?? 0) > 0
+      ? sortedData.filter(item =>
           Object.values(item).some(
             v =>
               typeof v === 'string' &&
-              v.toLowerCase().includes(filter.toLowerCase().trim()),
+              v.toLowerCase().includes(filter!.toLowerCase().trim()),
           ),
         )
-      : data;
+      : sortedData;
+
+  const onClickCell = useCallback(
+    (j: number) => {
+      if (orderedColumn && orderedColumn.index === j) {
+        const order = orderedColumn.order;
+        if (order === Order.Ascending) {
+          setOrderedColumn({
+            ...orderedColumn,
+            order: Order.Descending,
+          });
+        } else if (order === Order.Descending) {
+          setOrderedColumn(null);
+        }
+      } else {
+        setOrderedColumn({ index: j, order: Order.Ascending });
+      }
+    },
+    [orderedColumn],
+  );
+
+  const renderItem = useCallback(
+    ({ item, index: i }) => (
+      <DataTableRow
+        key={item.key ?? i}
+        headers={headers}
+        even={i % 2 === 1}
+        selected={selectedRowKey === item.key}
+        hoverable
+        item={item}
+        widths={widths}
+        setWidths={setWidths}
+        onClick={() => {
+          if (onSelectRow) {
+            onSelectRow(item);
+          }
+        }}
+        onDoubleClick={() => {
+          if (onDoubleClickRow) {
+            onDoubleClickRow(item);
+          }
+        }}
+      />
+    ),
+    [headers, widths, selectedRowKey, onSelectRow, onDoubleClickRow],
+  );
 
   return (
     // TODO: Horizontal scroll?
@@ -94,47 +143,12 @@ export function DataTable<T extends DataItem>(props: DataTableProps<T>) {
                 })
               : undefined
           }
-          onClickCell={j => {
-            if (orderedColumn && orderedColumn.index === j) {
-              const order = orderedColumn.order;
-              if (order === Order.Ascending) {
-                setOrderedColumn({
-                  ...orderedColumn,
-                  order: Order.Descending,
-                });
-              } else if (order === Order.Descending) {
-                setOrderedColumn(null);
-              }
-            } else {
-              setOrderedColumn({ index: j, order: Order.Ascending });
-            }
-          }}
+          onClickCell={onClickCell}
           widths={widths}
           setWidths={setWidths}
         />
       }
-      renderItem={({ item, index: i }) => (
-        <DataTableRow
-          key={item.key ?? i}
-          headers={headers}
-          even={i % 2 === 1}
-          selected={props.selectedRowKey === item.key}
-          hoverable
-          item={item}
-          widths={widths}
-          setWidths={setWidths}
-          onClick={() => {
-            if (props.onSelectRow) {
-              props.onSelectRow(item);
-            }
-          }}
-          onDoubleClick={() => {
-            if (props.onDoubleClickRow) {
-              props.onDoubleClickRow(item);
-            }
-          }}
-        />
-      )}
+      renderItem={renderItem}
     />
   );
 }

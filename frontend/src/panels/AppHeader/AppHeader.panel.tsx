@@ -18,7 +18,7 @@ export function AppHeader(props: DrawerHeaderProps) {
         <View style={[styles.item, styles.sideItem]}>
           <PlaybackControls
             isPlaying={player.isPlaying}
-            setPlaying={playing => (player.isPlaying = playing)}
+            setPlaying={player.setPlaying}
           />
         </View>
         <PlaybackView
