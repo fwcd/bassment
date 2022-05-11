@@ -4,18 +4,17 @@ import React, { memo, useState } from 'react';
 
 interface TrackTableProps {
   tracks: AnnotatedTrack[];
-  filter?: string;
   onPlay?: (track: AnnotatedTrack) => void;
 }
 
-export const TrackTable = memo((props: TrackTableProps) => {
+export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
 
   return (
     <DataTable
       headers={['ID', 'Album', 'Artist', 'Title', 'Genre']}
       initialWidths={[40, 200, 200, 400, 200]}
-      data={props.tracks.map(track => ({
+      data={tracks.map(track => ({
         _track: track, // Internal property for keeping the track
         key: track.id!,
         ID: track.id,
@@ -24,13 +23,12 @@ export const TrackTable = memo((props: TrackTableProps) => {
         Title: track.title ?? '',
         Genre: track.genres.map(g => g.name).join(', '),
       }))}
-      filter={props.filter}
       selectedRowKey={selectedId}
       onSelectRow={item => setSelectedId(item?.key)}
       onDoubleClickRow={item => {
         const track = item?._track;
-        if (props.onPlay && track) {
-          props.onPlay(track);
+        if (onPlay && track) {
+          onPlay(track);
         }
       }}
     />

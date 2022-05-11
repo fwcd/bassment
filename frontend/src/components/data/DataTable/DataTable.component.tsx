@@ -33,7 +33,6 @@ export function DataTable<T extends DataItem>({
   headers,
   data,
   initialWidths,
-  filter,
   selectedRowKey,
   onSelectRow,
   onDoubleClickRow,
@@ -56,17 +55,6 @@ export function DataTable<T extends DataItem>({
         : (x, y) => `${y[header]}`.localeCompare(`${x[header]}`),
     );
   }
-
-  const filteredData =
-    (filter?.length ?? 0) > 0
-      ? sortedData.filter(item =>
-          Object.values(item).some(
-            v =>
-              typeof v === 'string' &&
-              v.toLowerCase().includes(filter!.toLowerCase().trim()),
-          ),
-        )
-      : sortedData;
 
   const onClickCell = useCallback(
     (j: number) => {
@@ -117,7 +105,7 @@ export function DataTable<T extends DataItem>({
     // TODO: Horizontal scroll?
     <FlatList
       style={styles.table}
-      data={filteredData}
+      data={data}
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <DataTableRow
