@@ -1,6 +1,6 @@
 import { DataTable } from '@bassment/components/data/DataTable';
 import { AnnotatedTrack } from '@bassment/models/Track';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 
 interface TrackTableProps {
   tracks: AnnotatedTrack[];
@@ -8,7 +8,7 @@ interface TrackTableProps {
   onPlay?: (track: AnnotatedTrack) => void;
 }
 
-export function TrackTable(props: TrackTableProps) {
+export const TrackTable = memo((props: TrackTableProps) => {
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
 
   return (
@@ -35,4 +35,4 @@ export function TrackTable(props: TrackTableProps) {
       }}
     />
   );
-}
+});

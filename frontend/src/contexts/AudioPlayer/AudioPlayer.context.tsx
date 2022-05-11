@@ -50,10 +50,15 @@ export function AudioPlayerContextProvider(
   // Requested state
   const [track, setTrack] = useState<AnnotatedTrack>();
   const [isPlayingRequested, setPlayingRequested] = useState<boolean>();
-  // TODO: Use queue
   const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
   const [seekMs, setSeekMs] = useState<number>();
   const [audioUrl, setAudioUrl] = useState<string>();
+
+  const play = useCallback((newTrack: AnnotatedTrack) => {
+    setTrack(newTrack);
+    setSeekMs(0);
+    setPlayingRequested(true);
+  }, []);
 
   const value: AudioPlayerContextValue = {
     nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
@@ -67,15 +72,8 @@ export function AudioPlayerContextProvider(
       setPlayingRequested(playing);
     },
 
-    play(newTrack: AnnotatedTrack): void {
-      setTrack(newTrack);
-      setSeekMs(0);
-      setPlayingRequested(true);
-    },
-
-    seek(newSeekMs: number): void {
-      setSeekMs(newSeekMs);
-    },
+    play,
+    seek: setSeekMs,
   };
 
   const updateAudioUrl = useCallback(async () => {
