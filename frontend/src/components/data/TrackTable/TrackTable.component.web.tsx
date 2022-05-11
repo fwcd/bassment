@@ -1,5 +1,5 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
-import React from 'react';
+import React, { useCallback } from 'react';
 import DataGrid from 'react-data-grid';
 
 export function TrackTable({ tracks, onPlay }: TrackTableProps) {
@@ -19,5 +19,23 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     genre: track.genres.map(g => g.name).join(', '),
   }));
 
-  return <DataGrid columns={columns} rows={rows} />;
+  const onRowDoubleClick = useCallback(
+    ({ id }: { id?: number }) => {
+      // TODO: Something that isn't linear time
+      const track = tracks.find(t => t.id === id);
+      if (track && onPlay) {
+        onPlay(track);
+      }
+    },
+    [tracks, onPlay],
+  );
+
+  return (
+    <DataGrid
+      style={{ height: '100%' }}
+      columns={columns}
+      rows={rows}
+      onRowDoubleClick={onRowDoubleClick}
+    />
+  );
 }
