@@ -12,8 +12,17 @@ export function TracksView({ tracks }: TracksViewProps) {
   const { searchText } = useContext(SearchContext);
   const player = useContext(AudioPlayerContext);
 
+  const filteredTracks =
+    searchText.length > 0
+      ? tracks.filter(track =>
+          Object.values(track).some(
+            v =>
+              typeof v === 'string' &&
+              v.toLowerCase().includes(searchText.toLowerCase().trim()),
+          ),
+        )
+      : tracks;
+
   // TODO: Other view on mobile
-  return (
-    <TrackTable tracks={tracks} filter={searchText} onPlay={player.play} />
-  );
+  return <TrackTable tracks={filteredTracks} onPlay={player.play} />;
 }

@@ -2,7 +2,7 @@ import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable
 import React from 'react';
 import DataGrid from 'react-data-grid';
 
-export function TrackTable({ tracks, filter, onPlay }: TrackTableProps) {
+export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const columns = [
     { key: 'id', name: 'ID' },
     { key: 'album', name: 'Album' },
