@@ -1,8 +1,10 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
-import React, { useCallback } from 'react';
-import DataGrid from 'react-data-grid';
+import React, { useCallback, useMemo, useState } from 'react';
+import DataGrid, { SortColumn } from 'react-data-grid';
 
 export function TrackTable({ tracks, onPlay }: TrackTableProps) {
+  const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
+
   const columns = [
     { key: 'id', name: 'ID' },
     { key: 'album', name: 'Album' },
@@ -19,6 +21,22 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     genre: track.genres.map(g => g.name).join(', '),
   }));
 
+  const sortedRows = useMemo(() => {
+    if (sortColumns.length === 0) {
+      return rows;
+    }
+
+    return [...rows].sort((x, y) => {
+      for (const sort of sortColumns) {
+        const compResult = `${x}`.localeCompare(`${y}`);
+        if (compResult !== 0) {
+          return sort.direction === 'ASC' ? compResult : -compResult;
+        }
+      }
+      return 0;
+    });
+  }, [rows, sortColumns]);
+
   const onRowDoubleClick = useCallback(
     ({ id }: { id?: number }) => {
       // TODO: Something that isn't linear time
@@ -34,7 +52,9 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     <DataGrid
       style={{ height: '100%' }}
       columns={columns}
-      rows={rows}
+      rows={sortedRows}
+      sortColumns={sortColumns}
+      onSortColumnsChange={setSortColumns}
       onRowDoubleClick={onRowDoubleClick}
     />
   );
