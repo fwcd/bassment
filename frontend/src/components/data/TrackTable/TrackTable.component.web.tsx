@@ -67,18 +67,22 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const styles = useTrackTableStyles();
 
   return (
-    <DataGrid
-      style={styles.grid}
-      rowHeight={1.5 * globalStyles.text.fontSize}
-      columns={columns}
-      rows={sortedRows}
-      defaultColumnOptions={{
-        sortable: true,
-        resizable: true,
-      }}
-      sortColumns={sortColumns}
-      onSortColumnsChange={setSortColumns}
-      onRowDoubleClick={onRowDoubleClick}
-    />
+    <>
+      <DataGrid
+        style={styles.grid}
+        rowHeight={1.5 * globalStyles.text.fontSize}
+        columns={columns}
+        rows={sortedRows}
+        defaultColumnOptions={{
+          sortable: true,
+          resizable: true,
+        }}
+        sortColumns={sortColumns}
+        onSortColumnsChange={setSortColumns}
+        onRowDoubleClick={onRowDoubleClick}
+      />
+      {/* We patch the CSS at runtime since react-data-grid doesn't use react-native's styling. */}
+      <style>{styles.patched}</style>
+    </>
   );
 }
