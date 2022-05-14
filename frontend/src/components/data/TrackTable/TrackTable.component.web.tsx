@@ -4,6 +4,10 @@ import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
 import DataGrid, { SortColumn } from 'react-data-grid';
 
+// TODO: Pass columnKey to compare function, e.g. to implement more
+//       specialized comparisons, like the circle-of-fifths ordering
+//       of keys?
+
 function compare(x: any, y: any) {
   if (typeof x === 'string' && typeof y === 'string') {
     return x.localeCompare(y);
@@ -18,9 +22,9 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
 
   const columns = [
-    { key: 'id', name: 'ID' },
-    { key: 'album', name: 'Album' },
-    { key: 'artist', name: 'Artist' },
+    { key: 'id', name: 'ID', width: '4%' },
+    { key: 'album', name: 'Album', width: '15%' },
+    { key: 'artist', name: 'Artist', width: '20%' },
     { key: 'title', name: 'Title' },
     { key: 'genre', name: 'Genre' },
   ];
