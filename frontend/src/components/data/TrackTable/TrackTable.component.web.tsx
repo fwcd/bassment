@@ -92,13 +92,18 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const styles = useTrackTableStyles();
 
   const rowRenderer = useCallback(
-    (props: RowRendererProps<AnnotatedTrack>) => <Row {...props} />,
+    (props: RowRendererProps<AnnotatedTrack>) => (
+      <Row
+        {...props}
+        draggable
+        onMouseDown={() => {
+          // TODO: Shift selection
+          setSelectedRows(new Set([props.row.id!]));
+        }}
+      />
+    ),
     [],
   );
-
-  const onRowClick = useCallback((track: AnnotatedTrack) => {
-    setSelectedRows(new Set([track.id!]));
-  }, []);
 
   const onRowDoubleClick = useCallback(
     (track: AnnotatedTrack) => {
@@ -127,7 +132,6 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
         sortColumns={sortColumns}
         onSelectedRowsChange={setSelectedRows}
         onSortColumnsChange={setSortColumns}
-        onRowClick={onRowClick}
         onRowDoubleClick={onRowDoubleClick}
         components={{
           rowRenderer,
