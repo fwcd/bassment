@@ -1,4 +1,6 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
+import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
+import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
 import DataGrid, { SortColumn } from 'react-data-grid';
 
@@ -48,9 +50,13 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     [tracks, onPlay],
   );
 
+  const globalStyles = useStyles();
+  const styles = useTrackTableStyles();
+
   return (
     <DataGrid
-      style={{ height: '100%' }}
+      style={styles.grid}
+      rowHeight={1.5 * globalStyles.text.fontSize}
       columns={columns}
       rows={sortedRows}
       sortColumns={sortColumns}
