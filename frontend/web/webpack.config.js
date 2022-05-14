@@ -54,6 +54,15 @@ module.exports = {
         ],
         loader: 'file-loader',
       },
+      // Fix for an issue with react-data-grid. See:
+      // - https://github.com/facebook/create-react-app/issues/11769
+      // - https://github.com/webpack/webpack/issues/11467#issuecomment-691873586
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
     ],
   },
   plugins: [

@@ -15,10 +15,18 @@ export function TracksView({ tracks }: TracksViewProps) {
   const filteredTracks =
     searchText.length > 0
       ? tracks.filter(track =>
-          Object.values(track).some(
-            v =>
-              typeof v === 'string' &&
-              v.toLowerCase().includes(searchText.toLowerCase().trim()),
+          [
+            `${track.id}`,
+            track.title,
+            ...track.artists.map(a => a.name),
+            ...track.albums.map(a => a.name),
+            ...track.genres.map(g => g.name),
+            track.comment,
+            track.year,
+          ].some(v =>
+            v
+              ? v.toLowerCase().includes(searchText.toLowerCase().trim())
+              : false,
           ),
         )
       : tracks;
