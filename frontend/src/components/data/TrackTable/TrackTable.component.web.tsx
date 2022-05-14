@@ -3,6 +3,7 @@ import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackT
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import { useStyles } from '@bassment/styles';
+import { fromDrops } from '@bassment/utils/dropConversions.web';
 import React, { useCallback, useMemo, useState } from 'react';
 import DataGrid, {
   Column,
@@ -96,13 +97,33 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
       <Row
         {...props}
         draggable
+        onDragStart={e => {
+          const transfer = e.dataTransfer;
+
+          const img = document.createElement('img');
+          // TODO: Use a proper image
+          img.src = 'http://kryogenix.org/images/hackergotchi-simpler.png';
+          transfer.setDragImage(img, 0, 0);
+
+          fromDrops(
+            [
+              {
+                kind: 'tracks',
+                tracks: tracks.filter(t =>
+                  t.id ? selectedRows.has(t.id) : false,
+                ),
+              },
+            ],
+            transfer,
+          );
+        }}
         onMouseDown={() => {
           // TODO: Shift selection
           setSelectedRows(new Set([props.row.id!]));
         }}
       />
     ),
-    [],
+    [selectedRows, tracks],
   );
 
   const onRowDoubleClick = useCallback(

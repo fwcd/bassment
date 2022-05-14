@@ -1,3 +1,5 @@
+import { AnnotatedTrack } from '@bassment/models/Track';
+
 /** A value transferred via drag-n-drop. */
 interface BaseDrop {
   kind: string;
@@ -8,9 +10,15 @@ export interface FileDrop extends BaseDrop {
   file?: File;
 }
 
-export interface ValueDrop<V> extends BaseDrop {
-  kind: 'any';
-  value: V;
+export interface TracksDrop extends BaseDrop {
+  kind: 'tracks';
+  tracks: AnnotatedTrack[];
 }
 
-export type Drop = FileDrop | ValueDrop<any>;
+export interface StringDrop extends BaseDrop {
+  kind: 'string';
+  value: string;
+  type: string;
+}
+
+export type Drop = FileDrop | TracksDrop | StringDrop;

@@ -1,35 +1,14 @@
 import { DroppableProps } from '@bassment/components/input/Droppable/Droppable.props';
-import { Drop } from '@bassment/models/Drop';
+import { toDrops } from '@bassment/utils/dropConversions.web';
 import React, { DragEventHandler, useCallback } from 'react';
-
-/** Converts a data transfer (from the DOM API) to a Drop (from our model). */
-async function dropsOf(transfer: DataTransfer): Promise<Drop[]> {
-  const drops: Drop[] = [];
-
-  for (let i = 0; i < transfer.items.length; i++) {
-    const item = transfer.items[i];
-    switch (item.kind) {
-      case 'file':
-        const file = item.getAsFile() ?? undefined;
-        drops.push({ kind: 'file', file });
-        break;
-      default:
-        // TODO: More fine-grained drop types rather than just dumping the item in here
-        drops.push({ kind: 'any', value: item });
-        break;
-    }
-  }
-
-  return drops;
-}
 
 export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
   const onDragIn: DragEventHandler = useCallback(
-    async event => onDrag(true, await dropsOf(event.dataTransfer)),
+    async event => onDrag(true, await toDrops(event.dataTransfer)),
     [onDrag],
   );
   const onDragOut: DragEventHandler = useCallback(
-    async event => onDrag(false, await dropsOf(event.dataTransfer)),
+    async event => onDrag(false, await toDrops(event.dataTransfer)),
     [onDrag],
   );
 
@@ -44,7 +23,7 @@ export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
       event.preventDefault();
 
       // Extract the transferred data
-      const drops = await dropsOf(event.dataTransfer);
+      const drops = await toDrops(event.dataTransfer);
 
       // Finish drag and notify drop handler
       onDrag(false, drops);
