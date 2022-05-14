@@ -44,7 +44,7 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     () => [
       { key: 'id', name: 'ID', width: '4%' },
       {
-        key: 'album',
+        key: 'albums',
         name: 'Album',
         width: '15%',
         formatter: ({ row }) => (
@@ -52,7 +52,7 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
         ),
       },
       {
-        key: 'artist',
+        key: 'artists',
         name: 'Artist',
         width: '20%',
         formatter: ({ row }) => (
@@ -61,7 +61,7 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
       },
       { key: 'title', name: 'Title' },
       {
-        key: 'genre',
+        key: 'genres',
         name: 'Genre',
         formatter: ({ row }) => (
           <ThemedText>{joinNames(row.genres)}</ThemedText>
