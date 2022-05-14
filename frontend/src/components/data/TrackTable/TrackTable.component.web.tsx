@@ -4,7 +4,12 @@ import { ThemedText } from '@bassment/components/display/ThemedText';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
-import DataGrid, { Column, SortColumn } from 'react-data-grid';
+import DataGrid, {
+  Column,
+  Row,
+  RowRendererProps,
+  SortColumn,
+} from 'react-data-grid';
 
 // TODO: Pass columnKey to compare function, e.g. to implement more
 //       specialized comparisons, like the circle-of-fifths ordering
@@ -67,6 +72,21 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     });
   }, [rows, sortColumns]);
 
+  const globalStyles = useStyles();
+  const styles = useTrackTableStyles();
+
+  // TODO: Multi-selection
+  const [selectedId, setSelectedId] = useState<number>();
+
+  const rowRenderer = useCallback(
+    (props: RowRendererProps<AnnotatedTrack>) => <Row {...props} />,
+    [],
+  );
+
+  const onRowClick = useCallback((track: AnnotatedTrack) => {
+    setSelectedId(track.id);
+  }, []);
+
   const onRowDoubleClick = useCallback(
     (track: AnnotatedTrack) => {
       if (onPlay) {
@@ -75,9 +95,6 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     },
     [onPlay],
   );
-
-  const globalStyles = useStyles();
-  const styles = useTrackTableStyles();
 
   return (
     <>
@@ -90,9 +107,15 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
           sortable: true,
           resizable: true,
         }}
+        // TODO: This doesn't seem to work, why?
+        selectedRows={new Set(selectedId ? [selectedId] : [])}
         sortColumns={sortColumns}
         onSortColumnsChange={setSortColumns}
+        onRowClick={onRowClick}
         onRowDoubleClick={onRowDoubleClick}
+        components={{
+          rowRenderer,
+        }}
       />
       {/* We patch the CSS at runtime since react-data-grid doesn't use react-native's styling. */}
       <style>{styles.patched}</style>
