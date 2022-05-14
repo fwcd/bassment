@@ -1,9 +1,10 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
 import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
+import { ThemedText } from '@bassment/components/display/ThemedText';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
-import DataGrid, { SortColumn } from 'react-data-grid';
+import DataGrid, { Column, SortColumn } from 'react-data-grid';
 
 // TODO: Pass columnKey to compare function, e.g. to implement more
 //       specialized comparisons, like the circle-of-fifths ordering
@@ -22,23 +23,35 @@ function compare(x: any, y: any) {
 export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
 
-  const columns = [
+  const columns: Column<AnnotatedTrack>[] = [
     { key: 'id', name: 'ID', width: '4%' },
-    { key: 'album', name: 'Album', width: '15%' },
-    { key: 'artist', name: 'Artist', width: '20%' },
+    {
+      key: 'album',
+      name: 'Album',
+      width: '15%',
+      formatter: ({ row }) => (
+        <ThemedText>{row.albums.map(a => a.name).join(', ')}</ThemedText>
+      ),
+    },
+    {
+      key: 'artist',
+      name: 'Artist',
+      width: '20%',
+      formatter: ({ row }) => (
+        <ThemedText>{row.artists.map(a => a.name).join(', ')}</ThemedText>
+      ),
+    },
     { key: 'title', name: 'Title' },
-    { key: 'genre', name: 'Genre' },
+    {
+      key: 'genre',
+      name: 'Genre',
+      formatter: ({ row }) => (
+        <ThemedText>{row.genres.map(g => g.name).join(', ')}</ThemedText>
+      ),
+    },
   ];
 
-  const rows = tracks.map(track => ({
-    _track: track,
-    id: track.id,
-    album: track.albums.map(a => a.name).join(', '),
-    artist: track.artists.map(a => a.name).join(', '),
-    title: track.title,
-    genre: track.genres.map(g => g.name).join(', '),
-  }));
-
+  const rows: AnnotatedTrack[] = tracks;
   const sortedRows = useMemo(() => {
     return [...rows].sort((x, y) => {
       for (const sort of sortColumns) {
@@ -55,9 +68,9 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   }, [rows, sortColumns]);
 
   const onRowDoubleClick = useCallback(
-    ({ _track }: { _track: AnnotatedTrack }) => {
+    (track: AnnotatedTrack) => {
       if (onPlay) {
-        onPlay(_track);
+        onPlay(track);
       }
     },
     [onPlay],
