@@ -4,6 +4,16 @@ import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
 import DataGrid, { SortColumn } from 'react-data-grid';
 
+function compare(x: any, y: any) {
+  if (typeof x === 'string' && typeof y === 'string') {
+    return x.localeCompare(y);
+  } else if (typeof x === 'number' && typeof y === 'number') {
+    return x - y;
+  } else {
+    return 0;
+  }
+}
+
 export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
 
@@ -24,13 +34,12 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   }));
 
   const sortedRows = useMemo(() => {
-    if (sortColumns.length === 0) {
-      return rows;
-    }
-
     return [...rows].sort((x, y) => {
       for (const sort of sortColumns) {
-        const compResult = `${x}`.localeCompare(`${y}`);
+        const compResult = compare(
+          (x as any)[sort.columnKey],
+          (y as any)[sort.columnKey],
+        );
         if (compResult !== 0) {
           return sort.direction === 'ASC' ? compResult : -compResult;
         }
@@ -59,6 +68,10 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
       rowHeight={1.5 * globalStyles.text.fontSize}
       columns={columns}
       rows={sortedRows}
+      defaultColumnOptions={{
+        sortable: true,
+        resizable: true,
+      }}
       sortColumns={sortColumns}
       onSortColumnsChange={setSortColumns}
       onRowDoubleClick={onRowDoubleClick}
