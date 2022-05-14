@@ -1,5 +1,6 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
 import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import { useStyles } from '@bassment/styles';
 import React, { useCallback, useMemo, useState } from 'react';
 import DataGrid, { SortColumn } from 'react-data-grid';
@@ -30,6 +31,7 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   ];
 
   const rows = tracks.map(track => ({
+    _track: track,
     id: track.id,
     album: track.albums.map(a => a.name).join(', '),
     artist: track.artists.map(a => a.name).join(', '),
@@ -53,14 +55,12 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   }, [rows, sortColumns]);
 
   const onRowDoubleClick = useCallback(
-    ({ id }: { id?: number }) => {
-      // TODO: Something that isn't linear time
-      const track = tracks.find(t => t.id === id);
-      if (track && onPlay) {
-        onPlay(track);
+    ({ _track }: { _track: AnnotatedTrack }) => {
+      if (onPlay) {
+        onPlay(_track);
       }
     },
-    [tracks, onPlay],
+    [onPlay],
   );
 
   const globalStyles = useStyles();
