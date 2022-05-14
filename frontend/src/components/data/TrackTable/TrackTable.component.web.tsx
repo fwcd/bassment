@@ -11,58 +11,74 @@ import DataGrid, {
   SortColumn,
 } from 'react-data-grid';
 
-// TODO: Pass columnKey to compare function, e.g. to implement more
-//       specialized comparisons, like the circle-of-fifths ordering
-//       of keys?
+function joinNames(xs: { name?: string }[]): string {
+  return xs.map(x => x.name ?? '').join(', ');
+}
 
-function compare(x: any, y: any) {
-  if (typeof x === 'string' && typeof y === 'string') {
-    return x.localeCompare(y);
-  } else if (typeof x === 'number' && typeof y === 'number') {
-    return x - y;
-  } else {
-    return 0;
+function compare(
+  x: AnnotatedTrack,
+  y: AnnotatedTrack,
+  columnKey: keyof AnnotatedTrack,
+) {
+  switch (columnKey) {
+    case 'id':
+      return (x[columnKey] ?? 0) - (y[columnKey] ?? 0);
+    case 'title':
+      return (x[columnKey] ?? '').localeCompare(y[columnKey] ?? '');
+    case 'artists':
+    case 'albums':
+    case 'genres':
+      return joinNames(x[columnKey]).localeCompare(joinNames(y[columnKey]));
+    default:
+      return 0;
   }
 }
 
 export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
+  const [selectedRows, setSelectedRows] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
 
-  const columns: Column<AnnotatedTrack>[] = [
-    { key: 'id', name: 'ID', width: '4%' },
-    {
-      key: 'album',
-      name: 'Album',
-      width: '15%',
-      formatter: ({ row }) => (
-        <ThemedText>{row.albums.map(a => a.name).join(', ')}</ThemedText>
-      ),
-    },
-    {
-      key: 'artist',
-      name: 'Artist',
-      width: '20%',
-      formatter: ({ row }) => (
-        <ThemedText>{row.artists.map(a => a.name).join(', ')}</ThemedText>
-      ),
-    },
-    { key: 'title', name: 'Title' },
-    {
-      key: 'genre',
-      name: 'Genre',
-      formatter: ({ row }) => (
-        <ThemedText>{row.genres.map(g => g.name).join(', ')}</ThemedText>
-      ),
-    },
-  ];
+  const columns: Column<AnnotatedTrack>[] = useMemo(
+    () => [
+      { key: 'id', name: 'ID', width: '4%' },
+      {
+        key: 'album',
+        name: 'Album',
+        width: '15%',
+        formatter: ({ row }) => (
+          <ThemedText>{joinNames(row.albums)}</ThemedText>
+        ),
+      },
+      {
+        key: 'artist',
+        name: 'Artist',
+        width: '20%',
+        formatter: ({ row }) => (
+          <ThemedText>{joinNames(row.artists)}</ThemedText>
+        ),
+      },
+      { key: 'title', name: 'Title' },
+      {
+        key: 'genre',
+        name: 'Genre',
+        formatter: ({ row }) => (
+          <ThemedText>{joinNames(row.genres)}</ThemedText>
+        ),
+      },
+    ],
+    [],
+  );
 
   const rows: AnnotatedTrack[] = tracks;
   const sortedRows = useMemo(() => {
     return [...rows].sort((x, y) => {
       for (const sort of sortColumns) {
         const compResult = compare(
-          (x as any)[sort.columnKey],
-          (y as any)[sort.columnKey],
+          x,
+          y,
+          sort.columnKey as keyof AnnotatedTrack,
         );
         if (compResult !== 0) {
           return sort.direction === 'ASC' ? compResult : -compResult;
@@ -75,16 +91,13 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const globalStyles = useStyles();
   const styles = useTrackTableStyles();
 
-  // TODO: Multi-selection
-  const [selectedId, setSelectedId] = useState<number>();
-
   const rowRenderer = useCallback(
     (props: RowRendererProps<AnnotatedTrack>) => <Row {...props} />,
     [],
   );
 
   const onRowClick = useCallback((track: AnnotatedTrack) => {
-    setSelectedId(track.id);
+    setSelectedRows(new Set([track.id!]));
   }, []);
 
   const onRowDoubleClick = useCallback(
@@ -96,9 +109,12 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
     [onPlay],
   );
 
+  const getRowKey = useCallback((track: AnnotatedTrack) => track.id!, []);
+
   return (
     <>
       <DataGrid
+        rowKeyGetter={getRowKey}
         style={styles.grid}
         rowHeight={1.5 * globalStyles.text.fontSize}
         columns={columns}
@@ -107,9 +123,9 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
           sortable: true,
           resizable: true,
         }}
-        // TODO: This doesn't seem to work, why?
-        selectedRows={new Set(selectedId ? [selectedId] : [])}
+        selectedRows={selectedRows}
         sortColumns={sortColumns}
+        onSelectedRowsChange={setSelectedRows}
         onSortColumnsChange={setSortColumns}
         onRowClick={onRowClick}
         onRowDoubleClick={onRowDoubleClick}

@@ -10,6 +10,8 @@ export function useTrackTableStyles() {
       .rdg-row {
         --rdg-row-hover-background-color: ${styles.color.hover};
         --rdg-row-selected-background-color: ${styles.color.selection};
+        --row-selected-hover-background-color: ${styles.color.selection};
+        --rdg-selection-color: ${styles.color.selection};
       }
 
       .rdg-cell {
