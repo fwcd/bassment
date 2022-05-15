@@ -3,10 +3,11 @@ import { Droppable } from '@bassment/components/input/Droppable';
 import { useDropzoneStyles } from '@bassment/components/input/Dropzone/Dropzone.style';
 import { Drop } from '@bassment/models/Drop';
 import React, { ReactNode, useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { LayoutChangeEvent, View, ViewStyle } from 'react-native';
 
 interface DropzoneProps {
   label?: string;
+  stretch?: boolean;
   filterDrop?: (drops: Drop[]) => boolean;
   onDrop: (drops: Drop[]) => void;
   children: ReactNode;
@@ -14,6 +15,7 @@ interface DropzoneProps {
 
 export function Dropzone({
   label,
+  stretch,
   filterDrop,
   onDrop,
   children,
@@ -39,11 +41,24 @@ export function Dropzone({
     [filterDrop, onDrop],
   );
 
+  const [size, setSize] = useState<[number, number]>();
+  const sizeStyle = size ? { width: size[0], height: size[1] } : null;
+
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setSize([width, height]);
+  }, []);
+
   return (
-    <Droppable onDrag={onDragCallback} onDrop={onDropCallback}>
-      <View style={[styles.item, styles.background]}>{children}</View>
+    <Droppable
+      onDrag={onDragCallback}
+      onDrop={onDropCallback}
+      anchor={!stretch}>
+      <View style={[stretch ? styles.stretch : null]} onLayout={onLayout}>
+        {children}
+      </View>
       {isHovering ? (
-        <View style={[styles.item, styles.overlay]} pointerEvents="none">
+        <View style={[sizeStyle, styles.overlay]} pointerEvents="none">
           {label ? <ThemedText style={styles.label}>{label}</ThemedText> : null}
         </View>
       ) : null}

@@ -2,7 +2,12 @@ import { DroppableProps } from '@bassment/components/input/Droppable/Droppable.p
 import { toDrops } from '@bassment/utils/dropConversions.web';
 import React, { DragEventHandler, useCallback } from 'react';
 
-export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
+export function Droppable({
+  anchor,
+  onDrag,
+  onDrop,
+  children,
+}: DroppableProps) {
   const onDragIn: DragEventHandler = useCallback(
     async event => onDrag(true, await toDrops(event.dataTransfer)),
     [onDrag],
@@ -38,7 +43,8 @@ export function Droppable({ onDrag, onDrop, children }: DroppableProps) {
       onDragExit={onDragOut}
       onDragEnd={onDragOut}
       onDragOver={onDragOver}
-      onDrop={onDropEvent}>
+      onDrop={onDropEvent}
+      style={anchor ? { position: 'relative' } : {}}>
       {children}
     </div>
   );

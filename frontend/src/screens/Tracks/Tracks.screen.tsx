@@ -37,6 +37,7 @@ export function TracksScreen() {
 
   return (
     <Dropzone
+      stretch
       label="Drop tracks to upload!"
       filterDrop={filterDrop}
       onDrop={onDrop}>
