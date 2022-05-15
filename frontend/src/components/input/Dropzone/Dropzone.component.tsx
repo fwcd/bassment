@@ -3,7 +3,7 @@ import { Droppable } from '@bassment/components/input/Droppable';
 import { useDropzoneStyles } from '@bassment/components/input/Dropzone/Dropzone.style';
 import { Drop } from '@bassment/models/Drop';
 import React, { ReactNode, useCallback, useState } from 'react';
-import { LayoutChangeEvent, View, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, View } from 'react-native';
 
 interface DropzoneProps {
   label?: string;

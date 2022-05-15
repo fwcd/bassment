@@ -92,6 +92,22 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
   const globalStyles = useStyles();
   const styles = useTrackTableStyles();
 
+  const onRowDoubleClick = useCallback(
+    (track: AnnotatedTrack) => {
+      if (onPlay) {
+        onPlay(track);
+      }
+    },
+    [onPlay],
+  );
+
+  const [lastClick, setLastClick] = useState<{
+    time: number;
+    trackId?: number;
+  }>({
+    time: 0,
+  });
+
   const rowRenderer = useCallback(
     (props: RowRendererProps<AnnotatedTrack>) => (
       <Row
@@ -118,21 +134,26 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
           );
         }}
         onMouseDown={() => {
-          // TODO: Shift selection
-          setSelectedRows(new Set([props.row.id!]));
+          // We manually detect double-clicks since changing
+          // state during the onMouseDown will prevent the
+          // onDoubleClick from firing
+
+          const now = Date.now();
+          const trackId = props.row.id;
+
+          if (
+            (!lastClick.trackId || trackId === lastClick.trackId) &&
+            now - lastClick.time < 500 /* ms */
+          ) {
+            onRowDoubleClick(props.row);
+          }
+
+          setSelectedRows(new Set(trackId ? [trackId] : []));
+          setLastClick({ time: now, trackId });
         }}
       />
     ),
-    [selectedRows, tracks],
-  );
-
-  const onRowDoubleClick = useCallback(
-    (track: AnnotatedTrack) => {
-      if (onPlay) {
-        onPlay(track);
-      }
-    },
-    [onPlay],
+    [selectedRows, lastClick, tracks, onRowDoubleClick],
   );
 
   const getRowKey = useCallback((track: AnnotatedTrack) => track.id!, []);
