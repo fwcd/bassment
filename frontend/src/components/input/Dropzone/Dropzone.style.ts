@@ -1,7 +1,7 @@
 import { useStyles } from '@bassment/styles';
 import { StyleSheet } from 'react-native';
 
-export function useDropzoneStyles() {
+export function useDropzoneStyles(isLabelled: boolean) {
   const styles = useStyles();
   return StyleSheet.create({
     stretch: {
@@ -15,9 +15,8 @@ export function useDropzoneStyles() {
       left: 0,
       zIndex: 1,
       borderColor: styles.color.primary,
-      borderStyle: 'dashed',
-      backgroundColor: styles.color.translucentZone,
-      borderWidth: 5,
+      backgroundColor: isLabelled ? styles.color.translucentZone : undefined,
+      borderWidth: 3,
       justifyContent: 'center',
       alignItems: 'center',
     },

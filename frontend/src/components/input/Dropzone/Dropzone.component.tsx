@@ -20,7 +20,7 @@ export function Dropzone({
   onDrop,
   children,
 }: DropzoneProps) {
-  const styles = useDropzoneStyles();
+  const styles = useDropzoneStyles((label?.length ?? 0) > 0);
   const [isHovering, setHovering] = useState(false);
 
   const onDragCallback = useCallback(
