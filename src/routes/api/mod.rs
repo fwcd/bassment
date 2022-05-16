@@ -1,9 +1,7 @@
-mod albums;
-mod artists;
 mod files;
-mod genres;
 mod playlists;
 mod settings;
+mod tags;
 mod tracks;
 mod users;
 
@@ -26,11 +24,9 @@ pub fn config(cfg: &mut web::ServiceConfig, opts: &Options) {
     cfg.service(
         web::scope("/api/v1")
             .service(ping)
-            .configure(albums::config)
-            .configure(artists::config)
-            .configure(genres::config)
             .configure(playlists::config)
             .configure(settings::config)
+            .configure(tags::config)
             .configure(users::config)
             .configure(|c| files::config(c, opts))
             .configure(|c| tracks::config(c, opts))

@@ -98,7 +98,7 @@ table! {
 
     tags (id) {
         id -> Int4,
-        category_id -> Nullable<Int4>,
+        category_id -> Int4,
         value -> Text,
         description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,

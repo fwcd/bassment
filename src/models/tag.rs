@@ -35,6 +35,27 @@ pub struct NewTag {
     pub cover_art_id: Option<i32>,
 }
 
+impl NewTag {
+    fn basic(category_id: i32, value: &str) -> Self {
+        Self {
+            category_id,
+            value: value.to_owned(),
+            description: None,
+            cover_art_id: None,
+        }
+    }
+
+    pub fn artist(value: &str) -> Self { Self::basic(1, value) }
+
+    pub fn album(value: &str) -> Self { Self::basic(2, value) }
+
+    pub fn crate_(value: &str) -> Self { Self::basic(3, value) }
+
+    pub fn genre(value: &str) -> Self { Self::basic(4, value) }
+
+    pub fn mood(value: &str) -> Self { Self::basic(5, value) }
+}
+
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "tags"]

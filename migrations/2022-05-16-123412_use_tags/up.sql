@@ -11,11 +11,12 @@ CREATE TABLE categories (
 
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    category_id INT REFERENCES categories(id),
+    category_id INT NOT NULL REFERENCES categories(id),
     value TEXT NOT NULL,
     description TEXT,
     cover_art_id INT REFERENCES file_infos(id),
-    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
+    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT tags_unique UNIQUE (category_id, value)
 );
 
 CREATE TABLE track_tags (

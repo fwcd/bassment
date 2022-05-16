@@ -1,10 +1,9 @@
-pub mod albums;
-pub mod artists;
 pub mod auth;
 pub mod blobs;
+pub mod categories;
 pub mod files;
-pub mod genres;
 pub mod playlists;
 pub mod settings;
+pub mod tags;
 pub mod tracks;
 pub mod users;
