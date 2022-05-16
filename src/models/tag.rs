@@ -20,7 +20,7 @@ pub struct Tag {
 #[serde(rename_all = "camelCase")]
 pub struct AnnotatedTag {
     pub id: i32,
-    pub category_key: String,
+    pub key: String,
     pub display_name: String,
     pub value: String,
 }

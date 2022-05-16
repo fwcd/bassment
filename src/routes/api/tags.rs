@@ -9,10 +9,10 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
     Ok(web::Json(tags))
 }
 
-#[get("/partial")]
-async fn get_all_partial(pool: web::Data<DbPool>) -> Result<impl Responder> {
+#[get("/annotated")]
+async fn get_all_annotated(pool: web::Data<DbPool>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let albums = web::block(move || tags::all_partial(&conn)).await??;
+    let albums = web::block(move || tags::all_annotated(&conn)).await??;
     Ok(web::Json(albums))
 }
 
@@ -48,7 +48,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/tags")
             .service(get_all)
-            .service(get_all_partial)
+            .service(get_all_annotated)
             .service(post)
             .service(get_by_id)
             .service(get_annotated_tracks_by_id)
