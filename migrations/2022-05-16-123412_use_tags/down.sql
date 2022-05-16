@@ -1,0 +1,106 @@
+-- Migrate back to the existing tables of artists etc.
+
+CREATE TABLE artists (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    cover_art_id INT REFERENCES file_infos(id),
+    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE albums (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    cover_art_id INT REFERENCES file_infos(id),
+    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE genres (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE album_artists (
+    album_id INT REFERENCES albums(id),
+    artist_id INT REFERENCES artists(id),
+    CONSTRAINT album_artists_pkey PRIMARY KEY (album_id, artist_id)
+);
+
+CREATE TABLE track_artists (
+    track_id INT REFERENCES tracks(id),
+    artist_id INT REFERENCES artists(id),
+    CONSTRAINT track_artists_pkey PRIMARY KEY (track_id, artist_id)
+);
+
+CREATE TABLE track_albums (
+    track_id INT REFERENCES tracks(id),
+    album_id INT REFERENCES albums(id),
+    CONSTRAINT track_albums_pkey PRIMARY KEY (track_id, album_id)
+);
+
+CREATE TABLE track_genres (
+    track_id INT REFERENCES tracks(id),
+    genre_id INT REFERENCES genres(id),
+    CONSTRAINT track_genres_pkey PRIMARY KEY (track_id, genre_id)
+);
+
+-- Migrate artists, albums, crates and genres
+
+INSERT INTO artists (name, description, cover_art_id)
+    SELECT value, description, cover_art_id
+    FROM tags
+        JOIN tag_categories ON (category_id = tag_categories.id)
+    WHERE key = 'artist';
+
+INSERT INTO albums (name, description, cover_art_id)
+    SELECT value, description, cover_art_id
+    FROM tags
+        JOIN tag_categories ON (category_id = tag_categories.id)
+    WHERE key = 'album';
+
+INSERT INTO genres (name, description)
+    SELECT value, description
+    FROM tags
+        JOIN tag_categories ON (category_id = tag_categories.id)
+    WHERE key = 'genre';
+
+INSERT INTO playlists (kind, name, description, cover_art_id)
+    SELECT 'crate', value, description, cover_art_id
+    FROM tags
+        JOIN tag_categories ON (category_id = tag_categories.id)
+    WHERE key = 'crate';
+
+-- Migrate associations.
+
+INSERT track_artists (track_id, artist_id)
+    SELECT track_id, artists.id
+    FROM track_tags
+        JOIN tags ON (key = 'artist' AND tag_id = tags.id)
+        JOIN artists ON (artists.name = tags.value);
+
+INSERT track_albums (track_id, album_id)
+    SELECT track_id, albums.id
+    FROM track_tags
+        JOIN tags ON (key = 'album' AND tag_id = tags.id)
+        JOIN albums ON (albums.name = tags.value);
+
+INSERT track_genres (track_id, genre_id)
+    SELECT track_id, genres.id
+    FROM track_tags
+        JOIN tags ON (key = 'genre' AND tag_id = tags.id)
+        JOIN genres ON (genres.name = tags.value);
+
+INSERT playlist_tracks (track_id, playlist_id)
+    SELECT track_id, playlists.id
+    FROM track_tags
+        JOIN tags ON (key = 'crate' AND tag_id = tags.id)
+        JOIN playlists ON (playlists.name = tags.value);
+
+-- Delete old tables.
+
+DROP TABLE track_tags;
+DROP TABLE tags;
+DROP TABLE tag_categories;
