@@ -85,7 +85,7 @@ table! {
     tag_categories (id) {
         id -> Int4,
         key -> Text,
-        collection_name -> Text,
+        display_name -> Text,
         predefined -> Bool,
         description -> Nullable<Text>,
         last_modified_at -> Timestamp,

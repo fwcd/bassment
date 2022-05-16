@@ -12,7 +12,6 @@ use crate::utils::serde::deserialize_optional_field;
 pub enum PlaylistKind {
     Playlist,
     Folder,
-    Crate,
     SetLog,
 }
 

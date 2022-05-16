@@ -1,22 +1,18 @@
-mod album;
-mod artist;
 mod auth;
 mod blob;
 mod cue;
 mod file;
-mod genre;
 mod playlist;
 mod settings;
+mod tag;
 mod track;
 mod user;
 
-pub use album::*;
-pub use artist::*;
+pub use tag::*;
 pub use auth::*;
 pub use blob::*;
 pub use cue::*;
 pub use file::*;
-pub use genre::*;
 pub use playlist::*;
 pub use settings::*;
 pub use track::*;

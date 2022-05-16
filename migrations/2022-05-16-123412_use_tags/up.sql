@@ -3,7 +3,7 @@
 CREATE TABLE tag_categories (
     id SERIAL PRIMARY KEY,
     key TEXT NOT NULL UNIQUE,
-    collection_name TEXT NOT NULL,
+    display_name TEXT NOT NULL,
     predefined BOOLEAN NOT NULL DEFAULT FALSE,
     description TEXT,
     last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
@@ -24,11 +24,11 @@ CREATE TABLE track_tags (
     CONSTRAINT track_tags_pkey PRIMARY KEY (track_id, tag_id)
 );
 
-INSERT INTO tag_categories (id, key, collection_name, predefined) VALUES (1, 'artist', 'Artists', TRUE);
-INSERT INTO tag_categories (id, key, collection_name, predefined) VALUES (2, 'album', 'Albums', TRUE);
-INSERT INTO tag_categories (id, key, collection_name, predefined) VALUES (3, 'crate', 'Crates', TRUE);
-INSERT INTO tag_categories (id, key, collection_name, predefined) VALUES (4, 'genre', 'Genres', TRUE);
-INSERT INTO tag_categories (id, key, collection_name, predefined) VALUES (5, 'mood', 'Moods', TRUE);
+INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (1, 'artist', 'Artist', TRUE);
+INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (2, 'album', 'Album', TRUE);
+INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (3, 'crate', 'Crate', TRUE);
+INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (4, 'genre', 'Genre', TRUE);
+INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (5, 'mood', 'Mood', TRUE);
 
 -- Migrate artists, albums, crates and genres
 
