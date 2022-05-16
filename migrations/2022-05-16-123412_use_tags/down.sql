@@ -58,25 +58,25 @@ CREATE TABLE track_genres (
 INSERT INTO artists (name, description, cover_art_id)
     SELECT value, tags.description, cover_art_id
     FROM tags
-        JOIN tag_categories ON (category_id = tag_categories.id)
+        JOIN categories ON (category_id = categories.id)
     WHERE key = 'artist';
 
 INSERT INTO albums (name, description, cover_art_id)
     SELECT value, tags.description, cover_art_id
     FROM tags
-        JOIN tag_categories ON (category_id = tag_categories.id)
+        JOIN categories ON (category_id = categories.id)
     WHERE key = 'album';
 
 INSERT INTO genres (name, description)
     SELECT value, tags.description
     FROM tags
-        JOIN tag_categories ON (category_id = tag_categories.id)
+        JOIN categories ON (category_id = categories.id)
     WHERE key = 'genre';
 
 INSERT INTO playlists (kind, name, description, position, cover_art_id)
     SELECT 'crate', value, tags.description, 1, cover_art_id -- TODO: We should use a proper/incrementing position here
     FROM tags
-        JOIN tag_categories ON (category_id = tag_categories.id)
+        JOIN categories ON (category_id = categories.id)
     WHERE key = 'crate';
 
 -- Migrate associations.
@@ -109,4 +109,4 @@ INSERT INTO playlist_tracks (track_id, playlist_id)
 
 DROP TABLE track_tags;
 DROP TABLE tags;
-DROP TABLE tag_categories;
+DROP TABLE categories;

@@ -1,6 +1,6 @@
 -- Create tag tables.
 
-CREATE TABLE tag_categories (
+CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     key TEXT NOT NULL UNIQUE,
     display_name TEXT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE tag_categories (
 
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    category_id INT REFERENCES tag_categories(id),
+    category_id INT REFERENCES categories(id),
     value TEXT NOT NULL,
     description TEXT,
     cover_art_id INT REFERENCES file_infos(id),
@@ -24,11 +24,11 @@ CREATE TABLE track_tags (
     CONSTRAINT track_tags_pkey PRIMARY KEY (track_id, tag_id)
 );
 
-INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (1, 'artist', 'Artist', TRUE);
-INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (2, 'album', 'Album', TRUE);
-INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (3, 'crate', 'Crate', TRUE);
-INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (4, 'genre', 'Genre', TRUE);
-INSERT INTO tag_categories (id, key, display_name, predefined) VALUES (5, 'mood', 'Mood', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (1, 'artist', 'Artist', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (2, 'album', 'Album', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (3, 'crate', 'Crate', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (4, 'genre', 'Genre', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (5, 'mood', 'Mood', TRUE);
 
 -- Migrate artists, albums, crates and genres
 

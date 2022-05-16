@@ -15,6 +15,20 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    categories (id) {
+        id -> Int4,
+        key -> Text,
+        display_name -> Text,
+        predefined -> Bool,
+        description -> Nullable<Text>,
+        last_modified_at -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     cues (id) {
         id -> Int4,
         track_id -> Nullable<Int4>,
@@ -75,20 +89,6 @@ table! {
     settings (id) {
         id -> Bool,
         file_storage_base_directory -> Text,
-    }
-}
-
-table! {
-    use diesel::sql_types::*;
-    use crate::models::*;
-
-    tag_categories (id) {
-        id -> Int4,
-        key -> Text,
-        display_name -> Text,
-        predefined -> Bool,
-        description -> Nullable<Text>,
-        last_modified_at -> Timestamp,
     }
 }
 
@@ -183,8 +183,8 @@ joinable!(playlist_tracks -> tracks (track_id));
 joinable!(playlist_tracks -> users (added_by));
 joinable!(playlists -> file_infos (cover_art_id));
 joinable!(playlists -> users (added_by));
+joinable!(tags -> categories (category_id));
 joinable!(tags -> file_infos (cover_art_id));
-joinable!(tags -> tag_categories (category_id));
 joinable!(track_audios -> file_infos (file_id));
 joinable!(track_audios -> tracks (track_id));
 joinable!(track_tags -> tags (tag_id));
@@ -193,12 +193,12 @@ joinable!(tracks -> users (added_by));
 
 allow_tables_to_appear_in_same_query!(
     blobs,
+    categories,
     cues,
     file_infos,
     playlist_tracks,
     playlists,
     settings,
-    tag_categories,
     tags,
     token_secret,
     track_audios,
