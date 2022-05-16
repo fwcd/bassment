@@ -1,3 +1,9 @@
+-- Add 'crate' enum case.
+
+ALTER TYPE playlist_kind
+    ADD VALUE 'crate';
+COMMIT;
+
 -- Migrate back to the existing tables of artists etc.
 
 CREATE TABLE artists (

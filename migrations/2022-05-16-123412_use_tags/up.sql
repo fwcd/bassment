@@ -1,4 +1,4 @@
--- Migrate to tags.
+-- Create tag tables.
 
 CREATE TABLE tag_categories (
     id SERIAL PRIMARY KEY,
@@ -83,6 +83,28 @@ DELETE FROM playlist_tracks
 
 DELETE FROM playlists
     WHERE kind = 'crate';
+
+-- Remove 'crate' enum case.
+
+ALTER TYPE playlist_kind RENAME TO playlist_kind_old;
+CREATE TYPE playlist_kind AS ENUM('playlist', 'folder', 'set_log');
+
+CREATE FUNCTION pg_temp.migrate_playlist_kind(old_kind playlist_kind_old) RETURNS playlist_kind AS $$
+BEGIN
+    RETURN CASE
+        WHEN old_kind = 'folder' THEN 'folder'
+        WHEN old_kind = 'set_log' THEN 'set_log'
+        ELSE 'playlist'
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+ALTER TABLE playlists
+    ALTER COLUMN kind DROP DEFAULT,
+    ALTER COLUMN kind TYPE playlist_kind USING pg_temp.migrate_playlist_kind(kind),
+    ALTER COLUMN kind SET DEFAULT 'playlist';
+
+DROP TYPE playlist_kind_old CASCADE;
 
 -- Delete old tables.
 
