@@ -1,5 +1,6 @@
 mod auth;
 mod blob;
+mod category;
 mod cue;
 mod file;
 mod playlist;
@@ -11,6 +12,7 @@ mod user;
 pub use tag::*;
 pub use auth::*;
 pub use blob::*;
+pub use category::*;
 pub use cue::*;
 pub use file::*;
 pub use playlist::*;
