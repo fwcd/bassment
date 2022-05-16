@@ -50,53 +50,53 @@ CREATE TABLE track_genres (
 -- Migrate artists, albums, crates and genres
 
 INSERT INTO artists (name, description, cover_art_id)
-    SELECT value, description, cover_art_id
+    SELECT value, tags.description, cover_art_id
     FROM tags
         JOIN tag_categories ON (category_id = tag_categories.id)
     WHERE key = 'artist';
 
 INSERT INTO albums (name, description, cover_art_id)
-    SELECT value, description, cover_art_id
+    SELECT value, tags.description, cover_art_id
     FROM tags
         JOIN tag_categories ON (category_id = tag_categories.id)
     WHERE key = 'album';
 
 INSERT INTO genres (name, description)
-    SELECT value, description
+    SELECT value, tags.description
     FROM tags
         JOIN tag_categories ON (category_id = tag_categories.id)
     WHERE key = 'genre';
 
-INSERT INTO playlists (kind, name, description, cover_art_id)
-    SELECT 'crate', value, description, cover_art_id
+INSERT INTO playlists (kind, name, description, position, cover_art_id)
+    SELECT 'crate', value, tags.description, 1, cover_art_id -- TODO: We should use a proper/incrementing position here
     FROM tags
         JOIN tag_categories ON (category_id = tag_categories.id)
     WHERE key = 'crate';
 
 -- Migrate associations.
 
-INSERT track_artists (track_id, artist_id)
+INSERT INTO track_artists (track_id, artist_id)
     SELECT track_id, artists.id
     FROM track_tags
-        JOIN tags ON (key = 'artist' AND tag_id = tags.id)
+        JOIN tags ON (category_id = 1 AND tag_id = tags.id)
         JOIN artists ON (artists.name = tags.value);
 
-INSERT track_albums (track_id, album_id)
+INSERT INTO track_albums (track_id, album_id)
     SELECT track_id, albums.id
     FROM track_tags
-        JOIN tags ON (key = 'album' AND tag_id = tags.id)
+        JOIN tags ON (category_id = 2 AND tag_id = tags.id)
         JOIN albums ON (albums.name = tags.value);
 
-INSERT track_genres (track_id, genre_id)
+INSERT INTO track_genres (track_id, genre_id)
     SELECT track_id, genres.id
     FROM track_tags
-        JOIN tags ON (key = 'genre' AND tag_id = tags.id)
+        JOIN tags ON (category_id = 4 AND tag_id = tags.id)
         JOIN genres ON (genres.name = tags.value);
 
-INSERT playlist_tracks (track_id, playlist_id)
+INSERT INTO playlist_tracks (track_id, playlist_id)
     SELECT track_id, playlists.id
     FROM track_tags
-        JOIN tags ON (key = 'crate' AND tag_id = tags.id)
+        JOIN tags ON (category_id = 3 AND tag_id = tags.id)
         JOIN playlists ON (playlists.name = tags.value);
 
 -- Delete old tables.
