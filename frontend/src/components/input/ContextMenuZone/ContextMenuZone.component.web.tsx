@@ -1,5 +1,6 @@
 import { Clickable } from '@bassment/components/input/Clickable';
 import { ContextMenuZoneProps } from '@bassment/components/input/ContextMenuZone/ContextMenuZone.props';
+import { envConstants } from '@bassment/constants/env';
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import {
@@ -7,6 +8,7 @@ import {
   MenuTrigger,
   MenuOptions,
   MenuOption,
+  renderers,
 } from 'react-native-popup-menu';
 
 export function ContextMenuZone({ options, children }: ContextMenuZoneProps) {

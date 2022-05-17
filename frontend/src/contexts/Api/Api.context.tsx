@@ -59,6 +59,9 @@ export interface ApiContextValue {
   /** Creates a new playlist. */
   postPlaylist(playlist: Playlist): Promise<void>;
 
+  /** Deletes a playlist. */
+  deletePlaylist(playlistId: number): Promise<void>;
+
   /** Fetches associated audio files for a track. */
   getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]>;
 
@@ -98,6 +101,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getPlaylistTrees: noApiContext('playlist trees', () => []),
   getCategoryTrees: noApiContext('category trees', () => []),
   postPlaylist: noApiContext('playlist', () => {}),
+  deletePlaylist: noApiContext('playlist', () => {}),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
   getFileDataUrl: noApiContextSync('file data url', () => ''),
@@ -213,6 +217,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async postPlaylist(playlist: Playlist): Promise<void> {
       return await apiRequest('POST', '/playlists', { body: playlist });
+    },
+    async deletePlaylist(playlistId: number): Promise<void> {
+      return await apiRequest('DELETE', `/playlists/${playlistId}`);
     },
     async getTrackAudioFiles(trackId: number): Promise<PartialFileInfo[]> {
       return await apiRequest('GET', `/tracks/${trackId}/audios`);

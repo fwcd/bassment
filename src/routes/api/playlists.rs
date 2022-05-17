@@ -1,4 +1,4 @@
-use actix_web::{get, web, Responder, post, patch};
+use actix_web::{get, web, Responder, post, patch, delete};
 
 use crate::{actions::playlists, db::DbPool, error::{Result, Error}, models::{NewPlaylist, UpdatePlaylist}};
 
@@ -51,6 +51,13 @@ async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, playlist: web:
     Ok(web::Json(playlist))
 }
 
+#[delete("/{id}")]
+async fn delete_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let count = web::block(move|| playlists::delete(*id, &conn)).await??;
+    Ok(web::Json(count))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/playlists")
@@ -61,5 +68,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_annotated_tracks_by_id)
             .service(get_tree_by_id)
             .service(patch_by_id)
+            .service(delete_by_id)
     );
 }

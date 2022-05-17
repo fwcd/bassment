@@ -77,3 +77,11 @@ pub fn update(playlist_id: i32, update_playlist: &UpdatePlaylist, conn: &DbConn)
         .set(update_playlist)
         .get_result(conn)?)
 }
+
+/// Deletes a playlist in the database.
+pub fn delete(playlist_id: i32, conn: &DbConn) -> Result<usize> {
+    use crate::schema::playlists::dsl::*;
+    Ok(diesel::delete(playlists)
+        .filter(id.eq(playlist_id))
+        .execute(conn)?)
+}
