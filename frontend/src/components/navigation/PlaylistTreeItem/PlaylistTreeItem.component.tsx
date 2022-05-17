@@ -1,3 +1,4 @@
+import { ContextMenuZone } from '@bassment/components/input/ContextMenuZone/ContextMenuZone.component.web';
 import { DropZone } from '@bassment/components/input/DropZone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
@@ -30,45 +31,47 @@ export function PlaylistTreeItem({
 
   return (
     <DropZone onDrop={onDrop}>
-      <DrawerTreeItem
-        label={playlist.name ?? 'Unnamed Playlist'}
-        isFocused={focusedId !== undefined && focusedId === playlist.id}
-        isEditable={isEditable}
-        isEditFocused={isEditFocused}
-        isExpandedInitially
-        icon={({ size, color }) => (
-          <PlaylistKindIcon
-            kind={playlist.kind ?? PlaylistKind.Playlist}
-            size={size}
-            color={color}
-          />
-        )}
-        onPress={
-          playlist.id && !isEditable
-            ? () => {
-                if (onFocus) {
-                  onFocus!(playlist);
+      <ContextMenuZone options={[{ label: 'Test 1' }, { label: 'Test 2' }]}>
+        <DrawerTreeItem
+          label={playlist.name ?? 'Unnamed Playlist'}
+          isFocused={focusedId !== undefined && focusedId === playlist.id}
+          isEditable={isEditable}
+          isEditFocused={isEditFocused}
+          isExpandedInitially
+          icon={({ size, color }) => (
+            <PlaylistKindIcon
+              kind={playlist.kind ?? PlaylistKind.Playlist}
+              size={size}
+              color={color}
+            />
+          )}
+          onPress={
+            playlist.id && !isEditable
+              ? () => {
+                  if (onFocus) {
+                    onFocus!(playlist);
+                  }
                 }
-              }
-            : undefined
-        }
-        onEdit={name => {
-          if (onEdit) {
-            onEdit({ ...playlist, name });
+              : undefined
           }
-        }}
-        onSubmitEdit={onSubmitEdit}>
-        {'children' in playlist
-          ? playlist.children.map(child => (
-              <PlaylistTreeItem
-                key={child.id}
-                playlist={child}
-                focusedId={focusedId}
-                onFocus={onFocus}
-              />
-            ))
-          : null}
-      </DrawerTreeItem>
+          onEdit={name => {
+            if (onEdit) {
+              onEdit({ ...playlist, name });
+            }
+          }}
+          onSubmitEdit={onSubmitEdit}>
+          {'children' in playlist
+            ? playlist.children.map(child => (
+                <PlaylistTreeItem
+                  key={child.id}
+                  playlist={child}
+                  focusedId={focusedId}
+                  onFocus={onFocus}
+                />
+              ))
+            : null}
+        </DrawerTreeItem>
+      </ContextMenuZone>
     </DropZone>
   );
 }
