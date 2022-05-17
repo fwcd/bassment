@@ -36,6 +36,7 @@ pub fn keyed_for_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<KeyedTag>> {
     use crate::schema::{tags, categories};
     Ok(tags::table.inner_join(categories::table)
         .select((tags::id, categories::key, categories::display_name, tags::value))
+        .filter(tags::id.eq(any(tag_ids)))
         .get_results(conn)?)
 }
 
