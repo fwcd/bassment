@@ -3,7 +3,6 @@ import { AuthContext } from '@bassment/contexts/Auth';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialFileInfo } from '@bassment/models/FileInfo';
-import { PartialGenre } from '@bassment/models/Tag';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {
@@ -34,9 +33,6 @@ export interface ApiContextValue {
 
   /** Fetches all albums (as partial structures). */
   getPartialAlbums(): Promise<PartialAlbum[]>;
-
-  /** Fetches all genres (as partial structures). */
-  getPartialGenres(): Promise<PartialGenre[]>;
 
   /** Fetches all tracks with artist/album/genre annotations. */
   getAnnotatedTracks(): Promise<AnnotatedTrack[]>;
@@ -90,7 +86,6 @@ export const ApiContext = createContext<ApiContextValue>({
   isLoggedIn: async () => false,
   getPartialAlbums: noApiContext('partial albums', () => []),
   getPartialArtists: noApiContext('partial artists', () => []),
-  getPartialGenres: noApiContext('partial genres', () => []),
   getAnnotatedTracks: noApiContext('annotated tracks', () => []),
   getAnnotatedPlaylistTracks: noApiContext('annotated list tracks', () => []),
   getAnnotatedArtistTracks: noApiContext('annotated artist tracks', () => []),
@@ -182,9 +177,6 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getPartialAlbums(): Promise<PartialAlbum[]> {
       return await apiRequest('GET', '/albums/partial');
-    },
-    async getPartialGenres(): Promise<PartialGenre[]> {
-      return await apiRequest('GET', '/genres/partial');
     },
     async getAnnotatedTracks(): Promise<AnnotatedTrack[]> {
       return await apiRequest('GET', '/tracks/annotated');
