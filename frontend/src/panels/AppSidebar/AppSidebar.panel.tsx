@@ -111,7 +111,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
             onFocus={() =>
               navigation.navigate('artist', {
                 id: artist.id!,
-                name: artist.name ?? `${artist.id}`,
+                displayName: artist.name ?? `${artist.id}`,
               })
             }
           />
@@ -133,7 +133,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
             onFocus={() =>
               navigation.navigate('album', {
                 id: album.id!,
-                name: album.name ?? `${album.id}`,
+                displayName: album.name ?? `${album.id}`,
               })
             }
           />
@@ -144,7 +144,18 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         <CategoryTreeItem
           key={category.id}
           category={category}
-          // TODO: Focus
+          focusedTagId={
+            route.name === 'tag'
+              ? (route.params as SidebarNavigatorParams['tag']).id
+              : undefined
+          }
+          onFocusTag={tag => {
+            navigation.navigate('tag', {
+              id: tag.id!,
+              displayName: category.displayName,
+              displayValue: tag.value,
+            });
+          }}
         />
       ))}
       {/* TODO: Implement streams
@@ -179,7 +190,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           onFocus={child =>
             navigation.navigate('playlist', {
               id: child.id!,
-              name: child.name ?? `${playlist.id}`,
+              displayName: child.name ?? `${playlist.id}`,
             })
           }
         />

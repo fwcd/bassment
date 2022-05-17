@@ -2,13 +2,13 @@ import { CategoryIcon } from '@bassment/components/navigation/CategoryIcon';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { TagTreeItem } from '@bassment/components/navigation/TagTreeItem';
 import { CategoryTreeNode } from '@bassment/models/Category';
-import { KeyedTag } from '@bassment/models/Tag';
+import { Tag } from '@bassment/models/Tag';
 import React from 'react';
 
 interface CategoryTreeItemProps {
   category: CategoryTreeNode;
   focusedTagId?: number;
-  onFocusTag?: (tag: KeyedTag) => void;
+  onFocusTag?: (tag: Tag) => void;
 }
 
 export function CategoryTreeItem({
