@@ -18,7 +18,6 @@ export function CategoryTreeItem({
 }: CategoryTreeItemProps) {
   return (
     <DrawerTreeItem
-      key={category.id}
       label={`${category.displayName}s` ?? 'Unnamed Category'}
       icon={({ size, color }) => (
         <CategoryIcon category={category} size={size} color={color} />
@@ -33,6 +32,7 @@ export function CategoryTreeItem({
       ))}
       {category.tags.map(tag => (
         <TagTreeItem
+          key={tag.id}
           tag={tag}
           isFocused={focusedTagId === tag.id}
           onFocus={() => {

@@ -31,7 +31,6 @@ export function PlaylistTreeItem({
   return (
     <Dropzone onDrop={onDrop}>
       <DrawerTreeItem
-        key={playlist.id}
         label={playlist.name ?? 'Unnamed Playlist'}
         isFocused={focusedId !== undefined && focusedId === playlist.id}
         isEditable={isEditable}
