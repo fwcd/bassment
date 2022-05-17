@@ -2,6 +2,42 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    album_artists (album_id, artist_id) {
+        album_id -> Int4,
+        artist_id -> Int4,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    albums (id) {
+        id -> Int4,
+        name -> Text,
+        description -> Nullable<Text>,
+        cover_art_id -> Nullable<Int4>,
+        last_modified_at -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    artists (id) {
+        id -> Int4,
+        name -> Text,
+        description -> Nullable<Text>,
+        cover_art_id -> Nullable<Int4>,
+        last_modified_at -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     blobs (id) {
         id -> Int4,
         data -> Bytea,
@@ -121,6 +157,26 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    track_albums (track_id, album_id) {
+        track_id -> Int4,
+        album_id -> Int4,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    track_artists (track_id, artist_id) {
+        track_id -> Int4,
+        artist_id -> Int4,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     track_audios (track_id, file_id) {
         track_id -> Int4,
         file_id -> Int4,
@@ -178,6 +234,10 @@ table! {
     }
 }
 
+joinable!(album_artists -> albums (album_id));
+joinable!(album_artists -> artists (artist_id));
+joinable!(albums -> file_infos (cover_art_id));
+joinable!(artists -> file_infos (cover_art_id));
 joinable!(cues -> tracks (track_id));
 joinable!(playlist_tracks -> playlists (playlist_id));
 joinable!(playlist_tracks -> tracks (track_id));
@@ -186,6 +246,10 @@ joinable!(playlists -> file_infos (cover_art_id));
 joinable!(playlists -> users (added_by));
 joinable!(tags -> categories (category_id));
 joinable!(tags -> file_infos (cover_art_id));
+joinable!(track_albums -> albums (album_id));
+joinable!(track_albums -> tracks (track_id));
+joinable!(track_artists -> artists (artist_id));
+joinable!(track_artists -> tracks (track_id));
 joinable!(track_audios -> file_infos (file_id));
 joinable!(track_audios -> tracks (track_id));
 joinable!(track_tags -> tags (tag_id));
@@ -193,6 +257,9 @@ joinable!(track_tags -> tracks (track_id));
 joinable!(tracks -> users (added_by));
 
 allow_tables_to_appear_in_same_query!(
+    album_artists,
+    albums,
+    artists,
     blobs,
     categories,
     cues,
@@ -202,6 +269,8 @@ allow_tables_to_appear_in_same_query!(
     settings,
     tags,
     token_secret,
+    track_albums,
+    track_artists,
     track_audios,
     track_tags,
     tracks,

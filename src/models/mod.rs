@@ -1,3 +1,5 @@
+mod album;
+mod artist;
 mod auth;
 mod blob;
 mod category;
@@ -9,6 +11,8 @@ mod tag;
 mod track;
 mod user;
 
+pub use album::*;
+pub use artist::*;
 pub use tag::*;
 pub use auth::*;
 pub use blob::*;

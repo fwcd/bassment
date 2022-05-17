@@ -1,44 +1,10 @@
 -- Migrate back to the existing tables of artists etc.
 
-CREATE TABLE artists (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    cover_art_id INT REFERENCES file_infos(id),
-    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE albums (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    cover_art_id INT REFERENCES file_infos(id),
-    last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
 CREATE TABLE genres (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
     last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE album_artists (
-    album_id INT REFERENCES albums(id),
-    artist_id INT REFERENCES artists(id),
-    CONSTRAINT album_artists_pkey PRIMARY KEY (album_id, artist_id)
-);
-
-CREATE TABLE track_artists (
-    track_id INT REFERENCES tracks(id),
-    artist_id INT REFERENCES artists(id),
-    CONSTRAINT track_artists_pkey PRIMARY KEY (track_id, artist_id)
-);
-
-CREATE TABLE track_albums (
-    track_id INT REFERENCES tracks(id),
-    album_id INT REFERENCES albums(id),
-    CONSTRAINT track_albums_pkey PRIMARY KEY (track_id, album_id)
 );
 
 CREATE TABLE track_genres (
@@ -47,19 +13,7 @@ CREATE TABLE track_genres (
     CONSTRAINT track_genres_pkey PRIMARY KEY (track_id, genre_id)
 );
 
--- Migrate artists, albums and genres
-
-INSERT INTO artists (name, description, cover_art_id)
-    SELECT value, tags.description, cover_art_id
-    FROM tags
-        JOIN categories ON (category_id = categories.id)
-    WHERE key = 'artist';
-
-INSERT INTO albums (name, description, cover_art_id)
-    SELECT value, tags.description, cover_art_id
-    FROM tags
-        JOIN categories ON (category_id = categories.id)
-    WHERE key = 'album';
+-- Migrate genres
 
 INSERT INTO genres (name, description)
     SELECT value, tags.description
@@ -67,24 +21,10 @@ INSERT INTO genres (name, description)
         JOIN categories ON (category_id = categories.id)
     WHERE key = 'genre';
 
--- Migrate associations.
-
-INSERT INTO track_artists (track_id, artist_id)
-    SELECT track_id, artists.id
-    FROM track_tags
-        JOIN tags ON (category_id = 1 AND tag_id = tags.id)
-        JOIN artists ON (artists.name = tags.value);
-
-INSERT INTO track_albums (track_id, album_id)
-    SELECT track_id, albums.id
-    FROM track_tags
-        JOIN tags ON (category_id = 2 AND tag_id = tags.id)
-        JOIN albums ON (albums.name = tags.value);
-
 INSERT INTO track_genres (track_id, genre_id)
     SELECT track_id, genres.id
     FROM track_tags
-        JOIN tags ON (category_id = 4 AND tag_id = tags.id)
+        JOIN tags ON (category_id = 1 AND tag_id = tags.id)
         JOIN genres ON (genres.name = tags.value);
 
 -- Delete old tables.
