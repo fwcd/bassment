@@ -66,46 +66,9 @@ INSERT INTO track_tags (track_id, tag_id)
 
 INSERT INTO track_tags (track_id, tag_id)
     SELECT track_id, tags.id
-    FROM playlist_tracks
-        JOIN playlists ON (playlist_id = playlists.id)
-        JOIN tags ON (tags.category_id = 3 AND value = playlists.name);
-
-INSERT INTO track_tags (track_id, tag_id)
-    SELECT track_id, tags.id
     FROM track_genres
         JOIN genres ON (genre_id = genres.id)
-        JOIN tags ON (tags.category_id = 4 AND value = genres.name);
-
--- Delete crates from playlists.
-
-DELETE FROM playlist_tracks
-    USING playlists
-    WHERE playlist_id = playlists.id AND kind = 'crate';
-
-DELETE FROM playlists
-    WHERE kind = 'crate';
-
--- Remove 'crate' enum case.
-
-ALTER TYPE playlist_kind RENAME TO playlist_kind_old;
-CREATE TYPE playlist_kind AS ENUM('playlist', 'folder', 'set_log');
-
-CREATE FUNCTION pg_temp.migrate_playlist_kind(old_kind playlist_kind_old) RETURNS playlist_kind AS $$
-BEGIN
-    RETURN CASE
-        WHEN old_kind = 'folder' THEN 'folder'
-        WHEN old_kind = 'set_log' THEN 'set_log'
-        ELSE 'playlist'
-    END;
-END;
-$$ LANGUAGE plpgsql;
-
-ALTER TABLE playlists
-    ALTER COLUMN kind DROP DEFAULT,
-    ALTER COLUMN kind TYPE playlist_kind USING pg_temp.migrate_playlist_kind(kind),
-    ALTER COLUMN kind SET DEFAULT 'playlist';
-
-DROP TYPE playlist_kind_old CASCADE;
+        JOIN tags ON (tags.category_id = 3 AND value = genres.name);
 
 -- Delete old tables.
 

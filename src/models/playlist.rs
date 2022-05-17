@@ -11,6 +11,7 @@ use crate::utils::serde::deserialize_optional_field;
 #[DieselType = "Playlist_kind"]
 pub enum PlaylistKind {
     Playlist,
+    Crate,
     Folder,
     SetLog,
 }

@@ -15,35 +15,31 @@ DECLARE set_logs_id INTEGER;
 DECLARE rock_n_roll_crate_id INTEGER;
 DECLARE rock_playlist_id INTEGER;
 BEGIN
-    -- Add artists.
-    INSERT INTO tags (category_id, value) VALUES (1, 'Queen') RETURNING id INTO queen_id;
-    INSERT INTO tags (category_id, value) VALUES (1, 'Elvis Presley') RETURNING id INTO elvis_id;
-    INSERT INTO tags (category_id, value) VALUES (1, 'The Beatles') RETURNING id INTO beatles_id;
+    INSERT INTO artists (name) VALUES ('Queen') RETURNING id INTO queen_id;
+    INSERT INTO artists (name) VALUES ('Elvis Presley') RETURNING id INTO elvis_id;
+    INSERT INTO artists (name) VALUES ('The Beatles') RETURNING id INTO beatles_id;
 
-    -- Add albums.
-    INSERT INTO tags (category_id, value) VALUES (2, 'Abbey Road') RETURNING id INTO abbey_road_id;
-    INSERT INTO tags (category_id, value) VALUES (2, 'News of the World') RETURNING id INTO news_of_the_world_id;
-    INSERT INTO tags (category_id, value) VALUES (2, 'The Game') RETURNING id INTO the_game_id;
+    INSERT INTO albums (name) VALUES ('Abbey Road') RETURNING id INTO abbey_road_id;
+    INSERT INTO albums (name) VALUES ('News of the World') RETURNING id INTO news_of_the_world_id;
+    INSERT INTO albums (name) VALUES ('The Game') RETURNING id INTO the_game_id;
+    INSERT INTO album_artists (album_id, artist_id) VALUES (abbey_road_id, beatles_id);
+    INSERT INTO album_artists (album_id, artist_id) VALUES (news_of_the_world_id, queen_id);
+    INSERT INTO album_artists (album_id, artist_id) VALUES (the_game_id, queen_id);
 
-    -- Add genres.
-    INSERT INTO tags (category_id, value) VALUES (4, 'Rock') RETURNING id INTO rock_id;
+    INSERT INTO genres (name) VALUES ('Rock') RETURNING id INTO rock_id;
 
-    -- Add tracks.
-    INSERT INTO tracks (title) VALUES ('Come Together') RETURNING id INTO come_together_id;
-    INSERT INTO tracks (title) VALUES ('Jailhouse Rock') RETURNING id INTO jailhouse_rock_id;
-    INSERT INTO tracks (title) VALUES ('We Will Rock You') RETURNING id INTO we_will_rock_you_id;
-    INSERT INTO tracks (title) VALUES ('Another One Bites The Dust') RETURNING id INTO another_one_bites_the_dust_id;
+    INSERT INTO tracks (name) VALUES ('Come Together') RETURNING id INTO come_together_id;
+    INSERT INTO tracks (name) VALUES ('Jailhouse Rock') RETURNING id INTO jailhouse_rock_id;
+    INSERT INTO tracks (name) VALUES ('We Will Rock You') RETURNING id INTO we_will_rock_you_id;
+    INSERT INTO tracks (name) VALUES ('Another One Bites The Dust') RETURNING id INTO another_one_bites_the_dust_id;
+    INSERT INTO track_artists (track_id, artist_id) VALUES (come_together_id, beatles_id);
+    INSERT INTO track_artists (track_id, artist_id) VALUES (jailhouse_rock_id, elvis_id);
+    INSERT INTO track_artists (track_id, artist_id) VALUES (we_will_rock_you_id, queen_id);
+    INSERT INTO track_artists (track_id, artist_id) VALUES (another_one_bites_the_dust_id, queen_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (jailhouse_rock_id, rock_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (we_will_rock_you_id, rock_id);
+    INSERT INTO track_genres (track_id, genre_id) VALUES (another_one_bites_the_dust_id, rock_id);
 
-    -- Add track taggings.
-    INSERT INTO track_tags (track_id, tag_id) VALUES (come_together_id, beatles_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (jailhouse_rock_id, elvis_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (we_will_rock_you_id, queen_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (another_one_bites_the_dust_id, queen_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (jailhouse_rock_id, rock_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (we_will_rock_you_id, rock_id);
-    INSERT INTO track_tags (track_id, tag_id) VALUES (another_one_bites_the_dust_id, rock_id);
-
-    -- Add playlists.
     INSERT INTO playlists (name, kind, position) VALUES ('Stuff', 'folder', 1) RETURNING id INTO stuff_id;
     INSERT INTO playlists (name, kind, position, parent_id) VALUES ('50s', 'crate', 1, stuff_id) RETURNING id INTO rock_n_roll_crate_id;
     INSERT INTO playlists (name, position) VALUES ('Rock', 3) RETURNING id INTO rock_playlist_id;

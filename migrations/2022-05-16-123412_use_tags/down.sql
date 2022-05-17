@@ -1,9 +1,3 @@
--- Add 'crate' enum case.
-
-ALTER TYPE playlist_kind
-    ADD VALUE 'crate';
-COMMIT;
-
 -- Migrate back to the existing tables of artists etc.
 
 CREATE TABLE artists (
@@ -53,7 +47,7 @@ CREATE TABLE track_genres (
     CONSTRAINT track_genres_pkey PRIMARY KEY (track_id, genre_id)
 );
 
--- Migrate artists, albums, crates and genres
+-- Migrate artists, albums and genres
 
 INSERT INTO artists (name, description, cover_art_id)
     SELECT value, tags.description, cover_art_id
@@ -72,12 +66,6 @@ INSERT INTO genres (name, description)
     FROM tags
         JOIN categories ON (category_id = categories.id)
     WHERE key = 'genre';
-
-INSERT INTO playlists (kind, name, description, position, cover_art_id)
-    SELECT 'crate', value, tags.description, 1, cover_art_id -- TODO: We should use a proper/incrementing position here
-    FROM tags
-        JOIN categories ON (category_id = categories.id)
-    WHERE key = 'crate';
 
 -- Migrate associations.
 
@@ -98,12 +86,6 @@ INSERT INTO track_genres (track_id, genre_id)
     FROM track_tags
         JOIN tags ON (category_id = 4 AND tag_id = tags.id)
         JOIN genres ON (genres.name = tags.value);
-
-INSERT INTO playlist_tracks (track_id, playlist_id)
-    SELECT track_id, playlists.id
-    FROM track_tags
-        JOIN tags ON (category_id = 3 AND tag_id = tags.id)
-        JOIN playlists ON (playlists.name = tags.value);
 
 -- Delete old tables.
 
