@@ -1021,6 +1021,14 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/@miblanchard/react-native-slider</string>
+            <key>Title</key>
+            <string>@miblanchard/react-native-slider</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/@react-native-community/cli</string>
             <key>Title</key>
             <string>@react-native-community/cli</string>
@@ -1744,6 +1752,14 @@
             <string>com.k-tomoyasu.react-native-oss-license/clone-deep</string>
             <key>Title</key>
             <string>clone-deep</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/clsx</string>
+            <key>Title</key>
+            <string>clsx</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
@@ -3741,6 +3757,14 @@
         </dict>
         <dict>
             <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/react-data-grid</string>
+            <key>Title</key>
+            <string>react-data-grid</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
             <string>com.k-tomoyasu.react-native-oss-license/react-devtools-core</string>
             <key>Title</key>
             <string>react-devtools-core</string>
@@ -3800,6 +3824,14 @@
             <string>com.k-tomoyasu.react-native-oss-license/react-native-gradle-plugin</string>
             <key>Title</key>
             <string>react-native-gradle-plugin</string>
+            <key>Type</key>
+            <string>PSChildPaneSpecifier</string>            
+        </dict>
+        <dict>
+            <key>File</key>
+            <string>com.k-tomoyasu.react-native-oss-license/react-native-popup-menu</string>
+            <key>Title</key>
+            <string>react-native-popup-menu</string>
             <key>Type</key>
             <string>PSChildPaneSpecifier</string>            
         </dict>
