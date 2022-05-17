@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 
-use crate::{models::{Tag, NewTag, UpdateTag, AnnotatedTrack, AnnotatedTag}, error::Result, db::DbConn, actions::tracks};
+use crate::{models::{Tag, NewTag, UpdateTag, AnnotatedTrack, KeyedTag}, error::Result, db::DbConn, actions::tracks};
 
 /// Fetches all tags from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Tag>> {
@@ -9,13 +9,13 @@ pub fn all(conn: &DbConn) -> Result<Vec<Tag>> {
     Ok(fetched)
 }
 
-/// Fetches all tags with annotations.
-pub fn all_annotated(conn: &DbConn) -> Result<Vec<AnnotatedTag>> {
+/// Fetches all tags with keyed.
+pub fn all_keyed(conn: &DbConn) -> Result<Vec<KeyedTag>> {
     use crate::schema::{tags, categories};
     let mut fetched = tags::table.inner_join(categories::table)
         .select((tags::id, categories::key, categories::display_name, tags::value))
         .get_results(conn)?;
-    fetched.sort_by_key(|a: &AnnotatedTag| a.display_name.clone());
+    fetched.sort_by_key(|a: &KeyedTag| a.display_name.clone());
     Ok(fetched)
 }
 
@@ -31,8 +31,8 @@ pub fn by_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<Tag>> {
     Ok(tags.filter(id.eq(any(tag_ids))).get_results(conn)?)
 }
 
-/// Looks up tags with annotations by ids.
-pub fn annotated_for_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<AnnotatedTag>> {
+/// Looks up tags with keys by ids.
+pub fn keyed_for_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<KeyedTag>> {
     use crate::schema::{tags, categories};
     Ok(tags::table.inner_join(categories::table)
         .select((tags::id, categories::key, categories::display_name, tags::value))

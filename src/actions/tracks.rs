@@ -32,7 +32,7 @@ pub fn annotated_for(track: Track, conn: &DbConn) -> Result<AnnotatedTrack> {
         track,
         artists: artists::partial_for_track_id(track_id, conn)?,
         albums: albums::partial_for_track_id(track_id, conn)?,
-        tags: tags::annotated_for_ids(&[track_id], conn)?,
+        tags: tags::keyed_for_ids(&[track_id], conn)?,
     })
 }
 

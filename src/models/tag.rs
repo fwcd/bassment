@@ -18,7 +18,7 @@ pub struct Tag {
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 #[serde(rename_all = "camelCase")]
-pub struct AnnotatedTag {
+pub struct KeyedTag {
     pub id: i32,
     pub key: String,
     pub display_name: String,

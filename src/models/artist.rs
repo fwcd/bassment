@@ -10,9 +10,9 @@ use crate::utils::serde::deserialize_optional_field;
 pub struct Artist {
     pub id: i32,
     pub name: String,
-    pub description: Option<String>,
     pub cover_art_id: Option<i32>,
     pub last_modified_at: SystemTime,
+    pub description: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
