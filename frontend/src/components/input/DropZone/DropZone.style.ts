@@ -1,7 +1,7 @@
 import { useStyles } from '@bassment/styles';
 import { StyleSheet } from 'react-native';
 
-export function useDropzoneStyles(isLabelled: boolean) {
+export function useDropZoneStyles(isLabelled: boolean) {
   const styles = useStyles();
   return StyleSheet.create({
     stretch: {

@@ -1,4 +1,4 @@
-import { Dropzone } from '@bassment/components/input/Dropzone';
+import { DropZone } from '@bassment/components/input/DropZone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { Tag } from '@bassment/models/Tag';
 import React, { useCallback } from 'react';
@@ -14,12 +14,12 @@ export function TagTreeItem({ tag, isFocused, onFocus }: TagTreeItemProps) {
   const onDrop = useCallback(() => {}, []);
 
   return (
-    <Dropzone onDrop={onDrop}>
+    <DropZone onDrop={onDrop}>
       <DrawerTreeItem
         label={tag.value ?? 'Anonymous Tag'}
         isFocused={isFocused}
         onPress={onFocus}
       />
-    </Dropzone>
+    </DropZone>
   );
 }

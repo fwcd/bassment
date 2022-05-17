@@ -1,11 +1,11 @@
 import { ThemedText } from '@bassment/components/display/ThemedText';
 import { Droppable } from '@bassment/components/input/Droppable';
-import { useDropzoneStyles } from '@bassment/components/input/Dropzone/Dropzone.style';
+import { useDropZoneStyles } from '@bassment/components/input/DropZone/DropZone.style';
 import { Drop } from '@bassment/models/Drop';
 import React, { ReactNode, useCallback, useState } from 'react';
 import { LayoutChangeEvent, View } from 'react-native';
 
-interface DropzoneProps {
+interface DropZoneProps {
   label?: string;
   stretch?: boolean;
   filterDrop?: (drops: Drop[]) => boolean;
@@ -13,14 +13,14 @@ interface DropzoneProps {
   children: ReactNode;
 }
 
-export function Dropzone({
+export function DropZone({
   label,
   stretch,
   filterDrop,
   onDrop,
   children,
-}: DropzoneProps) {
-  const styles = useDropzoneStyles((label?.length ?? 0) > 0);
+}: DropZoneProps) {
+  const styles = useDropZoneStyles((label?.length ?? 0) > 0);
   const [isHovering, setHovering] = useState(false);
 
   const onDragCallback = useCallback(

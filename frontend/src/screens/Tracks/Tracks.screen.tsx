@@ -1,5 +1,5 @@
 import { TracksView } from '@bassment/components/data/TracksView';
-import { Dropzone } from '@bassment/components/input/Dropzone';
+import { DropZone } from '@bassment/components/input/DropZone';
 import { ApiContext } from '@bassment/contexts/Api';
 import { Drop } from '@bassment/models/Drop';
 import { AnnotatedTrack } from '@bassment/models/Track';
@@ -36,12 +36,12 @@ export function TracksScreen() {
   );
 
   return (
-    <Dropzone
+    <DropZone
       stretch
       label="Drop tracks to upload!"
       filterDrop={filterDrop}
       onDrop={onDrop}>
       <TracksView tracks={tracks} />
-    </Dropzone>
+    </DropZone>
   );
 }

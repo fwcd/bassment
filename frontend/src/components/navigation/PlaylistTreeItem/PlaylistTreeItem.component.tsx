@@ -1,4 +1,4 @@
-import { Dropzone } from '@bassment/components/input/Dropzone';
+import { DropZone } from '@bassment/components/input/DropZone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
@@ -29,7 +29,7 @@ export function PlaylistTreeItem({
   const onDrop = useCallback(() => {}, []);
 
   return (
-    <Dropzone onDrop={onDrop}>
+    <DropZone onDrop={onDrop}>
       <DrawerTreeItem
         label={playlist.name ?? 'Unnamed Playlist'}
         isFocused={focusedId !== undefined && focusedId === playlist.id}
@@ -69,6 +69,6 @@ export function PlaylistTreeItem({
             ))
           : null}
       </DrawerTreeItem>
-    </Dropzone>
+    </DropZone>
   );
 }
