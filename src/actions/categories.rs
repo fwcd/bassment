@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Category, NewCategory, UpdateCategory}, error::Result, db::DbConn};
+use crate::{models::{Category, NewCategory, UpdateCategory, CategoryTreeNode}, error::Result, db::DbConn};
 
 /// Fetches all categories from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Category>> {
@@ -8,6 +8,36 @@ pub fn all(conn: &DbConn) -> Result<Vec<Category>> {
     let mut fetched = categories.get_results(conn)?;
     fetched.sort_by_key(|a: &Category| a.display_name.clone());
     Ok(fetched)
+}
+
+/// Fetches a category tree for a category.
+fn tree_for(category: Category, conn: &DbConn) -> Result<CategoryTreeNode> {
+    use crate::schema::tags;
+    let id = category.id;
+    Ok(CategoryTreeNode {
+        category,
+        children: Vec::new(),
+        tags: tags::table
+            .filter(tags::category_id.eq(id))
+            .get_results(conn)?
+    })
+}
+
+/// Fetches a category tree by id.
+pub fn tree_by_id(playlist_id: i32, conn: &DbConn) -> Result<Option<CategoryTreeNode>> {
+    if let Some(playlist) = by_id(playlist_id, conn)? {
+        Ok(Some(tree_for(playlist, conn)?))
+    } else {
+        Ok(None)
+    }
+}
+
+/// Fetches all category trees from the database.
+pub fn all_trees(conn: &DbConn) -> Result<Vec<CategoryTreeNode>> {
+    all(conn)?
+        .into_iter()
+        .map(|c| tree_for(c, conn))
+        .collect::<Result<Vec<_>>>()
 }
 
 /// Looks up a category by id.

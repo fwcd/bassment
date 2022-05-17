@@ -9,6 +9,13 @@ async fn get_all(pool: web::Data<DbPool>) -> Result<impl Responder> {
     Ok(web::Json(categories))
 }
 
+#[get("/trees")]
+async fn get_all_trees(pool: web::Data<DbPool>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let categories = web::block(move || categories::all_trees(&conn)).await??;
+    Ok(web::Json(categories))
+}
+
 #[post("")]
 async fn post(pool: web::Data<DbPool>, category: web::Json<NewCategory>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -34,6 +41,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/categories")
             .service(get_all)
+            .service(get_all_trees)
             .service(post)
             .service(get_by_id)
             .service(patch_by_id)

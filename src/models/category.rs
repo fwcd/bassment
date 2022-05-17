@@ -5,6 +5,8 @@ use serde::{Serialize, Deserialize};
 use crate::schema::*;
 use crate::utils::serde::deserialize_optional_field;
 
+use super::Tag;
+
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 #[serde(rename_all = "camelCase")]
 pub struct Category {
@@ -15,6 +17,16 @@ pub struct Category {
     pub hidden: bool,
     pub description: Option<String>,
     pub last_modified_at: SystemTime,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CategoryTreeNode {
+    #[serde(flatten)]
+    pub category: Category,
+    // TODO: Use these children, e.g. by placing a parent_id in Category
+    pub children: Vec<CategoryTreeNode>,
+    pub tags: Vec<Tag>,
 }
 
 #[derive(Debug, Clone, Deserialize, Insertable)]
