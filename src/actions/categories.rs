@@ -1,6 +1,6 @@
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
 
-use crate::{models::{Category, NewCategory, UpdateCategory, CategoryTreeNode}, error::Result, db::DbConn};
+use crate::{models::{Category, NewCategory, UpdateCategory, CategoryTreeNode, Tag}, error::Result, db::DbConn};
 
 /// Fetches all categories from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Category>> {
@@ -14,12 +14,14 @@ pub fn all(conn: &DbConn) -> Result<Vec<Category>> {
 fn tree_for(category: Category, conn: &DbConn) -> Result<CategoryTreeNode> {
     use crate::schema::tags;
     let id = category.id;
+    let mut fetched_tags = tags::table
+        .filter(tags::category_id.eq(id))
+        .get_results(conn)?;
+    fetched_tags.sort_by_key(|t: &Tag| t.value.clone());
     Ok(CategoryTreeNode {
         category,
         children: Vec::new(),
-        tags: tags::table
-            .filter(tags::category_id.eq(id))
-            .get_results(conn)?
+        tags: fetched_tags
     })
 }
 
