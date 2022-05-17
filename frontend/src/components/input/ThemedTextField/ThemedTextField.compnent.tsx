@@ -4,7 +4,7 @@ import { TextInput, TextInputProps } from 'react-native';
 
 interface ThemedTextFieldProps extends TextInputProps {}
 
-export function ThemedTextField(props: ThemedTextFieldProps) {
+export function ThemedTextField({ style, ...props }: ThemedTextFieldProps) {
   const styles = useThemedTextFieldStyles();
-  return <TextInput {...props} style={[styles.textField, props.style]} />;
+  return <TextInput {...props} style={[styles.textField, style]} />;
 }

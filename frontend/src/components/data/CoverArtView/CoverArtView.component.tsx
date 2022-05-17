@@ -6,7 +6,7 @@ interface CoverArtViewProps {
   style?: ViewStyle | ViewStyle[];
 }
 
-export function CoverArtView(props: CoverArtViewProps) {
+export function CoverArtView({ style }: CoverArtViewProps) {
   const styles = useCoverArtViewStyles();
-  return <View style={[styles.coverArt, props.style]} />;
+  return <View style={[styles.coverArt, style]} />;
 }

@@ -8,15 +8,13 @@ interface PlayButtonProps {
   setPlaying: (playing: boolean) => void;
 }
 
-export function PlayButton(props: PlayButtonProps) {
+export function PlayButton({ isPlaying, setPlaying }: PlayButtonProps) {
   const globalStyles = useStyles();
 
   return (
-    <ThemedButton
-      hasBackground={false}
-      onPress={() => props.setPlaying(!props.isPlaying)}>
+    <ThemedButton hasBackground={false} onPress={() => setPlaying(!isPlaying)}>
       <ThemedIcon
-        name={props.isPlaying ? 'pause-outline' : 'play-outline'}
+        name={isPlaying ? 'pause-outline' : 'play-outline'}
         size={globalStyles.icon.largeSize}
       />
     </ThemedButton>

@@ -4,14 +4,12 @@ import { SearchBar } from '@bassment/components/input/SearchBar';
 import { AlbumTreeItem } from '@bassment/components/navigation/AlbumTreeItem';
 import { ArtistTreeItem } from '@bassment/components/navigation/ArtistTreeItem';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
-import { GenreTreeItem } from '@bassment/components/navigation/GenreTreeItem';
 import { PlaylistTreeItem } from '@bassment/components/navigation/PlaylistTreeItem';
 import { Divider } from '@bassment/components/structure/Divider';
 import { ApiContext } from '@bassment/contexts/Api';
 import { SearchContext } from '@bassment/contexts/Search';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
-import { PartialGenre } from '@bassment/models/Genre';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import { useAppSidebarStyles } from '@bassment/panels/AppSidebar/AppSidebar.style';
@@ -21,6 +19,8 @@ import {
 } from '@react-navigation/drawer';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { CategoryTreeNode } from '@bassment/models/Category';
+import { CategoryTreeItem } from '@bassment/components/navigation/CategoryTreeItem';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
@@ -31,9 +31,9 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   const { searchText, setSearchText } = useContext(SearchContext);
 
   const [playlists, setPlaylists] = useState<PlaylistTreeNode[]>([]);
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [albums, setAlbums] = useState<PartialAlbum[]>([]);
   const [artists, setArtists] = useState<PartialArtist[]>([]);
-  const [genres, setGenres] = useState<PartialGenre[]>([]);
   const [newPlaylist, setNewPlaylist] = useState<Playlist>();
 
   const updatePlaylists = useCallback(async () => {
@@ -48,8 +48,8 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     setArtists(await api.getPartialArtists());
   }, [api]);
 
-  const updateGenres = useCallback(async () => {
-    setGenres(await api.getPartialGenres());
+  const updateCategories = useCallback(async () => {
+    setCategories(await api.getCategoryTrees());
   }, [api]);
 
   const createNewPlaylist = useCallback(
@@ -76,8 +76,8 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     updatePlaylists();
     updateAlbums();
     updateArtists();
-    updateGenres();
-  }, [updateAlbums, updateArtists, updateGenres, updatePlaylists]);
+    updateCategories();
+  }, [updateAlbums, updateArtists, updateCategories, updatePlaylists]);
 
   // TODO: Link to TracksScreens with corresponding params for each item (e.g. passing the playlist/album/artist id)
 
@@ -111,7 +111,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
             onFocus={() =>
               navigation.navigate('artist', {
                 id: artist.id!,
-                name: artist.name ?? `${artist.id}`,
+                displayName: artist.name ?? `${artist.id}`,
               })
             }
           />
@@ -133,41 +133,38 @@ export function AppSidebar(props: DrawerContentComponentProps) {
             onFocus={() =>
               navigation.navigate('album', {
                 id: album.id!,
-                name: album.name ?? `${album.id}`,
+                displayName: album.name ?? `${album.id}`,
               })
             }
           />
         ))}
       </DrawerTreeItem>
-      <DrawerTreeItem
-        label="Genres"
-        icon={({ size, color }) => (
-          <ThemedIcon name="star-outline" size={size} color={color} />
-        )}>
-        {genres.map(genre => (
-          <GenreTreeItem
-            key={genre.id}
-            genre={genre}
-            isFocused={
-              route.name === 'genre' &&
-              (route.params as SidebarNavigatorParams['genre']).id === genre.id
-            }
-            onFocus={() =>
-              navigation.navigate('genre', {
-                id: genre.id!,
-                name: genre.name ?? `${genre.id}`,
-              })
-            }
-          />
-        ))}
-      </DrawerTreeItem>
+      <Divider />
+      {categories.map(category => (
+        <CategoryTreeItem
+          key={category.id}
+          category={category}
+          focusedTagId={
+            route.name === 'tag'
+              ? (route.params as SidebarNavigatorParams['tag']).id
+              : undefined
+          }
+          onFocusTag={tag => {
+            navigation.navigate('tag', {
+              id: tag.id!,
+              displayName: category.displayName,
+              displayValue: tag.value,
+            });
+          }}
+        />
+      ))}
+      {/* TODO: Implement streams
       <DrawerTreeItem
         label="Streams"
         icon={({ size, color }) => (
-          // TODO: Implement streams
           <ThemedIcon name="radio-outline" size={size} color={color} />
         )}
-      />
+      /> */}
       <Divider />
       <DrawerTreeItem
         label="Queue"
@@ -179,6 +176,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           navigation.navigate('queue', {});
         }}
       />
+      {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
       <Divider />
       {playlists.map(playlist => (
         <PlaylistTreeItem
@@ -192,7 +190,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           onFocus={child =>
             navigation.navigate('playlist', {
               id: child.id!,
-              name: child.name ?? `${playlist.id}`,
+              displayName: child.name ?? `${playlist.id}`,
             })
           }
         />
@@ -228,6 +226,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="add-outline" size={size} color={color} />
         )}
       />
+      {/* TODO: Add button for adding new categories */}
     </DrawerContentScrollView>
   );
 }

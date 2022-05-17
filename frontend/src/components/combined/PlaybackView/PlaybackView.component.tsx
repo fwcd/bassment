@@ -12,20 +12,20 @@ interface PlaybackViewProps {
   style?: ViewStyle | ViewStyle[];
 }
 
-export function PlaybackView(props: PlaybackViewProps) {
+export function PlaybackView({ nowPlaying, onSeek, style }: PlaybackViewProps) {
   const styles = usePlaybackViewStyles();
 
   return (
-    <View style={[styles.view, props.style]}>
+    <View style={[styles.view, style]}>
       <CoverArtView style={styles.coverArt} />
       <View style={styles.playback}>
-        {props.nowPlaying ? (
+        {nowPlaying ? (
           <>
-            <TrackInfoView style={styles.info} track={props.nowPlaying.track} />
+            <TrackInfoView style={styles.info} track={nowPlaying.track} />
             <PlaybackProgress
-              elapsedMs={props.nowPlaying.elapsedMs}
-              totalMs={props.nowPlaying.totalMs}
-              onSeek={props.onSeek}
+              elapsedMs={nowPlaying.elapsedMs}
+              totalMs={nowPlaying.totalMs}
+              onSeek={onSeek}
             />
           </>
         ) : null}

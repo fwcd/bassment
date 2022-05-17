@@ -9,15 +9,15 @@ interface TrackInfoViewProps {
   style: ViewStyle | ViewStyle[];
 }
 
-export function TrackInfoView(props: TrackInfoViewProps) {
+export function TrackInfoView({ track, style }: TrackInfoViewProps) {
   const styles = useTrackInfoViewStyles();
   return (
-    <View style={[styles.info, props.style]}>
+    <View style={[styles.info, style]}>
       <ThemedText style={styles.title}>
-        {props.track.title ?? 'Unnamed Track'}
+        {track.title ?? 'Unnamed Track'}
       </ThemedText>
       <ThemedText>
-        {props.track.artists.flatMap(a => (a.name ? [a.name] : [])).join(', ')}
+        {track.artists.flatMap(a => (a.name ? [a.name] : [])).join(', ')}
       </ThemedText>
     </View>
   );

@@ -5,7 +5,6 @@ import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { AlbumScreen } from '@bassment/screens/Album';
 import { ArtistScreen } from '@bassment/screens/Artist';
-import { GenreScreen } from '@bassment/screens/Genre';
 import { LoginScreen } from '@bassment/screens/Login';
 import { PlaylistScreen } from '@bassment/screens/Playlist';
 import { TracksScreen } from '@bassment/screens/Tracks';
@@ -19,10 +18,11 @@ import { QueueScreen } from '@bassment/screens/Queue';
 export type SidebarNavigatorParams = {
   tracks: {};
   queue: {};
-  playlist: { name: string; id: number };
-  genre: { name: string; id: number };
-  album: { name: string; id: number };
-  artist: { name: string; id: number };
+  playlist: { displayName?: string; id: number };
+  genre: { displayName?: string; id: number };
+  album: { displayName?: string; id: number };
+  artist: { displayName?: string; id: number };
+  tag: { displayName?: string; displayValue?: string; id: number };
 };
 
 const SidebarDrawer = createDrawerNavigator<SidebarNavigatorParams>();
@@ -81,30 +81,32 @@ export function AppContainer() {
           <SidebarDrawer.Screen
             name="playlist"
             options={({ route }) => ({
-              title: `Playlist: ${route.params?.name ?? '?'}`,
+              title: `Playlist: ${route.params?.displayName ?? '?'}`,
             })}
             component={PlaylistScreen}
           />
           <SidebarDrawer.Screen
             name="album"
             options={({ route }) => ({
-              title: `Album: ${route.params?.name ?? '?'}`,
+              title: `Album: ${route.params?.displayName ?? '?'}`,
             })}
             component={AlbumScreen}
           />
           <SidebarDrawer.Screen
             name="artist"
             options={({ route }) => ({
-              title: `Artist: ${route.params?.name ?? '?'}`,
+              title: `Artist: ${route.params?.displayName ?? '?'}`,
             })}
             component={ArtistScreen}
           />
           <SidebarDrawer.Screen
-            name="genre"
+            name="tag"
             options={({ route }) => ({
-              title: `Genre: ${route.params?.name ?? '?'}`,
+              title: `${route.params?.displayName ?? 'Tag'}: ${
+                route.params?.displayValue ?? '?'
+              }`,
             })}
-            component={GenreScreen}
+            component={ArtistScreen}
           />
         </SidebarDrawer.Navigator>
       ) : (

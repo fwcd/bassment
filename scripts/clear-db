@@ -16,11 +16,10 @@ fi
 echo "You are about to DELETE ALL CONTENT in the database. This is IRREVERSIBLE."
 confirm "Are you sure?"
 
-truncated_tables="albums, artists, blobs, cues, genres, playlist_tracks, playlists, track_albums, track_artists, track_audios, track_genres, tracks, album_artists, users, file_infos"
+echo "==> Clearing db..."
+psql "$DATABASE_URL" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public; CREATE EXTENSION pgcrypto"
 
-echo "==> Clearing tables..."
-psql "$DATABASE_URL" -c "TRUNCATE $truncated_tables"
-psql "$DATABASE_URL" -c "DELETE FROM settings; INSERT INTO settings (id) VALUES (DEFAULT);"
+echo "==> Rerunning migrations..."
+diesel migration run
 
-echo "==> Cleared tables"
 echo "==> Note: Make sure to delete local files referenced by file_infos (e.g. under 'local') manually, since the DB might otherwise try to overwrite them in the future, causing potential inconsistencies."

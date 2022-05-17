@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 
 use crate::schema::*;
 
-use super::{PartialGenre, PartialAlbum, PartialArtist};
+use super::{KeyedTag, PartialArtist, PartialAlbum};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
 #[serde(rename_all = "camelCase")]
@@ -36,7 +36,7 @@ pub struct AnnotatedTrack {
     pub track: Track,
     pub artists: Vec<PartialArtist>,
     pub albums: Vec<PartialAlbum>,
-    pub genres: Vec<PartialGenre>,
+    pub tags: Vec<KeyedTag>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
@@ -57,11 +57,11 @@ pub struct TrackAlbum {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]
-#[table_name = "track_genres"]
+#[table_name = "track_tags"]
 #[serde(rename_all = "camelCase")]
-pub struct TrackGenre {
+pub struct TrackTag {
     pub track_id: i32,
-    pub genre_id: i32,
+    pub tag_id: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable)]

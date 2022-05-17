@@ -1,6 +1,7 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
 import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
 import { ThemedText } from '@bassment/components/display/ThemedText';
+import { KeyedTag } from '@bassment/models/Tag';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import { useStyles } from '@bassment/styles';
 import { fromDrops } from '@bassment/utils/dropConversions.web';
@@ -16,6 +17,10 @@ function joinNames(xs: { name?: string }[]): string {
   return xs.map(x => x.name ?? '').join(', ');
 }
 
+function joinTags(tags: KeyedTag[]): string {
+  return tags.map(tag => `${tag.displayName}: ${tag.value}`).join(', ');
+}
+
 function compare(
   x: AnnotatedTrack,
   y: AnnotatedTrack,
@@ -28,8 +33,9 @@ function compare(
       return (x[columnKey] ?? '').localeCompare(y[columnKey] ?? '');
     case 'artists':
     case 'albums':
-    case 'genres':
       return joinNames(x[columnKey]).localeCompare(joinNames(y[columnKey]));
+    case 'tags':
+      return joinTags(x[columnKey]).localeCompare(joinTags(y[columnKey]));
     default:
       return 0;
   }
@@ -62,11 +68,9 @@ export function TrackTable({ tracks, onPlay }: TrackTableProps) {
       },
       { key: 'title', name: 'Title' },
       {
-        key: 'genres',
-        name: 'Genre',
-        formatter: ({ row }) => (
-          <ThemedText>{joinNames(row.genres)}</ThemedText>
-        ),
+        key: 'tags',
+        name: 'Tags',
+        formatter: ({ row }) => <ThemedText>{joinTags(row.tags)}</ThemedText>,
       },
     ],
     [],

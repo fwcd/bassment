@@ -8,12 +8,16 @@ interface ArtistTreeItemProps {
   onFocus?: () => void;
 }
 
-export function ArtistTreeItem(props: ArtistTreeItemProps) {
+export function ArtistTreeItem({
+  artist,
+  isFocused,
+  onFocus,
+}: ArtistTreeItemProps) {
   return (
     <DrawerTreeItem
-      label={props.artist.name ?? 'Unnamed Artist'}
-      isFocused={props.isFocused}
-      onPress={props.onFocus}
+      label={artist.name ?? 'Unnamed Artist'}
+      isFocused={isFocused}
+      onPress={onFocus}
     />
   );
 }

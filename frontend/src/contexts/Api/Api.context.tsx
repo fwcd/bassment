@@ -2,8 +2,8 @@ import { networkConstants } from '@bassment/constants';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
+import { CategoryTreeNode } from '@bassment/models/Category';
 import { PartialFileInfo } from '@bassment/models/FileInfo';
-import { PartialGenre } from '@bassment/models/Genre';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {
@@ -35,9 +35,6 @@ export interface ApiContextValue {
   /** Fetches all albums (as partial structures). */
   getPartialAlbums(): Promise<PartialAlbum[]>;
 
-  /** Fetches all genres (as partial structures). */
-  getPartialGenres(): Promise<PartialGenre[]>;
-
   /** Fetches all tracks with artist/album/genre annotations. */
   getAnnotatedTracks(): Promise<AnnotatedTrack[]>;
 
@@ -50,11 +47,14 @@ export interface ApiContextValue {
   /** Fetches an album's tracks with annotations. */
   getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]>;
 
-  /** Fetches a genre's tracks with annotations. */
-  getAnnotatedGenreTracks(genreId: number): Promise<AnnotatedTrack[]>;
+  /** Fetches a tag's tracks with annotations. */
+  getAnnotatedTagTracks(tagId: number): Promise<AnnotatedTrack[]>;
 
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
+
+  /** Fetches all category trees. */
+  getCategoryTrees(): Promise<CategoryTreeNode[]>;
 
   /** Creates a new playlist. */
   postPlaylist(playlist: Playlist): Promise<void>;
@@ -90,13 +90,13 @@ export const ApiContext = createContext<ApiContextValue>({
   isLoggedIn: async () => false,
   getPartialAlbums: noApiContext('partial albums', () => []),
   getPartialArtists: noApiContext('partial artists', () => []),
-  getPartialGenres: noApiContext('partial genres', () => []),
   getAnnotatedTracks: noApiContext('annotated tracks', () => []),
   getAnnotatedPlaylistTracks: noApiContext('annotated list tracks', () => []),
   getAnnotatedArtistTracks: noApiContext('annotated artist tracks', () => []),
   getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
-  getAnnotatedGenreTracks: noApiContext('annotated genre tracks', () => []),
+  getAnnotatedTagTracks: noApiContext('annotated tag tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
+  getCategoryTrees: noApiContext('category trees', () => []),
   postPlaylist: noApiContext('playlist', () => {}),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
@@ -183,9 +183,6 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     async getPartialAlbums(): Promise<PartialAlbum[]> {
       return await apiRequest('GET', '/albums/partial');
     },
-    async getPartialGenres(): Promise<PartialGenre[]> {
-      return await apiRequest('GET', '/genres/partial');
-    },
     async getAnnotatedTracks(): Promise<AnnotatedTrack[]> {
       return await apiRequest('GET', '/tracks/annotated');
     },
@@ -205,11 +202,14 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     async getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]> {
       return await apiRequest('GET', `/albums/${albumId}/tracks/annotated`);
     },
-    async getAnnotatedGenreTracks(genreId: number): Promise<AnnotatedTrack[]> {
-      return await apiRequest('GET', `/genres/${genreId}/tracks/annotated`);
+    async getAnnotatedTagTracks(tagId: number): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', `/tags/${tagId}/tracks/annotated`);
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
+    },
+    async getCategoryTrees(): Promise<CategoryTreeNode[]> {
+      return await apiRequest('GET', '/categories/trees');
     },
     async postPlaylist(playlist: Playlist): Promise<void> {
       return await apiRequest('POST', '/playlists', { body: playlist });

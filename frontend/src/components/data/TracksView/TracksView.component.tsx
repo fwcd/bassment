@@ -20,7 +20,7 @@ export function TracksView({ tracks }: TracksViewProps) {
             track.title,
             ...track.artists.map(a => a.name),
             ...track.albums.map(a => a.name),
-            ...track.genres.map(g => g.name),
+            ...track.tags.map(t => t.value),
             track.comment,
             track.year,
           ].some(v =>

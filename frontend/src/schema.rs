@@ -15,9 +15,9 @@ table! {
     albums (id) {
         id -> Int4,
         name -> Text,
+        description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
-        description -> Nullable<Text>,
     }
 }
 
@@ -28,9 +28,9 @@ table! {
     artists (id) {
         id -> Int4,
         name -> Text,
+        description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
-        description -> Nullable<Text>,
     }
 }
 
@@ -43,21 +43,6 @@ table! {
         data -> Bytea,
         version -> Text,
         sub_version -> Nullable<Text>,
-        last_modified_at -> Timestamp,
-    }
-}
-
-table! {
-    use diesel::sql_types::*;
-    use crate::models::*;
-
-    categories (id) {
-        id -> Int4,
-        key -> Text,
-        display_name -> Text,
-        predefined -> Bool,
-        hidden -> Bool,
-        description -> Nullable<Text>,
         last_modified_at -> Timestamp,
     }
 }
@@ -87,6 +72,18 @@ table! {
         last_modified_at -> Timestamp,
         name -> Text,
         media_type -> Text,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
+    genres (id) {
+        id -> Int4,
+        name -> Text,
+        description -> Nullable<Text>,
+        last_modified_at -> Timestamp,
     }
 }
 
@@ -133,9 +130,23 @@ table! {
     use diesel::sql_types::*;
     use crate::models::*;
 
+    tag_categories (id) {
+        id -> Int4,
+        key -> Text,
+        collection_name -> Text,
+        predefined -> Bool,
+        description -> Nullable<Text>,
+        last_modified_at -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+    use crate::models::*;
+
     tags (id) {
         id -> Int4,
-        category_id -> Int4,
+        category_id -> Nullable<Int4>,
         value -> Text,
         description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,
@@ -150,17 +161,6 @@ table! {
     token_secret (id) {
         id -> Bool,
         secret -> Bytea,
-    }
-}
-
-table! {
-    use diesel::sql_types::*;
-    use crate::models::*;
-
-    track_albums (track_id, album_id) {
-        track_id -> Int4,
-        album_id -> Int4,
-        track_number -> Int4,
     }
 }
 
@@ -245,10 +245,8 @@ joinable!(playlist_tracks -> tracks (track_id));
 joinable!(playlist_tracks -> users (added_by));
 joinable!(playlists -> file_infos (cover_art_id));
 joinable!(playlists -> users (added_by));
-joinable!(tags -> categories (category_id));
 joinable!(tags -> file_infos (cover_art_id));
-joinable!(track_albums -> albums (album_id));
-joinable!(track_albums -> tracks (track_id));
+joinable!(tags -> tag_categories (category_id));
 joinable!(track_artists -> artists (artist_id));
 joinable!(track_artists -> tracks (track_id));
 joinable!(track_audios -> file_infos (file_id));
@@ -262,15 +260,15 @@ allow_tables_to_appear_in_same_query!(
     albums,
     artists,
     blobs,
-    categories,
     cues,
     file_infos,
+    genres,
     playlist_tracks,
     playlists,
     settings,
+    tag_categories,
     tags,
     token_secret,
-    track_albums,
     track_artists,
     track_audios,
     track_tags,

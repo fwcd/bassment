@@ -3,9 +3,9 @@ use std::io::Cursor;
 use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 use id3::{Tag, TagLike};
 
-use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio, NewFileInfo, TrackArtist, TrackAlbum, TrackGenre, NewArtist, NewGenre}, error::Result, db::DbConn};
+use crate::{models::{Track, NewTrack, UpdateTrack, AnnotatedTrack, PartialFileInfo, TrackAudio, NewFileInfo, TrackTag, NewTag, NewArtist, TrackAlbum, TrackArtist}, error::Result, db::DbConn};
 
-use super::{artists, albums, genres, files};
+use super::{tags, files, albums, artists};
 
 /// Fetches all tracks from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Track>> {
@@ -32,7 +32,7 @@ pub fn annotated_for(track: Track, conn: &DbConn) -> Result<AnnotatedTrack> {
         track,
         artists: artists::partial_for_track_id(track_id, conn)?,
         albums: albums::partial_for_track_id(track_id, conn)?,
-        genres: genres::partial_for_track_id(track_id, conn)?,
+        tags: tags::keyed_for_ids(&[track_id], conn)?,
     })
 }
 
@@ -80,21 +80,24 @@ pub fn insert_audio(track_id: i32, file_id: i32, conn: &DbConn) -> Result<()> {
     Ok(())
 }
 
+/// Inserts a new track-tag association by id. Updates track number if exists.
+pub fn insert_tag(track_id: i32, tag_id: i32, track_number: Option<i32>, conn: &DbConn) -> Result<()> {
+    use crate::schema::track_tags;
+    diesel::insert_into(track_tags::table)
+        .values(TrackTag { track_id, tag_id })
+        // TODO: Add track_number to track_tags?
+        // .on_conflict(track_tags::track_number)
+        // .do_update()
+        // .set(track_tags::track_number.eq(track_number))
+        .execute(conn)?;
+    Ok(())
+}
+
 /// Inserts a new track-artist association by id. Ignores if exists.
 pub fn insert_artist(track_id: i32, artist_id: i32, conn: &DbConn) -> Result<()> {
     use crate::schema::track_artists;
     diesel::insert_into(track_artists::table)
         .values(TrackArtist { track_id, artist_id })
-        .on_conflict_do_nothing()
-        .execute(conn)?;
-    Ok(())
-}
-
-/// Inserts a new track-genre association by id. Ignores if exists.
-pub fn insert_genre(track_id: i32, genre_id: i32, conn: &DbConn) -> Result<()> {
-    use crate::schema::track_genres;
-    diesel::insert_into(track_genres::table)
-        .values(TrackGenre { track_id, genre_id })
         .on_conflict_do_nothing()
         .execute(conn)?;
     Ok(())
@@ -134,31 +137,32 @@ pub fn insert_autotagged(info: NewFileInfo, data: &[u8], conn: &DbConn) -> Resul
     // Parse tags from binary data
     // TODO: Support tags other than ID3
     let cursor = Cursor::new(data);
-    let tag = Tag::read_from(cursor)?;
+    let metadata_tag = Tag::read_from(cursor)?;
 
     // Insert file info into db and write to disk
     let file_name = info.name.clone();
     let file_info = files::insert_with_file(info, data, conn)?;
 
     // Insert track and audio association into db
-    let new_track = NewTrack::titled(tag.title().unwrap_or_else(|| &file_name));
+    let new_track = NewTrack::titled(metadata_tag.title().unwrap_or_else(|| &file_name));
     let track = insert(&new_track, conn)?;
     insert_audio(track.id, file_info.id, conn)?;
 
     // Insert artist into db if a tag exists
     // TODO: Split artists by comma or using some other heuristic?
-    if let Some(artist_name) = tag.artist() {
+    if let Some(artist_name) = metadata_tag.artist() {
         let artist = artists::insert_or_get(&NewArtist::named(artist_name), conn)?;
         insert_artist(track.id, artist.id, conn)?;
     }
 
     // Insert genre into db if a tag exists
     // TODO: Can a tag have multiple genres? Perhaps split by comma?
-    if let Some(genre_name) = tag.genre() {
-        let genre = genres::insert_or_get(&NewGenre::named(genre_name), conn)?;
-        insert_genre(track.id, genre.id, conn)?;
+    if let Some(genre_name) = metadata_tag.genre() {
+        let genre = tags::insert_or_get(&NewTag::genre(genre_name), conn)?;
+        insert_tag(track.id, genre.id, None, conn)?;
     }
 
+    // TODO: Insert bpm etc.
     // TODO: Insert cover art into db
 
     // TODO: Insert (or ignore) album into db
