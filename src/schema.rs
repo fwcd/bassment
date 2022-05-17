@@ -20,6 +20,7 @@ table! {
         key -> Text,
         display_name -> Text,
         predefined -> Bool,
+        hidden -> Bool,
         description -> Nullable<Text>,
         last_modified_at -> Timestamp,
     }

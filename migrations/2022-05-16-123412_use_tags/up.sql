@@ -5,6 +5,7 @@ CREATE TABLE categories (
     key TEXT NOT NULL UNIQUE,
     display_name TEXT NOT NULL,
     predefined BOOLEAN NOT NULL DEFAULT FALSE,
+    hidden BOOLEAN NOT NULL DEFAULT FALSE,
     description TEXT,
     last_modified_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -27,9 +28,8 @@ CREATE TABLE track_tags (
 
 INSERT INTO categories (id, key, display_name, predefined) VALUES (1, 'artist', 'Artist', TRUE);
 INSERT INTO categories (id, key, display_name, predefined) VALUES (2, 'album', 'Album', TRUE);
-INSERT INTO categories (id, key, display_name, predefined) VALUES (3, 'crate', 'Crate', TRUE);
-INSERT INTO categories (id, key, display_name, predefined) VALUES (4, 'genre', 'Genre', TRUE);
-INSERT INTO categories (id, key, display_name, predefined) VALUES (5, 'mood', 'Mood', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (3, 'genre', 'Genre', TRUE);
+INSERT INTO categories (id, key, display_name, predefined) VALUES (4, 'mood', 'Mood', TRUE);
 
 -- Migrate artists, albums, crates and genres
 
