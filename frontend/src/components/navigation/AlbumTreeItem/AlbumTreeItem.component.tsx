@@ -8,12 +8,16 @@ interface AlbumTreeItemProps {
   onFocus?: () => void;
 }
 
-export function AlbumTreeItem(props: AlbumTreeItemProps) {
+export function AlbumTreeItem({
+  album,
+  isFocused,
+  onFocus,
+}: AlbumTreeItemProps) {
   return (
     <DrawerTreeItem
-      label={props.album.name ?? 'Unnamed Album'}
-      isFocused={props.isFocused}
-      onPress={props.onFocus}
+      label={album.name ?? 'Unnamed Album'}
+      isFocused={isFocused}
+      onPress={onFocus}
     />
   );
 }

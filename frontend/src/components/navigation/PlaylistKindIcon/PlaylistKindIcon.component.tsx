@@ -8,10 +8,10 @@ interface PlaylistKindIconProps {
   color?: string;
 }
 
-export function PlaylistKindIcon(props: PlaylistKindIconProps) {
+export function PlaylistKindIcon({ kind, size, color }: PlaylistKindIconProps) {
   let iconName: string;
 
-  switch (props.kind) {
+  switch (kind) {
     case PlaylistKind.Playlist:
       iconName = 'list-outline';
       break;
@@ -26,5 +26,5 @@ export function PlaylistKindIcon(props: PlaylistKindIconProps) {
       break;
   }
 
-  return <ThemedIcon name={iconName} size={props.size} color={props.color} />;
+  return <ThemedIcon name={iconName} size={size} color={color} />;
 }

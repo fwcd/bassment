@@ -3,7 +3,7 @@ import { AuthContext } from '@bassment/contexts/Auth';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { PartialFileInfo } from '@bassment/models/FileInfo';
-import { PartialGenre } from '@bassment/models/Genre';
+import { PartialGenre } from '@bassment/models/Tag';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {

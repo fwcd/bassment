@@ -16,9 +16,16 @@ interface PlaylistTreeItemProps {
   onSubmitEdit?: () => void;
 }
 
-export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
-  const { playlist } = props;
-
+export function PlaylistTreeItem({
+  playlist,
+  isEditable,
+  isEditFocused,
+  focusedId,
+  onFocus,
+  onEdit,
+  onSubmitEdit,
+}: PlaylistTreeItemProps) {
+  // TODO: Implement onDrop
   const onDrop = useCallback(() => {}, []);
 
   return (
@@ -26,11 +33,9 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
       <DrawerTreeItem
         key={playlist.id}
         label={playlist.name ?? 'Unnamed Playlist'}
-        isFocused={
-          props.focusedId !== undefined && props.focusedId === playlist.id
-        }
-        isEditable={props.isEditable}
-        isEditFocused={props.isEditFocused}
+        isFocused={focusedId !== undefined && focusedId === playlist.id}
+        isEditable={isEditable}
+        isEditFocused={isEditFocused}
         isExpandedInitially
         icon={({ size, color }) => (
           <PlaylistKindIcon
@@ -40,27 +45,27 @@ export function PlaylistTreeItem(props: PlaylistTreeItemProps) {
           />
         )}
         onPress={
-          playlist.id && !props.isEditable
+          playlist.id && !isEditable
             ? () => {
-                if (props.onFocus) {
-                  props.onFocus!(playlist);
+                if (onFocus) {
+                  onFocus!(playlist);
                 }
               }
             : undefined
         }
         onEdit={name => {
-          if (props.onEdit) {
-            props.onEdit({ ...playlist, name });
+          if (onEdit) {
+            onEdit({ ...playlist, name });
           }
         }}
-        onSubmitEdit={props.onSubmitEdit}>
+        onSubmitEdit={onSubmitEdit}>
         {'children' in playlist
           ? playlist.children.map(child => (
               <PlaylistTreeItem
                 key={child.id}
                 playlist={child}
-                focusedId={props.focusedId}
-                onFocus={props.onFocus}
+                focusedId={focusedId}
+                onFocus={onFocus}
               />
             ))
           : null}
