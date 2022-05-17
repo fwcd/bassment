@@ -47,6 +47,9 @@ export interface ApiContextValue {
   /** Fetches an album's tracks with annotations. */
   getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]>;
 
+  /** Fetches a tag's tracks with annotations. */
+  getAnnotatedTagTracks(tagId: number): Promise<AnnotatedTrack[]>;
+
   /** Fetches all playlist trees. */
   getPlaylistTrees(): Promise<PlaylistTreeNode[]>;
 
@@ -91,6 +94,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getAnnotatedPlaylistTracks: noApiContext('annotated list tracks', () => []),
   getAnnotatedArtistTracks: noApiContext('annotated artist tracks', () => []),
   getAnnotatedAlbumTracks: noApiContext('annotated album tracks', () => []),
+  getAnnotatedTagTracks: noApiContext('annotated tag tracks', () => []),
   getPlaylistTrees: noApiContext('playlist trees', () => []),
   getCategoryTrees: noApiContext('category trees', () => []),
   postPlaylist: noApiContext('playlist', () => {}),
@@ -197,6 +201,9 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async getAnnotatedAlbumTracks(albumId: number): Promise<AnnotatedTrack[]> {
       return await apiRequest('GET', `/albums/${albumId}/tracks/annotated`);
+    },
+    async getAnnotatedTagTracks(tagId: number): Promise<AnnotatedTrack[]> {
+      return await apiRequest('GET', `/tags/${tagId}/tracks/annotated`);
     },
     async getPlaylistTrees(): Promise<PlaylistTreeNode[]> {
       return await apiRequest('GET', '/playlists/trees');
