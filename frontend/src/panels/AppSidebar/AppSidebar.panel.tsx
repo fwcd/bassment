@@ -193,6 +193,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           navigation.navigate('queue', {});
         }}
       />
+      {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
       <Divider />
       {playlists.map(playlist => (
         <PlaylistTreeItem
@@ -242,6 +243,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           <ThemedIcon name="add-outline" size={size} color={color} />
         )}
       />
+      {/* TODO: Add button for adding new categories */}
     </DrawerContentScrollView>
   );
 }
