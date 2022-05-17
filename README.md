@@ -3,7 +3,7 @@
 [![Build](https://github.com/fwcd/bassment/actions/workflows/build.yml/badge.svg)](https://github.com/fwcd/bassment/actions/workflows/build.yml)
 [![Frontend](https://github.com/fwcd/bassment/actions/workflows/frontend.yml/badge.svg)](https://github.com/fwcd/bassment/actions/workflows/frontend.yml)
 
-Music library server with support for cue points, playlists, crates and more.
+Music library server with support for cue points, tags, playlists, crates and more.
 
 <div align="center">
   <img alt="Icon" src="icons/icon-rounded.svg" width="100">
@@ -15,8 +15,8 @@ Music library server with support for cue points, playlists, crates and more.
 
 Bassment primarily consists of two components:
 
-- The backend server, written in Rust (using `actix-web` and `diesel`), is located in the repository root.
-- The frontend, written in TypeScript (using `react-native`, targeting Web, iOS and Android), is located in the `frontend` folder.
+- The backend server, written in Rust (using `actix-web` and `diesel`), located in the repository root.
+- The frontend, written in TypeScript (using `react-native`, targeting Web, iOS and Android), located in the `frontend` folder.
 
 While the backend server can serve the frontend from `frontend/dist` (after building and bundling it with Webpack), it can also run in API-only mode and independently (with `--api-only`).
 
