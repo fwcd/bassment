@@ -7,6 +7,7 @@ import { SearchContextProvider } from '@bassment/contexts/Search';
 import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { MenuProvider } from 'react-native-popup-menu';
 
 export function App() {
   return (
@@ -16,15 +17,17 @@ export function App() {
           height: envConstants.platform.os === 'web' ? '100vh' : '100%',
         }}>
         <StatusBar />
-        <AuthContextProvider>
-          <ApiContextProvider>
-            <SearchContextProvider>
-              <AudioPlayerContextProvider>
-                <AppContainer />
-              </AudioPlayerContextProvider>
-            </SearchContextProvider>
-          </ApiContextProvider>
-        </AuthContextProvider>
+        <MenuProvider>
+          <AuthContextProvider>
+            <ApiContextProvider>
+              <SearchContextProvider>
+                <AudioPlayerContextProvider>
+                  <AppContainer />
+                </AudioPlayerContextProvider>
+              </SearchContextProvider>
+            </ApiContextProvider>
+          </AuthContextProvider>
+        </MenuProvider>
       </View>
     </SafeAreaProvider>
   );
