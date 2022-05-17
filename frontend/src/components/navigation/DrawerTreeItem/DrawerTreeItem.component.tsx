@@ -3,7 +3,7 @@ import { ThemedText } from '@bassment/components/display/ThemedText';
 import { ThemedTextField } from '@bassment/components/input/ThemedTextField';
 import { useDrawerTreeItemStyles } from '@bassment/components/navigation/DrawerTreeItem/DrawerTreeItem.style';
 import { useStyles } from '@bassment/styles';
-import React, { ReactNode, useState } from 'react';
+import React, { Children, ReactNode, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 interface IconProps {
@@ -34,9 +34,7 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
     props.isFocused ?? false,
     props.isButton ?? false,
   );
-  const hasChildren =
-    props.children &&
-    (Array.isArray(props.children) ? props.children.length > 0 : true);
+  const hasChildren = Children.count(props.children) > 0;
 
   let item = (
     <View style={styles.item}>
