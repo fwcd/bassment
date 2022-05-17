@@ -5,7 +5,6 @@ import { ApiContext } from '@bassment/contexts/Api';
 import { AuthContext } from '@bassment/contexts/Auth';
 import { AlbumScreen } from '@bassment/screens/Album';
 import { ArtistScreen } from '@bassment/screens/Artist';
-import { GenreScreen } from '@bassment/screens/Genre';
 import { LoginScreen } from '@bassment/screens/Login';
 import { PlaylistScreen } from '@bassment/screens/Playlist';
 import { TracksScreen } from '@bassment/screens/Tracks';
@@ -98,13 +97,6 @@ export function AppContainer() {
               title: `Artist: ${route.params?.name ?? '?'}`,
             })}
             component={ArtistScreen}
-          />
-          <SidebarDrawer.Screen
-            name="genre"
-            options={({ route }) => ({
-              title: `Genre: ${route.params?.name ?? '?'}`,
-            })}
-            component={GenreScreen}
           />
         </SidebarDrawer.Navigator>
       ) : (

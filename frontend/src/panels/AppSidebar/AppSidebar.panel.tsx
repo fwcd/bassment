@@ -49,36 +49,8 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   }, [api]);
 
   const updateCategories = useCallback(async () => {
-    // TODO: Replace mock data with actual API call
-    // setCategories(await api.getCategoryTrees());
-    setCategories([
-      {
-        id: 1,
-        key: 'genre',
-        displayName: 'Genre',
-        children: [],
-        tags: [
-          {
-            id: 1,
-            categoryId: 1,
-            value: 'Pop',
-          },
-          {
-            id: 2,
-            categoryId: 1,
-            value: 'Rock',
-          },
-        ],
-      },
-      {
-        id: 2,
-        key: 'mood',
-        displayName: 'Mood',
-        children: [],
-        tags: [],
-      },
-    ]);
-  }, []);
+    setCategories(await api.getCategoryTrees());
+  }, [api]);
 
   const createNewPlaylist = useCallback(
     (kind: PlaylistKind) => {
