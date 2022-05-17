@@ -10,14 +10,14 @@ interface ThemedIconProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export function ThemedIcon(props: ThemedIconProps) {
+export function ThemedIcon({ name, size, color, style }: ThemedIconProps) {
   const globalStyles = useStyles();
   return (
     <Icon
-      name={props.name}
-      size={props.size ?? globalStyles.icon.size}
-      color={props.color ?? globalStyles.icon.color}
-      style={props.style}
+      name={name}
+      size={size ?? globalStyles.icon.size}
+      color={color ?? globalStyles.icon.color}
+      style={style}
     />
   );
 }

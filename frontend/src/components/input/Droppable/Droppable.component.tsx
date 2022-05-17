@@ -2,6 +2,6 @@ import { DroppableProps } from '@bassment/components/input/Droppable/Droppable.p
 import React from 'react';
 import { View } from 'react-native';
 
-export function Droppable(props: DroppableProps) {
-  return <View>{props.children}</View>;
+export function Droppable({ children }: DroppableProps) {
+  return <View>{children}</View>;
 }

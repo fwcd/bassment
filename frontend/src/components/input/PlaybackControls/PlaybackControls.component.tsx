@@ -10,13 +10,16 @@ interface PlaybackControlsProps {
   setPlaying: (playing: boolean) => void;
 }
 
-export function PlaybackControls(props: PlaybackControlsProps) {
+export function PlaybackControls({
+  isPlaying,
+  setPlaying,
+}: PlaybackControlsProps) {
   const styles = usePlaybackControlsStyles();
 
   return (
     <View style={styles.controls}>
       <BackButton onBack={() => {}} />
-      <PlayButton isPlaying={props.isPlaying} setPlaying={props.setPlaying} />
+      <PlayButton isPlaying={isPlaying} setPlaying={setPlaying} />
       <ForwardButton onForward={() => {}} />
     </View>
   );

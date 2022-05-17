@@ -7,8 +7,8 @@ interface ThemedButtonProps extends PressableProps {
   hasBackground?: boolean;
 }
 
-export function ThemedButton(props: ThemedButtonProps) {
-  const styles = useThemedButtonStyles(props.hasBackground ?? true);
+export function ThemedButton({ hasBackground, ...props }: ThemedButtonProps) {
+  const styles = useThemedButtonStyles(hasBackground ?? true);
 
   return (
     <Pressable

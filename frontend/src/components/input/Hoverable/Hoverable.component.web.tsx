@@ -1,10 +1,10 @@
 import { HoverableProps } from '@bassment/components/input/Hoverable/Hoverable.props';
 import React from 'react';
 
-export function Hoverable(props: HoverableProps) {
+export function Hoverable({ onHoverIn, onHoverOut, children }: HoverableProps) {
   return (
-    <div onMouseEnter={props.onHoverIn} onMouseLeave={props.onHoverOut}>
-      {props.children}
+    <div onMouseEnter={onHoverIn} onMouseLeave={onHoverOut}>
+      {children}
     </div>
   );
 }

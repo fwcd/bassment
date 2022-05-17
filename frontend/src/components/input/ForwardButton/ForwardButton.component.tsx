@@ -7,12 +7,12 @@ interface ForwardButtonProps {
   onForward: () => void;
 }
 
-export function ForwardButton(props: ForwardButtonProps) {
+export function ForwardButton({ onForward }: ForwardButtonProps) {
   const globalStyles = useStyles();
 
   return (
     // TODO: Undisable
-    <ThemedButton hasBackground={false} onPress={props.onForward} disabled>
+    <ThemedButton hasBackground={false} onPress={onForward} disabled>
       <ThemedIcon
         name={'play-forward-outline'}
         size={globalStyles.icon.largeSize}

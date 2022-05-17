@@ -25,16 +25,23 @@ interface DrawerTreeItemProps {
   children?: ReactNode;
 }
 
-export function DrawerTreeItem(props: DrawerTreeItemProps) {
-  const [isExpanded, setExpanded] = useState(
-    props.isExpandedInitially ?? false,
-  );
+export function DrawerTreeItem({
+  label,
+  icon,
+  isEditable,
+  isEditFocused,
+  isFocused,
+  isButton,
+  isExpandedInitially,
+  onPress,
+  onEdit,
+  onSubmitEdit,
+  children,
+}: DrawerTreeItemProps) {
+  const [isExpanded, setExpanded] = useState(isExpandedInitially ?? false);
   const globalStyles = useStyles();
-  const styles = useDrawerTreeItemStyles(
-    props.isFocused ?? false,
-    props.isButton ?? false,
-  );
-  const hasChildren = Children.count(props.children) > 0;
+  const styles = useDrawerTreeItemStyles(isFocused ?? false, isButton ?? false);
+  const hasChildren = Children.count(children) > 0;
 
   let item = (
     <View style={styles.item}>
@@ -49,28 +56,26 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
         ) : (
           <View style={styles.chevron} />
         )}
-        {props.icon ? props.icon(globalStyles.icon) : []}
+        {icon ? icon(globalStyles.icon) : []}
       </View>
-      {props.isEditable ? (
+      {isEditable ? (
         <ThemedTextField
-          value={props.label}
-          autoFocus={props.isEditFocused}
-          onChangeText={props.onEdit}
-          onSubmitEditing={props.onSubmitEdit}
+          value={label}
+          autoFocus={isEditFocused}
+          onChangeText={onEdit}
+          onSubmitEditing={onSubmitEdit}
         />
       ) : (
-        <ThemedText>{props.label}</ThemedText>
+        <ThemedText>{label}</ThemedText>
       )}
     </View>
   );
 
-  if (props.onPress || hasChildren) {
+  if (onPress || hasChildren) {
     item = (
       <Pressable
         onPress={() =>
-          props.onPress && !hasChildren
-            ? props.onPress()
-            : setExpanded(!isExpanded)
+          onPress && !hasChildren ? onPress() : setExpanded(!isExpanded)
         }
         style={({ pressed }) => ({
           opacity: pressed ? 0.5 : 1,
@@ -83,11 +88,7 @@ export function DrawerTreeItem(props: DrawerTreeItemProps) {
   return (
     <>
       {item}
-      {isExpanded ? (
-        <View style={{ marginLeft: 10 }}>{props.children}</View>
-      ) : (
-        []
-      )}
+      {isExpanded ? <View style={{ marginLeft: 10 }}>{children}</View> : []}
     </>
   );
 }

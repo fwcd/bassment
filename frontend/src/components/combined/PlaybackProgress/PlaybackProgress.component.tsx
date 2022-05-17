@@ -8,18 +8,22 @@ interface PlaybackProgressProps {
   onSeek?: (elapsedMs: number) => void;
 }
 
-export function PlaybackProgress(props: PlaybackProgressProps) {
+export function PlaybackProgress({
+  elapsedMs,
+  totalMs,
+  onSeek,
+}: PlaybackProgressProps) {
   const styles = usePlaybackProgressStyles();
 
   return (
     <Slider
-      value={props.elapsedMs}
+      value={elapsedMs}
       minimumValue={0}
-      maximumValue={props.totalMs}
+      maximumValue={totalMs}
       onValueChange={event => {
         const value = typeof event === 'number' ? event : event[0];
-        if (props.onSeek) {
-          props.onSeek(value);
+        if (onSeek) {
+          onSeek(value);
         }
       }}
       containerStyle={styles.slider}

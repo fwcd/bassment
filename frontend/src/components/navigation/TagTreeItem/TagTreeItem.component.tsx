@@ -1,8 +1,6 @@
 import { Dropzone } from '@bassment/components/input/Dropzone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
-import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
 import { Tag } from '@bassment/models/Tag';
-import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import React, { useCallback } from 'react';
 
 interface TagTreeItemProps {
