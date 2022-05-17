@@ -30,6 +30,13 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(categories))
 }
 
+#[get("/trees/{id}")]
+async fn get_tree_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let tree = web::block(move || categories::tree_by_id(*id, &conn)?.ok_or_else(|| Error::NotFound(format!("Could not fetch category tree with id {}", id)))).await??;
+    Ok(web::Json(tree))
+}
+
 #[patch("/{id}")]
 async fn patch_by_id(pool: web::Data<DbPool>, id: web::Path<i32>, category: web::Json<UpdateCategory>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -44,6 +51,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_all_trees)
             .service(post)
             .service(get_by_id)
+            .service(get_tree_by_id)
             .service(patch_by_id)
     );
 }
