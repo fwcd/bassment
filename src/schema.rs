@@ -15,9 +15,9 @@ table! {
     albums (id) {
         id -> Int4,
         name -> Text,
-        description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
+        description -> Nullable<Text>,
     }
 }
 
@@ -28,9 +28,9 @@ table! {
     artists (id) {
         id -> Int4,
         name -> Text,
-        description -> Nullable<Text>,
         cover_art_id -> Nullable<Int4>,
         last_modified_at -> Timestamp,
+        description -> Nullable<Text>,
     }
 }
 
@@ -160,6 +160,7 @@ table! {
     track_albums (track_id, album_id) {
         track_id -> Int4,
         album_id -> Int4,
+        track_number -> Int4,
     }
 }
 

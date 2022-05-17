@@ -1,4 +1,4 @@
-use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
+use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::any};
 
 use crate::{models::{Tag, NewTag, UpdateTag, AnnotatedTrack, AnnotatedTag}, error::Result, db::DbConn, actions::tracks};
 
@@ -23,6 +23,20 @@ pub fn all_annotated(conn: &DbConn) -> Result<Vec<AnnotatedTag>> {
 pub fn by_id(tag_id: i32, conn: &DbConn) -> Result<Option<Tag>> {
     use crate::schema::tags::dsl::*;
     Ok(tags.filter(id.eq(tag_id)).get_result(conn).optional()?)
+}
+
+/// Looks up tags by ids.
+pub fn by_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<Tag>> {
+    use crate::schema::tags::dsl::*;
+    Ok(tags.filter(id.eq(any(tag_ids))).get_results(conn)?)
+}
+
+/// Looks up tags with annotations by ids.
+pub fn annotated_for_ids(tag_ids: &[i32], conn: &DbConn) -> Result<Vec<AnnotatedTag>> {
+    use crate::schema::{tags, categories};
+    Ok(tags::table.inner_join(categories::table)
+        .select((tags::id, categories::key, categories::display_name, tags::value))
+        .get_results(conn)?)
 }
 
 /// Fetches annotated tracks for a tag by id.

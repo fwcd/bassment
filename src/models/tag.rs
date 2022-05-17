@@ -45,15 +45,9 @@ impl NewTag {
         }
     }
 
-    pub fn artist(value: &str) -> Self { Self::basic(1, value) }
+    pub fn genre(value: &str) -> Self { Self::basic(1, value) }
 
-    pub fn album(value: &str) -> Self { Self::basic(2, value) }
-
-    pub fn crate_(value: &str) -> Self { Self::basic(3, value) }
-
-    pub fn genre(value: &str) -> Self { Self::basic(4, value) }
-
-    pub fn mood(value: &str) -> Self { Self::basic(5, value) }
+    pub fn mood(value: &str) -> Self { Self::basic(2, value) }
 }
 
 #[derive(Debug, Clone, Deserialize, AsChangeset)]
