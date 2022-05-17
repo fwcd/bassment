@@ -14,6 +14,7 @@ interface PlaylistTreeItemProps {
   focusedId?: number;
   onFocus?: (playlist: Playlist) => void;
   onEdit?: (playlist: Playlist) => void;
+  onDelete?: (playlist: Playlist) => void;
   onSubmitEdit?: () => void;
 }
 
@@ -25,13 +26,24 @@ export function PlaylistTreeItem({
   onFocus,
   onEdit,
   onSubmitEdit,
+  onDelete,
 }: PlaylistTreeItemProps) {
   // TODO: Implement onDrop
   const onDrop = useCallback(() => {}, []);
 
   return (
     <DropZone onDrop={onDrop}>
-      <ContextMenuZone options={[{ label: 'Test 1' }, { label: 'Test 2' }]}>
+      <ContextMenuZone
+        options={[
+          {
+            label: 'Delete Playlist',
+            onSelect: () => {
+              if (onDelete) {
+                onDelete(playlist);
+              }
+            },
+          },
+        ]}>
         <DrawerTreeItem
           label={playlist.name ?? 'Unnamed Playlist'}
           isFocused={focusedId !== undefined && focusedId === playlist.id}
@@ -67,6 +79,7 @@ export function PlaylistTreeItem({
                   playlist={child}
                   focusedId={focusedId}
                   onFocus={onFocus}
+                  onDelete={onDelete}
                 />
               ))
             : null}

@@ -71,6 +71,16 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     }
   }, [api, newPlaylist, updatePlaylists]);
 
+  const onDeletePlaylist = useCallback(
+    async (playlist: Playlist) => {
+      if (playlist.id) {
+        await api.deletePlaylist(playlist.id);
+        await updatePlaylists();
+      }
+    },
+    [api, updatePlaylists],
+  );
+
   // Update the playlists, albums etc. on the initial render
   useEffect(() => {
     updatePlaylists();
@@ -78,8 +88,6 @@ export function AppSidebar(props: DrawerContentComponentProps) {
     updateArtists();
     updateCategories();
   }, [updateAlbums, updateArtists, updateCategories, updatePlaylists]);
-
-  // TODO: Link to TracksScreens with corresponding params for each item (e.g. passing the playlist/album/artist id)
 
   return (
     <DrawerContentScrollView style={styles.sidebar}>
@@ -193,6 +201,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               displayName: child.name ?? `${playlist.id}`,
             })
           }
+          onDelete={onDeletePlaylist}
         />
       ))}
       {/* TODO: Add context menus and let user insert playlists e.g. in folders */}
