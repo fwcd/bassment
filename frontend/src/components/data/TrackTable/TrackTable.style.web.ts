@@ -23,8 +23,12 @@ export function useTrackTableStyles() {
       background-color: ${styles.color.field};
     }
 
-    .tt-row:hover {
+    .tt-unselected:hover {
       background-color: ${styles.color.hover};
+    }
+
+    .tt-selected {
+      background-color: ${styles.color.selection};
     }
 
     .tt-head-cell {

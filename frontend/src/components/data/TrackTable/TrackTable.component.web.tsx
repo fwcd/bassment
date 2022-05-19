@@ -13,7 +13,9 @@ const table = createTable().setRowType<AnnotatedTrack>();
 
 export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
   const styles = useTrackTableStyles();
-  const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+  const [selectedIds, setSelectedIds] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
 
   const columns = useMemo(
     () => [
@@ -65,7 +67,20 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
         </thead>
         <tbody>
           {instance.getRowModel().rows.map(row => (
-            <tr key={row.id} className="tt-row">
+            <tr
+              key={row.id}
+              className={[
+                'tt-row',
+                ...(selectedIds.has(row.original!.id!)
+                  ? ['tt-selected']
+                  : ['tt-unselected']),
+              ].join(' ')}
+              onClick={() => setSelectedIds(new Set([row.original!.id!]))}
+              onDoubleClick={() => {
+                if (onPlay) {
+                  onPlay(row.original!);
+                }
+              }}>
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className="tt-cell">
                   {cell.renderCell()}
