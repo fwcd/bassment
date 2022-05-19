@@ -12,16 +12,19 @@ export function useTrackTableStyles() {
       width: '100%',
       color: styles.text.color,
       fontSize: styles.text.fontSize,
-      borderSpacing: '0px',
+      borderSpacing: '0',
     },
     head: {
       position: 'sticky',
       top: '0',
-      padding: styles.layout.space,
-      backgroundColor: 'red',
+      textAlign: 'left',
+      backgroundColor: styles.color.field,
+    },
+    headCell: {
+      padding: styles.layout.smallSpace,
     },
     cell: {
-      padding: `0 ${styles.layout.smallSpace}px`,
+      padding: `${styles.layout.tinySpace}px ${styles.layout.space}px`,
     },
   } as const;
 }

@@ -17,8 +17,17 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
 
   const columns = useMemo(
     () => [
+      table.createDataColumn('albums', {
+        header: () => 'Albums',
+        cell: ({ row: { original } }) =>
+          original?.albums.map(a => a.name).join(', '),
+        size: 30,
+      }),
       table.createDataColumn('artists', {
-        header: () => <div style={{ width: '50%' }}>Artists</div>,
+        header: () => 'Artists',
+        cell: ({ row: { original } }) =>
+          original?.artists.map(a => a.name).join(', '),
+        size: 30,
       }),
       table.createDataColumn('title', {
         header: () => 'Title',
@@ -41,7 +50,14 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
           {instance.getHeaderGroups().map(group => (
             <tr key={group.id}>
               {group.headers.map(header => (
-                <th key={header.id} colSpan={header.colSpan}>
+                <th
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  style={{
+                    ...styles.headCell,
+                    ...styles.cell,
+                    width: header.getSize(),
+                  }}>
                   {header.isPlaceholder ? null : header.renderHeader()}
                 </th>
               ))}
