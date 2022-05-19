@@ -65,7 +65,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
         </thead>
         <tbody>
           {instance.getRowModel().rows.map(row => (
-            <tr key={row.id}>
+            <tr key={row.id} className="tt-row">
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className="tt-cell">
                   {cell.renderCell()}

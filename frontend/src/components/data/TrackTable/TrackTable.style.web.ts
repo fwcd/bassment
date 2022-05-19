@@ -23,6 +23,10 @@ export function useTrackTableStyles() {
       background-color: ${styles.color.field};
     }
 
+    .tt-row:hover {
+      background-color: ${styles.color.hover};
+    }
+
     .tt-head-cell {
       padding: ${styles.layout.smallSpace};
     }
