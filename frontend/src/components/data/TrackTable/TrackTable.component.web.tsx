@@ -75,7 +75,17 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
                   ? ['tt-selected']
                   : ['tt-unselected']),
               ].join(' ')}
-              onClick={() => setSelectedIds(new Set([row.original!.id!]))}
+              // TODO: Support dragging multiple elements
+              draggable
+              onClick={e => {
+                const id = row.original!.id!;
+                if (e.shiftKey) {
+                  // TODO: Select the range instead of just adding the id
+                  setSelectedIds(new Set([...selectedIds, id]));
+                } else {
+                  setSelectedIds(new Set([id]));
+                }
+              }}
               onDoubleClick={() => {
                 if (onPlay) {
                   onPlay(row.original!);
