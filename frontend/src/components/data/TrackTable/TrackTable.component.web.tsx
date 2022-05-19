@@ -44,18 +44,17 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
   });
 
   return (
-    <div style={styles.wrapper}>
-      <table style={styles.table}>
-        <thead style={styles.head}>
+    <div className="tt-wrapper">
+      <table className="tt-table">
+        <thead className="tt-head">
           {instance.getHeaderGroups().map(group => (
             <tr key={group.id}>
               {group.headers.map(header => (
                 <th
                   key={header.id}
                   colSpan={header.colSpan}
+                  className="tt-cell tt-head-cell"
                   style={{
-                    ...styles.headCell,
-                    ...styles.cell,
                     width: header.getSize(),
                   }}>
                   {header.isPlaceholder ? null : header.renderHeader()}
@@ -68,7 +67,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
           {instance.getRowModel().rows.map(row => (
             <tr key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} style={styles.cell}>
+                <td key={cell.id} className="tt-cell">
                   {cell.renderCell()}
                 </td>
               ))}
@@ -76,6 +75,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
           ))}
         </tbody>
       </table>
+      <style>{styles}</style>
     </div>
   );
 });

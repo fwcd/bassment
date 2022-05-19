@@ -2,29 +2,33 @@ import { useStyles } from '@bassment/styles';
 
 export function useTrackTableStyles() {
   const styles = useStyles();
-  return {
-    wrapper: {
-      height: '100%',
-      overflow: 'auto',
-      padding: 0,
-    },
-    table: {
-      width: '100%',
-      color: styles.text.color,
-      fontSize: styles.text.fontSize,
-      borderSpacing: '0',
-    },
-    head: {
-      position: 'sticky',
-      top: '0',
-      textAlign: 'left',
-      backgroundColor: styles.color.field,
-    },
-    headCell: {
-      padding: styles.layout.smallSpace,
-    },
-    cell: {
-      padding: `${styles.layout.tinySpace}px ${styles.layout.space}px`,
-    },
-  } as const;
+  return `
+    .tt-wrapper {
+      height: 100%;
+      overflow: auto;
+      padding: 0;
+    }
+
+    .tt-table {
+      width: 100%;
+      color: ${styles.text.color};
+      font-size: ${styles.text.fontSize}px;
+      border-spacing: 0;
+    }
+
+    .tt-head {
+      position: sticky;
+      top: 0;
+      text-align: left;
+      background-color: ${styles.color.field};
+    }
+
+    .tt-head-cell {
+      padding: ${styles.layout.smallSpace};
+    }
+
+    .tt-cell {
+      padding: ${styles.layout.tinySpace}px ${styles.layout.space}px;
+    }
+  `;
 }
