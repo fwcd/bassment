@@ -171,8 +171,12 @@ export function AudioPlayerContextProvider(
   }, [updateAudioUrl]);
 
   const back = useCallback(() => {
-    // TODO: Implement back
-  }, []);
+    if (elapsedMs < 2000 && queue.history.length > 0) {
+      play(queue.history[queue.history.length - 1]);
+    } else {
+      setSeekMs(0);
+    }
+  }, [elapsedMs, play, queue.history]);
 
   const forward = useCallback(() => {
     advanceQueue();
