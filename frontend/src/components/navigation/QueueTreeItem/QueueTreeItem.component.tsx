@@ -6,14 +6,14 @@ import { AnnotatedTrack } from '@bassment/models/Track';
 import React, { useCallback } from 'react';
 
 interface QueueTreeItemProps {
-  queueLength: number;
+  count: number;
   isFocused?: boolean;
   onFocus?: () => void;
   onEnqueue?: (tracks: AnnotatedTrack[]) => void;
 }
 
 export function QueueTreeItem({
-  queueLength,
+  count,
   isFocused,
   onFocus,
   onEnqueue,
@@ -33,7 +33,7 @@ export function QueueTreeItem({
   return (
     <DropZone onDrop={onDrop}>
       <DrawerTreeItem
-        label={`Queue (${queueLength})`}
+        label={`Queue (${count})`}
         icon={({ size, color }) => (
           <ThemedIcon name="trail-sign-outline" size={size} color={color} />
         )}

@@ -23,6 +23,7 @@ import { CategoryTreeNode } from '@bassment/models/Category';
 import { CategoryTreeItem } from '@bassment/components/navigation/CategoryTreeItem';
 import { QueueTreeItem } from '@bassment/components/navigation/QueueTreeItem';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
+import { HistoryTreeItem } from '@bassment/components/navigation/HistoryTreeItem';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
@@ -178,11 +179,14 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       /> */}
       <Divider />
       <QueueTreeItem
-        queueLength={player.queue?.tracks.length ?? 0}
+        count={player.queue?.tracks.length ?? 0}
         isFocused={route.name === 'queue'}
-        onFocus={() => {
-          navigation.navigate('queue', {});
-        }}
+        onFocus={() => navigation.navigate('queue', {})}
+        onEnqueue={player.enqueue}
+      />
+      <HistoryTreeItem
+        isFocused={route.name === 'history'}
+        onFocus={() => navigation.navigate('history', {})}
         onEnqueue={player.enqueue}
       />
       {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
