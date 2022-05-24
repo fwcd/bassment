@@ -1,13 +1,29 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
-import React, { memo, useMemo, useState } from 'react';
+import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
+import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import {
   createTable,
   getCoreRowModel,
   getSortedRowModel,
+  SortingState,
   useTableInstance,
 } from '@tanstack/react-table';
-import { AnnotatedTrack } from '@bassment/models/Track';
-import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
+import React, { memo, useMemo, useState } from 'react';
+
+function joinNames(xs: { name?: string }[]): string {
+  return xs
+    .map(x => x.name)
+    .filter(x => x)
+    .join(', ');
+}
+
+function joinedNameSortingFn<T>(
+  extractor: (item?: T) => { name?: string }[],
+): (first: { original?: T }, second: { original?: T }) => number {
+  return ({ original: x }, { original: y }) =>
+    joinNames(extractor(x)).localeCompare(joinNames(extractor(y)));
+}
 
 const table = createTable().setRowType<AnnotatedTrack>();
 
@@ -21,26 +37,33 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
     () => [
       table.createDataColumn('albums', {
         header: () => 'Albums',
-        cell: ({ row: { original } }) =>
-          original?.albums.map(a => a.name).join(', '),
+        cell: ({ row: { original } }) => joinNames(original?.albums ?? []),
+        sortingFn: joinedNameSortingFn(original => original?.albums ?? []),
+        sortDescFirst: false,
         size: 30,
       }),
       table.createDataColumn('artists', {
         header: () => 'Artists',
-        cell: ({ row: { original } }) =>
-          original?.artists.map(a => a.name).join(', '),
+        cell: ({ row: { original } }) => joinNames(original?.artists ?? []),
+        sortingFn: joinedNameSortingFn(original => original?.artists ?? []),
+        sortDescFirst: false,
         size: 30,
       }),
       table.createDataColumn('title', {
         header: () => 'Title',
+        sortDescFirst: false,
       }),
     ],
     [],
   );
 
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const instance = useTableInstance(table, {
     data: tracks,
     columns,
+    state: { sorting },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
@@ -56,10 +79,21 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
                   key={header.id}
                   colSpan={header.colSpan}
                   className="tt-cell tt-head-cell"
+                  onClick={header.column.getToggleSortingHandler()}
                   style={{
                     width: header.getSize(),
                   }}>
                   {header.isPlaceholder ? null : header.renderHeader()}
+                  {header.column.getIsSorted() ? (
+                    <ThemedIcon
+                      name={
+                        header.column.getIsSorted() === 'asc'
+                          ? 'chevron-up-outline'
+                          : 'chevron-down-outline'
+                      }
+                      size={12}
+                    />
+                  ) : null}
                 </th>
               ))}
             </tr>
