@@ -29,6 +29,9 @@ export interface AudioPlayerContextValue {
   /** Appends the given tracks to the queue. */
   enqueue(tracks: AnnotatedTrack[]): void;
 
+  /** Updates the queue's base tracks. */
+  rebase(base: AnnotatedTrack[]): void;
+
   /** Seeks to the given offset in the current track. */
   seek(elapsedMs: number): void;
 }
@@ -38,6 +41,7 @@ export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   setPlaying: () => {},
   play: () => {},
   enqueue: () => {},
+  rebase: () => {},
   seek: () => {},
 });
 
@@ -58,7 +62,7 @@ export function AudioPlayerContextProvider(
   // Requested state
   const [track, setTrack] = useState<AnnotatedTrack>();
   const [isPlayingRequested, setPlayingRequested] = useState<boolean>();
-  const [queue, setQueue] = useState<TrackQueue>({ tracks: [] });
+  const [queue, setQueue] = useState<TrackQueue>({ tracks: [], base: [] });
   const [seekMs, setSeekMs] = useState<number>();
   const [audioUrl, setAudioUrl] = useState<string>();
 
@@ -72,14 +76,21 @@ export function AudioPlayerContextProvider(
     (newTracks: AnnotatedTrack[]) => {
       const nextTracks = [...queue.tracks, ...newTracks];
       if (isPlaying) {
-        setQueue({ tracks: nextTracks });
+        setQueue({ ...queue, tracks: nextTracks });
       } else if (nextTracks.length > 0) {
         const nextTrack = nextTracks[0];
-        setQueue({ tracks: nextTracks.slice(1) });
+        setQueue({ ...queue, tracks: nextTracks.slice(1) });
         play(nextTrack);
       }
     },
-    [queue.tracks, isPlaying, play],
+    [queue, isPlaying, play],
+  );
+
+  const rebase = useCallback(
+    (newBase: AnnotatedTrack[]) => {
+      setQueue({ ...queue, base: newBase });
+    },
+    [queue],
   );
 
   const value: AudioPlayerContextValue = {
@@ -89,6 +100,7 @@ export function AudioPlayerContextProvider(
     setPlaying: setPlayingRequested,
     play,
     enqueue,
+    rebase,
     seek: setSeekMs,
   };
 
@@ -122,7 +134,12 @@ export function AudioPlayerContextProvider(
   const advanceQueue = useCallback(() => {
     if (queue.tracks.length > 0) {
       const next = queue.tracks[0];
-      setQueue({ tracks: queue.tracks.slice(1) });
+      setQueue({ ...queue, tracks: queue.tracks.slice(1) });
+      setTrack(next);
+      setSeekMs(0);
+    } else if (queue.base.length > 0) {
+      const next = queue.base[0];
+      setQueue({ ...queue, base: queue.base.slice(1) });
       setTrack(next);
       setSeekMs(0);
     } else {
