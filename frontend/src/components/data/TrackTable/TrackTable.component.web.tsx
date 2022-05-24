@@ -2,6 +2,7 @@ import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable
 import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
 import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { AnnotatedTrack } from '@bassment/models/Track';
+import { fromDrops } from '@bassment/utils/dropConversions.web';
 import {
   createTable,
   getCoreRowModel,
@@ -109,7 +110,6 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
                   ? ['tt-selected']
                   : ['tt-unselected']),
               ].join(' ')}
-              // TODO: Support dragging multiple elements
               draggable
               onClick={e => {
                 const id = row.original!.id!;
@@ -119,6 +119,18 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
                 } else {
                   setSelectedIds(new Set([id]));
                 }
+              }}
+              onDragStart={e => {
+                // TODO: Support dragging multiple elements, e.g. by dragging all selected ids instead?
+                fromDrops(
+                  [
+                    {
+                      kind: 'tracks',
+                      tracks: row.original ? [row.original] : [],
+                    },
+                  ],
+                  e.dataTransfer,
+                );
               }}
               onDoubleClick={() => {
                 if (onPlay) {
