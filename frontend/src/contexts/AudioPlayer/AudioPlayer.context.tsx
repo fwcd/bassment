@@ -26,6 +26,9 @@ export interface AudioPlayerContextValue {
   /** Plays the given track immediately. */
   play(track: AnnotatedTrack): void;
 
+  /** Appends the given tracks to the queue. */
+  enqueue(tracks: AnnotatedTrack[]): void;
+
   /** Seeks to the given offset in the current track. */
   seek(elapsedMs: number): void;
 }
@@ -34,6 +37,7 @@ export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   isPlaying: false,
   setPlaying: () => {},
   play: () => {},
+  enqueue: () => {},
   seek: () => {},
 });
 
@@ -64,12 +68,20 @@ export function AudioPlayerContextProvider(
     setPlayingRequested(true);
   }, []);
 
+  const enqueue = useCallback(
+    (newTracks: AnnotatedTrack[]) => {
+      setQueue({ tracks: [...queue.tracks, ...newTracks] });
+    },
+    [queue.tracks],
+  );
+
   const value: AudioPlayerContextValue = {
     nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
     queue,
     isPlaying,
     setPlaying: setPlayingRequested,
     play,
+    enqueue,
     seek: setSeekMs,
   };
 

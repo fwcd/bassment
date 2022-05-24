@@ -183,6 +183,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         onFocus={() => {
           navigation.navigate('queue', {});
         }}
+        onEnqueue={player.enqueue}
       />
       {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
       <Divider />
