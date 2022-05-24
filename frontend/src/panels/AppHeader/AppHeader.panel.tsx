@@ -19,6 +19,8 @@ export function AppHeader(props: DrawerHeaderProps) {
           <PlaybackControls
             isPlaying={player.isPlaying}
             setPlaying={player.setPlaying}
+            onBack={player.back}
+            onForward={player.forward}
           />
         </View>
         <PlaybackView

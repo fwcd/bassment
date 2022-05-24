@@ -26,6 +26,12 @@ export interface AudioPlayerContextValue {
   /** Plays the given track immediately. */
   play(track: AnnotatedTrack): void;
 
+  /** Plays the previous track. */
+  back(): void;
+
+  /** Skips to the next track. */
+  forward(): void;
+
   /** Appends the given tracks to the queue. */
   enqueue(tracks: AnnotatedTrack[]): void;
 
@@ -40,6 +46,8 @@ export const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   isPlaying: false,
   setPlaying: () => {},
   play: () => {},
+  back: () => {},
+  forward: () => {},
   enqueue: () => {},
   rebase: () => {},
   seek: () => {},
@@ -93,17 +101,6 @@ export function AudioPlayerContextProvider(
     [queue],
   );
 
-  const value: AudioPlayerContextValue = {
-    nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
-    queue,
-    isPlaying,
-    setPlaying: setPlayingRequested,
-    play,
-    enqueue,
-    rebase,
-    seek: setSeekMs,
-  };
-
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
     const audioFiles = track?.id ? await api.getTrackAudioFiles(track.id) : [];
@@ -146,6 +143,27 @@ export function AudioPlayerContextProvider(
       setPlayingRequested(false);
     }
   }, [queue]);
+
+  const back = useCallback(() => {
+    // TODO: Implement back
+  }, []);
+
+  const forward = useCallback(() => {
+    advanceQueue();
+  }, [advanceQueue]);
+
+  const value: AudioPlayerContextValue = {
+    nowPlaying: track ? { track, elapsedMs, totalMs } : undefined,
+    queue,
+    isPlaying,
+    setPlaying: setPlayingRequested,
+    play,
+    back,
+    forward,
+    enqueue,
+    rebase,
+    seek: setSeekMs,
+  };
 
   return (
     <AudioPlayerContext.Provider value={value}>
