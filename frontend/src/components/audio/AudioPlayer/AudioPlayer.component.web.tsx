@@ -36,7 +36,7 @@ export function AudioPlayer({
 
   // Seek to position if it changes
   useEffect(() => {
-    if (elementRef.current && seekMs) {
+    if (elementRef.current && seekMs !== undefined) {
       elementRef.current.currentTime = seekMs / 1000;
     }
   }, [elementRef, seekMs]);

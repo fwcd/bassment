@@ -2,29 +2,41 @@ import { useStyles } from '@bassment/styles';
 
 export function useTrackTableStyles() {
   const styles = useStyles();
-  return {
-    grid: {
-      height: '100%',
-    },
-    patched: `
-      .rdg-row {
-        --rdg-row-hover-background-color: ${styles.color.hover};
-        --rdg-row-selected-background-color: ${styles.color.selection};
-        --row-selected-hover-background-color: ${styles.color.selection};
-        --rdg-selection-color: ${styles.color.selection};
-      }
+  return `
+    .tt-wrapper {
+      height: 100%;
+      overflow: auto;
+      padding: 0;
+    }
 
-      .rdg-cell {
-        border: none;
-      }
+    .tt-table {
+      width: 100%;
+      color: ${styles.text.color};
+      font-size: ${styles.text.fontSize}px;
+      border-spacing: 0;
+    }
 
-      .rdg-cell[aria-selected='true'] {
-        outline: none;
-      }
+    .tt-head {
+      position: sticky;
+      top: 0;
+      text-align: left;
+      background-color: ${styles.color.field};
+    }
 
-      .selected-track {
-        background-color: ${styles.color.selection};
-      }
-    `,
-  };
+    .tt-unselected:hover {
+      background-color: ${styles.color.hover};
+    }
+
+    .tt-selected {
+      background-color: ${styles.color.selection};
+    }
+
+    .tt-head-cell {
+      padding: ${styles.layout.smallSpace};
+    }
+
+    .tt-cell {
+      padding: ${styles.layout.tinySpace}px ${styles.layout.space}px;
+    }
+  `;
 }

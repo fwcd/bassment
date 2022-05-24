@@ -23,7 +23,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
       onDoubleClickRow={item => {
         const track = item?._track;
         if (onPlay && track) {
-          onPlay(track);
+          onPlay({ track });
         }
       }}
     />

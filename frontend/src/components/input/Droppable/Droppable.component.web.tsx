@@ -38,6 +38,7 @@ export function Droppable({
   );
 
   return (
+    // TODO: onDragExit only seems to work in Firefox
     <div
       onDragEnter={onDragIn}
       onDragExit={onDragOut}

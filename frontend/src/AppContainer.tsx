@@ -14,10 +14,12 @@ import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { QueueScreen } from '@bassment/screens/Queue';
+import { HistoryScreen } from '@bassment/screens/History';
 
 export type SidebarNavigatorParams = {
   tracks: {};
   queue: {};
+  history: {};
   playlist: { displayName?: string; id: number };
   genre: { displayName?: string; id: number };
   album: { displayName?: string; id: number };
@@ -76,6 +78,11 @@ export function AppContainer() {
             name="queue"
             options={{ title: 'Queue' }}
             component={QueueScreen}
+          />
+          <SidebarDrawer.Screen
+            name="history"
+            options={{ title: 'History' }}
+            component={HistoryScreen}
           />
           {/* TODO: Should we cache the id -> name mappings somewhere in the API context context or similar and derive the name from the id? */}
           <SidebarDrawer.Screen

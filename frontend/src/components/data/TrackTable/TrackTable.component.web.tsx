@@ -1,190 +1,158 @@
 import { TrackTableProps } from '@bassment/components/data/TrackTable/TrackTable.props';
 import { useTrackTableStyles } from '@bassment/components/data/TrackTable/TrackTable.style.web';
-import { ThemedText } from '@bassment/components/display/ThemedText';
-import { KeyedTag } from '@bassment/models/Tag';
+import { ThemedIcon } from '@bassment/components/display/ThemedIcon';
 import { AnnotatedTrack } from '@bassment/models/Track';
-import { useStyles } from '@bassment/styles';
 import { fromDrops } from '@bassment/utils/dropConversions.web';
-import React, { useCallback, useMemo, useState } from 'react';
-import DataGrid, {
-  Column,
-  Row,
-  RowRendererProps,
-  SortColumn,
-} from 'react-data-grid';
+import {
+  createTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useTableInstance,
+} from '@tanstack/react-table';
+import React, { memo, useMemo, useState } from 'react';
 
 function joinNames(xs: { name?: string }[]): string {
-  return xs.map(x => x.name ?? '').join(', ');
+  return xs
+    .map(x => x.name)
+    .filter(x => x)
+    .join(', ');
 }
 
-function joinTags(tags: KeyedTag[]): string {
-  return tags.map(tag => `${tag.displayName}: ${tag.value}`).join(', ');
+function joinedNameSortingFn<T>(
+  extractor: (item?: T) => { name?: string }[],
+): (first: { original?: T }, second: { original?: T }) => number {
+  return ({ original: x }, { original: y }) =>
+    joinNames(extractor(x)).localeCompare(joinNames(extractor(y)));
 }
 
-function compare(
-  x: AnnotatedTrack,
-  y: AnnotatedTrack,
-  columnKey: keyof AnnotatedTrack,
-) {
-  switch (columnKey) {
-    case 'id':
-      return (x[columnKey] ?? 0) - (y[columnKey] ?? 0);
-    case 'title':
-      return (x[columnKey] ?? '').localeCompare(y[columnKey] ?? '');
-    case 'artists':
-    case 'albums':
-      return joinNames(x[columnKey]).localeCompare(joinNames(y[columnKey]));
-    case 'tags':
-      return joinTags(x[columnKey]).localeCompare(joinTags(y[columnKey]));
-    default:
-      return 0;
-  }
-}
+const table = createTable().setRowType<AnnotatedTrack>();
 
-export function TrackTable({ tracks, onPlay }: TrackTableProps) {
-  const [sortColumns, setSortColumns] = useState<readonly SortColumn[]>([]);
-  const [selectedRows, setSelectedRows] = useState<ReadonlySet<number>>(
+export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
+  const styles = useTrackTableStyles();
+  const [selectedIds, setSelectedIds] = useState<ReadonlySet<number>>(
     () => new Set(),
   );
 
-  const columns: Column<AnnotatedTrack>[] = useMemo(
+  const columns = useMemo(
     () => [
-      { key: 'id', name: 'ID', width: '4%' },
-      {
-        key: 'albums',
-        name: 'Album',
-        width: '15%',
-        formatter: ({ row }) => (
-          <ThemedText>{joinNames(row.albums)}</ThemedText>
-        ),
-      },
-      {
-        key: 'artists',
-        name: 'Artist',
-        width: '20%',
-        formatter: ({ row }) => (
-          <ThemedText>{joinNames(row.artists)}</ThemedText>
-        ),
-      },
-      { key: 'title', name: 'Title' },
-      {
-        key: 'tags',
-        name: 'Tags',
-        formatter: ({ row }) => <ThemedText>{joinTags(row.tags)}</ThemedText>,
-      },
+      table.createDataColumn('albums', {
+        header: () => 'Albums',
+        cell: ({ row: { original } }) => joinNames(original?.albums ?? []),
+        sortingFn: joinedNameSortingFn(original => original?.albums ?? []),
+        sortDescFirst: false,
+        size: 30,
+      }),
+      table.createDataColumn('artists', {
+        header: () => 'Artists',
+        cell: ({ row: { original } }) => joinNames(original?.artists ?? []),
+        sortingFn: joinedNameSortingFn(original => original?.artists ?? []),
+        sortDescFirst: false,
+        size: 30,
+      }),
+      table.createDataColumn('title', {
+        header: () => 'Title',
+        sortDescFirst: false,
+      }),
     ],
     [],
   );
 
-  const rows: AnnotatedTrack[] = tracks;
-  const sortedRows = useMemo(() => {
-    return [...rows].sort((x, y) => {
-      for (const sort of sortColumns) {
-        const compResult = compare(
-          x,
-          y,
-          sort.columnKey as keyof AnnotatedTrack,
-        );
-        if (compResult !== 0) {
-          return sort.direction === 'ASC' ? compResult : -compResult;
-        }
-      }
-      return 0;
-    });
-  }, [rows, sortColumns]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const globalStyles = useStyles();
-  const styles = useTrackTableStyles();
-
-  const onRowDoubleClick = useCallback(
-    (track: AnnotatedTrack) => {
-      if (onPlay) {
-        onPlay(track);
-      }
-    },
-    [onPlay],
-  );
-
-  const [lastClick, setLastClick] = useState<{
-    time: number;
-    trackId?: number;
-  }>({
-    time: 0,
+  const instance = useTableInstance(table, {
+    data: tracks,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
-  const rowRenderer = useCallback(
-    (props: RowRendererProps<AnnotatedTrack>) => (
-      <Row
-        {...props}
-        draggable
-        onDragStart={e => {
-          const transfer = e.dataTransfer;
-
-          const img = document.createElement('img');
-          // TODO: Use a proper image
-          img.src = 'http://kryogenix.org/images/hackergotchi-simpler.png';
-          transfer.setDragImage(img, 0, 0);
-
-          fromDrops(
-            [
-              {
-                kind: 'tracks',
-                tracks: tracks.filter(t =>
-                  t.id ? selectedRows.has(t.id) : false,
-                ),
-              },
-            ],
-            transfer,
-          );
-        }}
-        onMouseDown={() => {
-          // We manually detect double-clicks since changing
-          // state during the onMouseDown will prevent the
-          // onDoubleClick from firing
-
-          const now = Date.now();
-          const trackId = props.row.id;
-
-          if (
-            (!lastClick.trackId || trackId === lastClick.trackId) &&
-            now - lastClick.time < 500 /* ms */
-          ) {
-            onRowDoubleClick(props.row);
-          }
-
-          setSelectedRows(new Set(trackId ? [trackId] : []));
-          setLastClick({ time: now, trackId });
-        }}
-      />
-    ),
-    [selectedRows, lastClick, tracks, onRowDoubleClick],
-  );
-
-  const getRowKey = useCallback((track: AnnotatedTrack) => track.id!, []);
-
   return (
-    <>
-      <DataGrid
-        rowKeyGetter={getRowKey}
-        style={styles.grid}
-        rowHeight={1.5 * globalStyles.text.fontSize}
-        columns={columns}
-        rows={sortedRows}
-        defaultColumnOptions={{
-          sortable: true,
-          resizable: true,
-        }}
-        selectedRows={selectedRows}
-        sortColumns={sortColumns}
-        onSelectedRowsChange={setSelectedRows}
-        onSortColumnsChange={setSortColumns}
-        onRowDoubleClick={onRowDoubleClick}
-        components={{
-          rowRenderer,
-        }}
-      />
-      {/* We patch the CSS at runtime since react-data-grid doesn't use react-native's styling. */}
-      <style>{styles.patched}</style>
-    </>
+    <div className="tt-wrapper">
+      <table className="tt-table">
+        <thead className="tt-head">
+          {instance.getHeaderGroups().map(group => (
+            <tr key={group.id}>
+              {group.headers.map(header => (
+                <th
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  className="tt-cell tt-head-cell"
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{
+                    width: header.getSize(),
+                  }}>
+                  {header.isPlaceholder ? null : header.renderHeader()}
+                  {header.column.getIsSorted() ? (
+                    <ThemedIcon
+                      name={
+                        header.column.getIsSorted() === 'asc'
+                          ? 'chevron-up-outline'
+                          : 'chevron-down-outline'
+                      }
+                      size={12}
+                    />
+                  ) : null}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {instance.getRowModel().rows.map((row, index) => (
+            <tr
+              key={row.id}
+              className={[
+                'tt-row',
+                ...(selectedIds.has(row.original!.id!)
+                  ? ['tt-selected']
+                  : ['tt-unselected']),
+              ].join(' ')}
+              draggable
+              onClick={e => {
+                const id = row.original!.id!;
+                if (e.shiftKey) {
+                  // TODO: Select the range instead of just adding the id
+                  setSelectedIds(new Set([...selectedIds, id]));
+                } else {
+                  setSelectedIds(new Set([id]));
+                }
+              }}
+              onDragStart={e => {
+                // TODO: Support dragging multiple elements, e.g. by dragging all selected ids instead?
+                fromDrops(
+                  [
+                    {
+                      kind: 'tracks',
+                      tracks: row.original ? [row.original] : [],
+                    },
+                  ],
+                  e.dataTransfer,
+                );
+              }}
+              onDoubleClick={() => {
+                if (onPlay && row.original) {
+                  onPlay({
+                    track: row.original,
+                    base: instance
+                      .getRowModel()
+                      .rows.flatMap(r => (r.original ? [r.original] : []))
+                      .slice(index + 1),
+                  });
+                }
+              }}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className="tt-cell">
+                  {cell.renderCell()}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <style>{styles}</style>
+    </div>
   );
-}
+});

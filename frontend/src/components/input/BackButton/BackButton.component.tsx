@@ -11,8 +11,7 @@ export function BackButton({ onBack }: BackButtonProps) {
   const globalStyles = useStyles();
 
   return (
-    // TODO: Undisable
-    <ThemedButton hasBackground={false} onPress={onBack} disabled>
+    <ThemedButton hasBackground={false} onPress={onBack}>
       <ThemedIcon
         name={'play-back-outline'}
         size={globalStyles.icon.largeSize}
