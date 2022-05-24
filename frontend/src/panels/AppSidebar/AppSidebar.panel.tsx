@@ -21,12 +21,15 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { CategoryTreeNode } from '@bassment/models/Category';
 import { CategoryTreeItem } from '@bassment/components/navigation/CategoryTreeItem';
+import { QueueTreeItem } from '@bassment/components/navigation/QueueTreeItem';
+import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
   const navigation: NavigationProp<SidebarNavigatorParams> = useNavigation();
   const styles = useAppSidebarStyles();
 
+  const player = useContext(AudioPlayerContext);
   const api = useContext(ApiContext);
   const { searchText, setSearchText } = useContext(SearchContext);
 
@@ -174,13 +177,10 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         )}
       /> */}
       <Divider />
-      <DrawerTreeItem
-        label="Queue"
-        icon={({ size, color }) => (
-          <ThemedIcon name="trail-sign-outline" size={size} color={color} />
-        )}
+      <QueueTreeItem
+        queueLength={player.queue?.tracks.length ?? 0}
         isFocused={route.name === 'queue'}
-        onPress={() => {
+        onFocus={() => {
           navigation.navigate('queue', {});
         }}
       />
