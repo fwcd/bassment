@@ -70,9 +70,16 @@ export function AudioPlayerContextProvider(
 
   const enqueue = useCallback(
     (newTracks: AnnotatedTrack[]) => {
-      setQueue({ tracks: [...queue.tracks, ...newTracks] });
+      const nextTracks = [...queue.tracks, ...newTracks];
+      if (isPlaying) {
+        setQueue({ tracks: nextTracks });
+      } else if (nextTracks.length > 0) {
+        const nextTrack = nextTracks[0];
+        setQueue({ tracks: nextTracks.slice(1) });
+        play(nextTrack);
+      }
     },
-    [queue.tracks],
+    [queue.tracks, isPlaying, play],
   );
 
   const value: AudioPlayerContextValue = {
