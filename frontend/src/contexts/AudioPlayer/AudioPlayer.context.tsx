@@ -120,13 +120,14 @@ export function AudioPlayerContextProvider(
   }, []);
 
   const advanceQueue = useCallback(() => {
+    const newHistory = [...queue.history, ...(track ? [track] : [])];
     if (queue.tracks.length > 0) {
       // Dequeue from the next tracks
       const next = queue.tracks[0];
       setQueue({
         ...queue,
         tracks: queue.tracks.slice(1),
-        history: [...queue.history, next],
+        history: newHistory,
       });
       setTrack(next);
     } else if (queue.base.length > 0) {
@@ -135,15 +136,16 @@ export function AudioPlayerContextProvider(
       setQueue({
         ...queue,
         base: queue.base.slice(1),
-        history: [...queue.history, next],
+        history: newHistory,
       });
       setTrack(next);
     } else {
       // Queue ended, stop playback
+      setQueue({ ...queue, history: newHistory });
       setPlayingRequested(false);
     }
     setSeekMs(0);
-  }, [queue]);
+  }, [queue, track]);
 
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
