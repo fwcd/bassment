@@ -78,36 +78,7 @@ export function AudioPlayerContextProvider(
   const [seekMs, setSeekMs] = useState<number>();
   const [audioUrl, setAudioUrl] = useState<string>();
 
-  const play = useCallback((newTrack: AnnotatedTrack) => {
-    setTrack(newTrack);
-    setSeekMs(0);
-    setPlayingRequested(true);
-  }, []);
-
-  const enqueue = useCallback(
-    (newTracks: AnnotatedTrack[]) => {
-      const nextTracks = [...queue.tracks, ...newTracks];
-      if (isPlaying) {
-        setQueue({ ...queue, tracks: nextTracks });
-      } else if (nextTracks.length > 0) {
-        const nextTrack = nextTracks[0];
-        setQueue({
-          ...queue,
-          tracks: nextTracks.slice(1),
-          history: [...queue.history, nextTrack],
-        });
-        play(nextTrack);
-      }
-    },
-    [queue, isPlaying, play],
-  );
-
-  const rebase = useCallback(
-    (newBase: AnnotatedTrack[]) => {
-      setQueue({ ...queue, base: newBase });
-    },
-    [queue],
-  );
+  // Updaters
 
   const updatePlaying = useCallback((newPlaying: boolean) => {
     setPlaying(newPlaying);
@@ -119,33 +90,68 @@ export function AudioPlayerContextProvider(
     setSeekMs(undefined);
   }, []);
 
+  // Queue mutators
+
+  const rebase = useCallback((newBase: AnnotatedTrack[]) => {
+    setQueue(q => ({ ...q, base: newBase }));
+  }, []);
+
+  const popFrontTrack = useCallback(() => {
+    setQueue(q => ({ ...q, tracks: q.tracks.slice(1) }));
+  }, []);
+
+  const pushFrontTrack = useCallback((pushedTrack: AnnotatedTrack) => {
+    setQueue(q => ({ ...q, tracks: [pushedTrack, ...q.tracks] }));
+  }, []);
+
+  const popFrontBase = useCallback(() => {
+    setQueue(q => ({ ...q, base: q.base.slice(1) }));
+  }, []);
+
+  const pushHistory = useCallback((pushedTrack: AnnotatedTrack) => {
+    setQueue(q => ({ ...q, history: [...q.history, pushedTrack] }));
+  }, []);
+
+  const popHistory = useCallback(() => {
+    setQueue(q => ({
+      ...q,
+      history: q.history.slice(0, q.history.length - 1),
+    }));
+  }, []);
+
+  const pushTracks = useCallback((pushedTracks: AnnotatedTrack[]) => {
+    setQueue(q => ({ ...q, tracks: [...q.tracks, ...pushedTracks] }));
+  }, []);
+
   const advanceQueue = useCallback(() => {
-    const newHistory = [...queue.history, ...(track ? [track] : [])];
+    if (track) {
+      // Push previous track to history
+      pushHistory(track);
+    }
+
     if (queue.tracks.length > 0) {
       // Dequeue from the next tracks
       const next = queue.tracks[0];
-      setQueue({
-        ...queue,
-        tracks: queue.tracks.slice(1),
-        history: newHistory,
-      });
+      popFrontTrack();
       setTrack(next);
     } else if (queue.base.length > 0) {
       // Dequeue from the base tracks
       const next = queue.base[0];
-      setQueue({
-        ...queue,
-        base: queue.base.slice(1),
-        history: newHistory,
-      });
+      popFrontBase();
       setTrack(next);
     } else {
       // Queue ended, stop playback
-      setQueue({ ...queue, history: newHistory });
       setPlayingRequested(false);
     }
     setSeekMs(0);
-  }, [queue, track]);
+  }, [
+    pushHistory,
+    popFrontBase,
+    popFrontTrack,
+    queue.base,
+    queue.tracks,
+    track,
+  ]);
 
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
@@ -170,13 +176,26 @@ export function AudioPlayerContextProvider(
     updateAudioUrl();
   }, [updateAudioUrl]);
 
+  // Play controls
+
+  const play = useCallback((newTrack: AnnotatedTrack) => {
+    setTrack(newTrack);
+    setSeekMs(0);
+    setPlayingRequested(true);
+  }, []);
+
   const back = useCallback(() => {
     if (elapsedMs < 2000 && queue.history.length > 0) {
-      play(queue.history[queue.history.length - 1]);
+      if (track) {
+        pushFrontTrack(track);
+      }
+      const newTrack = queue.history[queue.history.length - 1];
+      popHistory();
+      play(newTrack);
     } else {
       setSeekMs(0);
     }
-  }, [elapsedMs, play, queue.history]);
+  }, [elapsedMs, track, queue.history, play, popHistory, pushFrontTrack]);
 
   const forward = useCallback(() => {
     advanceQueue();
@@ -190,7 +209,7 @@ export function AudioPlayerContextProvider(
     play,
     back,
     forward,
-    enqueue,
+    enqueue: pushTracks,
     rebase,
     seek: setSeekMs,
   };
