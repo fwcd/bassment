@@ -26,8 +26,9 @@ export function PlaybackProgress({
           onSeek(value);
         }
       }}
+      // For some reason we can't use a StyleSheet object here, so we do it inline
+      thumbStyle={{ width: 5, height: 5 }}
       containerStyle={styles.slider}
-      thumbTouchSize={{ width: 10, height: 10 }}
     />
   );
 }
