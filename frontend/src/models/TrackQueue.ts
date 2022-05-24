@@ -5,4 +5,6 @@ export interface TrackQueue {
   tracks: AnnotatedTrack[];
   /** The tracks from the underlying base playlist. */
   base: AnnotatedTrack[];
+  /** The previously played tracks. */
+  history: AnnotatedTrack[];
 }

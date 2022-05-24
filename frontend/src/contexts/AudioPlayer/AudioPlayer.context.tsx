@@ -70,7 +70,11 @@ export function AudioPlayerContextProvider(
   // Requested state
   const [track, setTrack] = useState<AnnotatedTrack>();
   const [isPlayingRequested, setPlayingRequested] = useState<boolean>();
-  const [queue, setQueue] = useState<TrackQueue>({ tracks: [], base: [] });
+  const [queue, setQueue] = useState<TrackQueue>({
+    tracks: [],
+    base: [],
+    history: [],
+  });
   const [seekMs, setSeekMs] = useState<number>();
   const [audioUrl, setAudioUrl] = useState<string>();
 
@@ -87,7 +91,11 @@ export function AudioPlayerContextProvider(
         setQueue({ ...queue, tracks: nextTracks });
       } else if (nextTracks.length > 0) {
         const nextTrack = nextTracks[0];
-        setQueue({ ...queue, tracks: nextTracks.slice(1) });
+        setQueue({
+          ...queue,
+          tracks: nextTracks.slice(1),
+          history: [...queue.history, nextTrack],
+        });
         play(nextTrack);
       }
     },
@@ -113,18 +121,28 @@ export function AudioPlayerContextProvider(
 
   const advanceQueue = useCallback(() => {
     if (queue.tracks.length > 0) {
+      // Dequeue from the next tracks
       const next = queue.tracks[0];
-      setQueue({ ...queue, tracks: queue.tracks.slice(1) });
+      setQueue({
+        ...queue,
+        tracks: queue.tracks.slice(1),
+        history: [...queue.history, next],
+      });
       setTrack(next);
-      setSeekMs(0);
     } else if (queue.base.length > 0) {
+      // Dequeue from the base tracks
       const next = queue.base[0];
-      setQueue({ ...queue, base: queue.base.slice(1) });
+      setQueue({
+        ...queue,
+        base: queue.base.slice(1),
+        history: [...queue.history, next],
+      });
       setTrack(next);
-      setSeekMs(0);
     } else {
+      // Queue ended, stop playback
       setPlayingRequested(false);
     }
+    setSeekMs(0);
   }, [queue]);
 
   const updateAudioUrl = useCallback(async () => {
