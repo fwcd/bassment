@@ -101,23 +101,6 @@ export function AudioPlayerContextProvider(
     [queue],
   );
 
-  const updateAudioUrl = useCallback(async () => {
-    // TODO: More advanced logic for picking the file, e.g. by quality/file type?
-    const audioFiles = track?.id ? await api.getTrackAudioFiles(track.id) : [];
-    const audioFile = audioFiles.find(() => true);
-    const newAudioUrl = audioFile?.id
-      ? api.getFileDataUrl(audioFile.id)
-      : undefined;
-
-    setAudioUrl(newAudioUrl);
-    setPlayingRequested(newAudioUrl !== undefined);
-  }, [api, track]);
-
-  // Update the audio buffer whenever the current track changes
-  useEffect(() => {
-    updateAudioUrl();
-  }, [updateAudioUrl]);
-
   const updatePlaying = useCallback((newPlaying: boolean) => {
     setPlaying(newPlaying);
     setPlayingRequested(undefined);
@@ -143,6 +126,29 @@ export function AudioPlayerContextProvider(
       setPlayingRequested(false);
     }
   }, [queue]);
+
+  const updateAudioUrl = useCallback(async () => {
+    // TODO: More advanced logic for picking the file, e.g. by quality/file type?
+    const audioFiles = track?.id ? await api.getTrackAudioFiles(track.id) : [];
+    const audioFile = audioFiles.find(() => true);
+    const newAudioUrl = audioFile?.id
+      ? api.getFileDataUrl(audioFile.id)
+      : undefined;
+    const canPlay = newAudioUrl !== undefined;
+
+    if (canPlay) {
+      setAudioUrl(newAudioUrl);
+      setPlayingRequested(true);
+    } else {
+      // TODO: This seems to 'skip' over tracks, investigate why
+      // advanceQueue();
+    }
+  }, [api, track]);
+
+  // Update the audio buffer whenever the current track changes
+  useEffect(() => {
+    updateAudioUrl();
+  }, [updateAudioUrl]);
 
   const back = useCallback(() => {
     // TODO: Implement back
