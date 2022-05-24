@@ -2,7 +2,7 @@ import { TrackTable } from '@bassment/components/data/TrackTable';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { SearchContext } from '@bassment/contexts/Search';
 import { AnnotatedTrack } from '@bassment/models/Track';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 interface TracksViewProps {
   tracks: AnnotatedTrack[];
@@ -31,6 +31,16 @@ export function TracksView({ tracks }: TracksViewProps) {
         )
       : tracks;
 
+  const onPlay = useCallback(
+    ({ track, base }: { track: AnnotatedTrack; base?: AnnotatedTrack[] }) => {
+      if (base) {
+        player.rebase(base);
+      }
+      player.play(track);
+    },
+    [player],
+  );
+
   // TODO: Other view on mobile
-  return <TrackTable tracks={filteredTracks} onPlay={player.play} />;
+  return <TrackTable tracks={filteredTracks} onPlay={onPlay} />;
 }

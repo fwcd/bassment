@@ -101,7 +101,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
           ))}
         </thead>
         <tbody>
-          {instance.getRowModel().rows.map(row => (
+          {instance.getRowModel().rows.map((row, index) => (
             <tr
               key={row.id}
               className={[
@@ -133,8 +133,14 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
                 );
               }}
               onDoubleClick={() => {
-                if (onPlay) {
-                  onPlay(row.original!);
+                if (onPlay && row.original) {
+                  onPlay({
+                    track: row.original,
+                    base: instance
+                      .getRowModel()
+                      .rows.flatMap(r => (r.original ? [r.original] : []))
+                      .slice(index + 1),
+                  });
                 }
               }}>
               {row.getVisibleCells().map(cell => (
