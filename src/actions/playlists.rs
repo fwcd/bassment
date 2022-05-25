@@ -1,6 +1,6 @@
-use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension};
+use diesel::{QueryDsl, RunQueryDsl, ExpressionMethods, OptionalExtension, dsl::count};
 
-use crate::{models::{Playlist, NewPlaylist, UpdatePlaylist, PlaylistTreeNode, AnnotatedTrack}, error::Result, db::DbConn, actions::tracks};
+use crate::{models::{Playlist, NewPlaylist, UpdatePlaylist, PlaylistTreeNode, AnnotatedTrack, PlaylistTrack, NewPlaylistTrack}, error::Result, db::DbConn, actions::tracks};
 
 /// Fetches all playlists from the database.
 pub fn all(conn: &DbConn) -> Result<Vec<Playlist>> {
@@ -61,12 +61,36 @@ pub fn annotated_tracks_by_id(playlist_id: i32, conn: &DbConn) -> Result<Vec<Ann
     tracks::annotated_by_ids(&track_ids, conn)
 }
 
+/// Fetches the length of the given playlist.
+pub fn length_by_id(playlist_id: i32, conn: &DbConn) -> Result<i32> {
+    use crate::schema::playlist_tracks;
+    let count: i64 = playlist_tracks::table.select(count(playlist_tracks::playlist_id))
+        .filter(playlist_tracks::playlist_id.eq(playlist_id))
+        .first(conn)?;
+    Ok(count as i32)
+}
+
 /// Inserts a playlist into the database.
 pub fn insert(new_playlist: &NewPlaylist, conn: &DbConn) -> Result<Playlist> {
     use crate::schema::playlists::dsl::*;
     Ok(diesel::insert_into(playlists)
         .values(new_playlist)
         .get_result(conn)?)
+}
+
+/// Inserts track ids into the playlist.
+pub fn insert_track_ids(playlist_id: i32, new_track_ids: &[i32], conn: &DbConn) -> Result<Vec<PlaylistTrack>> {
+    use crate::schema::playlist_tracks;
+    // TODO: Make this a transaction to guarantee atomicity?
+    let offset = length_by_id(playlist_id, conn)?;
+    let new_playlist_tracks: Vec<_> = new_track_ids
+        .into_iter()
+        .enumerate()
+        .map(|(i, &track_id)| NewPlaylistTrack { playlist_id, track_id, track_number: Some(offset + (i as i32)) })
+        .collect();
+    Ok(diesel::insert_into(playlist_tracks::table)
+        .values(new_playlist_tracks)
+        .get_results(conn)?)
 }
 
 /// Updates a playlist in the database.

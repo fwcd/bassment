@@ -38,6 +38,15 @@ pub struct PlaylistTreeNode {
     pub children: Vec<PlaylistTreeNode>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable)]
+#[serde(rename_all = "camelCase")]
+pub struct PlaylistTrack {
+    pub playlist_id: i32,
+    pub track_id: i32,
+    pub track_number: Option<i32>,
+    pub added_by: Option<i32>,
+}
+
 #[derive(Debug, Clone, Deserialize, Insertable)]
 #[serde(rename_all = "camelCase")]
 #[table_name = "playlists"]
@@ -49,6 +58,15 @@ pub struct NewPlaylist {
     pub position: i32,
     pub added_by: Option<i32>,
     pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Insertable)]
+#[serde(rename_all = "camelCase")]
+#[table_name = "playlist_tracks"]
+pub struct NewPlaylistTrack {
+    pub playlist_id: i32,
+    pub track_id: i32,
+    pub track_number: Option<i32>,
 }
 
 #[derive(Debug, Clone, Deserialize, AsChangeset)]

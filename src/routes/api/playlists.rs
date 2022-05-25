@@ -30,6 +30,20 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(playlists))
 }
 
+#[get("/{id}/length")]
+async fn get_length_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let length = web::block(move || playlists::length_by_id(*id, &conn)).await??;
+    Ok(web::Json(length))
+}
+
+#[post("/{id}/tracks/ids")]
+async fn post_track_ids(pool: web::Data<DbPool>, id: web::Path<i32>, track_ids: web::Json<Vec<i32>>) -> Result<impl Responder> {
+    let conn = pool.get()?;
+    let playlist_tracks = web::block(move || playlists::insert_track_ids(*id, &track_ids, &conn)).await??;
+    Ok(web::Json(playlist_tracks))
+}
+
 #[get("/{id}/tracks/annotated")]
 async fn get_annotated_tracks_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
     let conn = pool.get()?;
@@ -65,6 +79,8 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_all_trees)
             .service(post)
             .service(get_by_id)
+            .service(get_length_by_id)
+            .service(post_track_ids)
             .service(get_annotated_tracks_by_id)
             .service(get_tree_by_id)
             .service(patch_by_id)
