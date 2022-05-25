@@ -226,7 +226,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
       playlistId: number,
       trackIds: number[],
     ): Promise<void> {
-      return await apiRequest('POST', `/playlists/${playlistId}/tracks`, {
+      return await apiRequest('POST', `/playlists/${playlistId}/tracks/ids`, {
         body: trackIds,
       });
     },
