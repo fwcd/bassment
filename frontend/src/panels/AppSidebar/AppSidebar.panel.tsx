@@ -24,6 +24,7 @@ import { CategoryTreeItem } from '@bassment/components/navigation/CategoryTreeIt
 import { QueueTreeItem } from '@bassment/components/navigation/QueueTreeItem';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { HistoryTreeItem } from '@bassment/components/navigation/HistoryTreeItem';
+import { AnnotatedTrack } from '@bassment/models/Track';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
@@ -74,6 +75,16 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       setNewPlaylist(undefined);
     }
   }, [api, newPlaylist, updatePlaylists]);
+
+  const onInsertPlaylistTracks = useCallback(
+    async (playlistId: number, tracks: AnnotatedTrack[]) => {
+      await api.postPlaylistTrackIds(
+        playlistId,
+        tracks.flatMap(t => (t.id ? [t.id] : [])),
+      );
+    },
+    [api],
+  );
 
   const onDeletePlaylist = useCallback(
     async (playlist: Playlist) => {
@@ -187,7 +198,6 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       <HistoryTreeItem
         isFocused={route.name === 'history'}
         onFocus={() => navigation.navigate('history', {})}
-        onEnqueue={player.enqueue}
       />
       {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
       <Divider />
@@ -206,6 +216,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
               displayName: child.name ?? `${playlist.id}`,
             })
           }
+          onInsert={onInsertPlaylistTracks}
           onDelete={onDeletePlaylist}
         />
       ))}

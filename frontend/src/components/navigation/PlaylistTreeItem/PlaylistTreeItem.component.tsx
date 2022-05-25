@@ -2,8 +2,10 @@ import { ContextMenuZone } from '@bassment/components/input/ContextMenuZone/Cont
 import { DropZone } from '@bassment/components/input/DropZone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
+import { Drop, TracksDrop } from '@bassment/models/Drop';
 import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
+import { AnnotatedTrack } from '@bassment/models/Track';
 import React, { useCallback } from 'react';
 
 interface PlaylistTreeItemProps {
@@ -15,6 +17,7 @@ interface PlaylistTreeItemProps {
   onFocus?: (playlist: Playlist) => void;
   onEdit?: (playlist: Playlist) => void;
   onDelete?: (playlist: Playlist) => void;
+  onInsert?: (playlistId: number, tracks: AnnotatedTrack[]) => void;
   onSubmitEdit?: () => void;
 }
 
@@ -25,11 +28,21 @@ export function PlaylistTreeItem({
   focusedId,
   onFocus,
   onEdit,
+  onInsert,
   onSubmitEdit,
   onDelete,
 }: PlaylistTreeItemProps) {
-  // TODO: Implement onDrop
-  const onDrop = useCallback(() => {}, []);
+  const onDrop = useCallback(
+    (drops: Drop[]) => {
+      if (onInsert && playlist.id) {
+        const tracks = drops
+          .filter(drop => drop.kind === 'tracks')
+          .flatMap(drop => (drop as TracksDrop).tracks);
+        onInsert(playlist.id, tracks);
+      }
+    },
+    [playlist.id, onInsert],
+  );
 
   return (
     <DropZone onDrop={onDrop}>
@@ -79,6 +92,7 @@ export function PlaylistTreeItem({
                   playlist={child}
                   focusedId={focusedId}
                   onFocus={onFocus}
+                  onInsert={onInsert}
                   onDelete={onDelete}
                 />
               ))
