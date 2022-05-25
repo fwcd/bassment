@@ -59,6 +59,9 @@ export interface ApiContextValue {
   /** Creates a new playlist. */
   postPlaylist(playlist: Playlist): Promise<void>;
 
+  /** Adds tracks to a playlist. */
+  postPlaylistTrackIds(playlistId: number, trackIds: number[]): Promise<void>;
+
   /** Deletes a playlist. */
   deletePlaylist(playlistId: number): Promise<void>;
 
@@ -77,7 +80,7 @@ export interface ApiContextValue {
 
 function noApiContextSync<T>(resource: string, defaultValue: () => T): () => T {
   return () => {
-    console.warn(`No API context available for getting ${resource}!`);
+    console.warn(`No API context available for getting/updating ${resource}!`);
     return defaultValue();
   };
 }
@@ -101,6 +104,7 @@ export const ApiContext = createContext<ApiContextValue>({
   getPlaylistTrees: noApiContext('playlist trees', () => []),
   getCategoryTrees: noApiContext('category trees', () => []),
   postPlaylist: noApiContext('playlist', () => {}),
+  postPlaylistTrackIds: noApiContext('playlist tracks', () => {}),
   deletePlaylist: noApiContext('playlist', () => {}),
   getTrackAudioFiles: noApiContext('track audio files', () => []),
   getFileData: noApiContext('file data', () => new ArrayBuffer(0)),
@@ -217,6 +221,14 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     },
     async postPlaylist(playlist: Playlist): Promise<void> {
       return await apiRequest('POST', '/playlists', { body: playlist });
+    },
+    async postPlaylistTrackIds(
+      playlistId: number,
+      trackIds: number[],
+    ): Promise<void> {
+      return await apiRequest('POST', `/playlists/${playlistId}/tracks`, {
+        body: trackIds,
+      });
     },
     async deletePlaylist(playlistId: number): Promise<void> {
       return await apiRequest('DELETE', `/playlists/${playlistId}`);
