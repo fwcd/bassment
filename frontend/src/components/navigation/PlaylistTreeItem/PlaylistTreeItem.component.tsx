@@ -9,7 +9,7 @@ import { AnnotatedTrack } from '@bassment/models/Track';
 import React, { useCallback } from 'react';
 
 interface PlaylistTreeItemProps {
-  playlist: PlaylistTreeNode;
+  playlist: PlaylistTreeNode | Playlist;
   // TODO: Use ids for editable too to permit editing nested elements
   isEditable?: boolean;
   isEditFocused?: boolean;
@@ -59,9 +59,11 @@ export function PlaylistTreeItem({
         ]}>
         <DrawerTreeItem
           label={`${playlist.name ?? 'Unnamed Playlist'}${
-            isEditFocused || playlist.kind === PlaylistKind.Folder
-              ? ''
-              : ` (${playlist.trackCount})`
+            !isEditFocused &&
+            playlist.kind !== PlaylistKind.Folder &&
+            'trackCount' in playlist
+              ? ` (${playlist.trackCount})`
+              : ''
           }`}
           isFocused={focusedId !== undefined && focusedId === playlist.id}
           isEditable={isEditable}
