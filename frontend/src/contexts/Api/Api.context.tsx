@@ -4,7 +4,7 @@ import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
 import { CategoryTreeNode } from '@bassment/models/Category';
 import { PartialFileInfo } from '@bassment/models/FileInfo';
-import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
+import { NewPlaylist, PlaylistTreeNode } from '@bassment/models/Playlist';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, {
   createContext,
@@ -57,7 +57,7 @@ export interface ApiContextValue {
   getCategoryTrees(): Promise<CategoryTreeNode[]>;
 
   /** Creates a new playlist. */
-  postPlaylist(playlist: Playlist): Promise<void>;
+  postPlaylist(playlist: NewPlaylist): Promise<void>;
 
   /** Adds tracks to a playlist. */
   postPlaylistTrackIds(playlistId: number, trackIds: number[]): Promise<void>;
@@ -219,7 +219,7 @@ export function ApiContextProvider(props: ApiContextProviderProps) {
     async getCategoryTrees(): Promise<CategoryTreeNode[]> {
       return await apiRequest('GET', '/categories/trees');
     },
-    async postPlaylist(playlist: Playlist): Promise<void> {
+    async postPlaylist(playlist: NewPlaylist): Promise<void> {
       return await apiRequest('POST', '/playlists', { body: playlist });
     },
     async postPlaylistTrackIds(

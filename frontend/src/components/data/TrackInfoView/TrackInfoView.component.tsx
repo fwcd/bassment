@@ -13,12 +13,8 @@ export function TrackInfoView({ track, style }: TrackInfoViewProps) {
   const styles = useTrackInfoViewStyles();
   return (
     <View style={[styles.info, style]}>
-      <ThemedText style={styles.title}>
-        {track.title ?? 'Unnamed Track'}
-      </ThemedText>
-      <ThemedText>
-        {track.artists.flatMap(a => (a.name ? [a.name] : [])).join(', ')}
-      </ThemedText>
+      <ThemedText style={styles.title}>{track.title}</ThemedText>
+      <ThemedText>{track.artists.map(a => a.name).join(', ')}</ThemedText>
     </View>
   );
 }

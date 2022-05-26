@@ -11,11 +11,11 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
       initialWidths={[40, 200, 200, 400, 200]}
       data={tracks.map(track => ({
         _track: track, // Internal property for keeping the track
-        key: track.id!,
+        key: track.id,
         ID: track.id,
         Album: track.albums.map(a => a.name).join(', '),
         Artist: track.artists.map(a => a.name).join(', '),
-        Title: track.title ?? '',
+        Title: track.title,
         Tags: track.tags.map(t => `${t.displayName}: ${t.value}`).join(', '),
       }))}
       selectedRowKey={selectedId}

@@ -112,7 +112,7 @@ export const TrackTable = memo(({ tracks, onPlay }: TrackTableProps) => {
               ].join(' ')}
               draggable
               onClick={e => {
-                const id = row.original!.id!;
+                const id = row.original!.id;
                 if (e.shiftKey) {
                   // TODO: Select the range instead of just adding the id
                   setSelectedIds(new Set([...selectedIds, id]));

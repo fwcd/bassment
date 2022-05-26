@@ -155,7 +155,7 @@ export function AudioPlayerContextProvider(
 
   const updateAudioUrl = useCallback(async () => {
     // TODO: More advanced logic for picking the file, e.g. by quality/file type?
-    const audioFiles = track?.id ? await api.getTrackAudioFiles(track.id) : [];
+    const audioFiles = track ? await api.getTrackAudioFiles(track.id) : [];
     const audioFile = audioFiles.find(() => true);
     const newAudioUrl = audioFile?.id
       ? api.getFileDataUrl(audioFile.id)

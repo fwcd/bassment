@@ -15,7 +15,7 @@ export function ArtistTreeItem({
 }: ArtistTreeItemProps) {
   return (
     <DrawerTreeItem
-      label={artist.name ?? 'Unnamed Artist'}
+      label={artist.name}
       isFocused={isFocused}
       onPress={onFocus}
     />

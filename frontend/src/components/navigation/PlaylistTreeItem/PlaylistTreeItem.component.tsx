@@ -3,19 +3,23 @@ import { DropZone } from '@bassment/components/input/DropZone';
 import { DrawerTreeItem } from '@bassment/components/navigation/DrawerTreeItem';
 import { PlaylistKindIcon } from '@bassment/components/navigation/PlaylistKindIcon';
 import { Drop, TracksDrop } from '@bassment/models/Drop';
-import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
+import {
+  NewPlaylist,
+  Playlist,
+  PlaylistTreeNode,
+} from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import React, { useCallback } from 'react';
 
 interface PlaylistTreeItemProps {
-  playlist: PlaylistTreeNode;
+  playlist: PlaylistTreeNode | NewPlaylist;
   // TODO: Use ids for editable too to permit editing nested elements
   isEditable?: boolean;
   isEditFocused?: boolean;
   focusedId?: number;
   onFocus?: (playlist: Playlist) => void;
-  onEdit?: (playlist: Playlist) => void;
+  onEdit?: (playlist: Playlist | NewPlaylist) => void;
   onDelete?: (playlist: Playlist) => void;
   onInsert?: (playlistId: number, tracks: AnnotatedTrack[]) => void;
   onSubmitEdit?: () => void;
@@ -32,16 +36,18 @@ export function PlaylistTreeItem({
   onSubmitEdit,
   onDelete,
 }: PlaylistTreeItemProps) {
+  const exists = 'id' in playlist;
+
   const onDrop = useCallback(
     (drops: Drop[]) => {
-      if (onInsert && playlist.id) {
+      if (onInsert && exists && playlist.id) {
         const tracks = drops
           .filter(drop => drop.kind === 'tracks')
           .flatMap(drop => (drop as TracksDrop).tracks);
         onInsert(playlist.id, tracks);
       }
     },
-    [playlist.id, onInsert],
+    [exists, playlist, onInsert],
   );
 
   return (
@@ -51,31 +57,29 @@ export function PlaylistTreeItem({
           {
             label: 'Delete Playlist',
             onSelect: () => {
-              if (onDelete) {
+              if (onDelete && 'id' in playlist) {
                 onDelete(playlist);
               }
             },
           },
         ]}>
         <DrawerTreeItem
-          label={`${playlist.name ?? 'Unnamed Playlist'}${
-            isEditFocused || playlist.kind === PlaylistKind.Folder
+          label={`${playlist.name}${
+            isEditFocused || playlist.kind === PlaylistKind.Folder || !exists
               ? ''
               : ` (${playlist.trackCount})`
           }`}
-          isFocused={focusedId !== undefined && focusedId === playlist.id}
+          isFocused={
+            focusedId !== undefined && exists && focusedId === playlist.id
+          }
           isEditable={isEditable}
           isEditFocused={isEditFocused}
           isExpandedInitially
           icon={({ size, color }) => (
-            <PlaylistKindIcon
-              kind={playlist.kind ?? PlaylistKind.Playlist}
-              size={size}
-              color={color}
-            />
+            <PlaylistKindIcon kind={playlist.kind} size={size} color={color} />
           )}
           onPress={
-            playlist.id && !isEditable
+            exists && playlist.id && !isEditable
               ? () => {
                   if (onFocus) {
                     onFocus(playlist);

@@ -16,7 +16,7 @@ export function TagTreeItem({ tag, isFocused, onFocus }: TagTreeItemProps) {
   return (
     <DropZone onDrop={onDrop}>
       <DrawerTreeItem
-        label={tag.value ?? 'Anonymous Tag'}
+        label={tag.value}
         isFocused={isFocused}
         onPress={onFocus}
       />

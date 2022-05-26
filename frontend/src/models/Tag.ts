@@ -1,9 +1,9 @@
 export interface Tag {
-  id?: number;
-  categoryId?: number;
-  value?: string;
-  description?: string | null;
-  coverArtId?: number | null;
+  id: number;
+  categoryId: number;
+  value: string;
+  description: string | null;
+  coverArtId: number | null;
 }
 
 export interface KeyedTag {

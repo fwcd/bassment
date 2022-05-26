@@ -15,7 +15,7 @@ export function AlbumTreeItem({
 }: AlbumTreeItemProps) {
   return (
     <DrawerTreeItem
-      label={album.name ?? 'Unnamed Album'}
+      label={album.name}
       isFocused={isFocused}
       onPress={onFocus}
     />

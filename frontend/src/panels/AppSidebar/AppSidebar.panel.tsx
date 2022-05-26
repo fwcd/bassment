@@ -10,7 +10,11 @@ import { ApiContext } from '@bassment/contexts/Api';
 import { SearchContext } from '@bassment/contexts/Search';
 import { PartialAlbum } from '@bassment/models/Album';
 import { PartialArtist } from '@bassment/models/Artist';
-import { Playlist, PlaylistTreeNode } from '@bassment/models/Playlist';
+import {
+  NewPlaylist,
+  Playlist,
+  PlaylistTreeNode,
+} from '@bassment/models/Playlist';
 import { PlaylistKind } from '@bassment/models/PlaylistKind';
 import { useAppSidebarStyles } from '@bassment/panels/AppSidebar/AppSidebar.style';
 import {
@@ -39,7 +43,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [albums, setAlbums] = useState<PartialAlbum[]>([]);
   const [artists, setArtists] = useState<PartialArtist[]>([]);
-  const [newPlaylist, setNewPlaylist] = useState<Playlist>();
+  const [newPlaylist, setNewPlaylist] = useState<NewPlaylist>();
 
   const updatePlaylists = useCallback(async () => {
     setPlaylists(await api.getPlaylistTrees());
