@@ -62,7 +62,7 @@ pub fn annotated_tracks_by_id(playlist_id: i32, conn: &DbConn) -> Result<Vec<Ann
 }
 
 /// Fetches the length of the given playlist.
-pub fn length_by_id(playlist_id: i32, conn: &DbConn) -> Result<i32> {
+pub fn track_count_by_id(playlist_id: i32, conn: &DbConn) -> Result<i32> {
     use crate::schema::playlist_tracks;
     let count: i64 = playlist_tracks::table.select(count(playlist_tracks::playlist_id))
         .filter(playlist_tracks::playlist_id.eq(playlist_id))
@@ -82,7 +82,7 @@ pub fn insert(new_playlist: &NewPlaylist, conn: &DbConn) -> Result<Playlist> {
 pub fn insert_track_ids(playlist_id: i32, new_track_ids: &[i32], conn: &DbConn) -> Result<Vec<PlaylistTrack>> {
     use crate::schema::playlist_tracks;
     // TODO: Make this a transaction to guarantee atomicity?
-    let offset = length_by_id(playlist_id, conn)?;
+    let offset = track_count_by_id(playlist_id, conn)?;
     let new_playlist_tracks: Vec<_> = new_track_ids
         .into_iter()
         .enumerate()

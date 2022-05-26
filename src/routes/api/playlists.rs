@@ -30,10 +30,10 @@ async fn get_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl R
     Ok(web::Json(playlists))
 }
 
-#[get("/{id}/length")]
-async fn get_length_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
+#[get("/{id}/tracks/count")]
+async fn get_track_count_by_id(pool: web::Data<DbPool>, id: web::Path<i32>) -> Result<impl Responder> {
     let conn = pool.get()?;
-    let length = web::block(move || playlists::length_by_id(*id, &conn)).await??;
+    let length = web::block(move || playlists::track_count_by_id(*id, &conn)).await??;
     Ok(web::Json(length))
 }
 
@@ -79,7 +79,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
             .service(get_all_trees)
             .service(post)
             .service(get_by_id)
-            .service(get_length_by_id)
+            .service(get_track_count_by_id)
             .service(post_track_ids)
             .service(get_annotated_tracks_by_id)
             .service(get_tree_by_id)
