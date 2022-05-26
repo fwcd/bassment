@@ -12,5 +12,6 @@ export interface Playlist {
 }
 
 export interface PlaylistTreeNode extends Playlist {
+  trackCount: number;
   children: PlaylistTreeNode[];
 }

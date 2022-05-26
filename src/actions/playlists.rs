@@ -23,11 +23,12 @@ fn tree_for(playlist: Playlist, conn: &DbConn) -> Result<PlaylistTreeNode> {
         .filter(parent_id.eq(playlist.id))
         .get_results(conn)?;
     fetched.sort_by_key(|p: &Playlist| p.position);
+    let track_count = track_count_by_id(playlist.id, conn)?;
     let children = fetched
         .into_iter()
         .map(|p| tree_for(p, conn))
         .collect::<Result<Vec<_>>>()?;
-    Ok(PlaylistTreeNode { playlist, children })
+    Ok(PlaylistTreeNode { playlist, track_count, children })
 }
 
 /// Fetches a playlist tree by id.

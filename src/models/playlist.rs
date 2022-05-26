@@ -35,6 +35,7 @@ pub struct Playlist {
 pub struct PlaylistTreeNode {
     #[serde(flatten)]
     pub playlist: Playlist,
+    pub track_count: i32,
     pub children: Vec<PlaylistTreeNode>,
 }
 
