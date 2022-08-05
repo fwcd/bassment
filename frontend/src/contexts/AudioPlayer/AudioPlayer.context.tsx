@@ -218,6 +218,7 @@ export function AudioPlayerContextProvider(
     <AudioPlayerContext.Provider value={value}>
       <AudioPlayer
         isPlayingRequested={isPlayingRequested}
+        track={track}
         url={audioUrl}
         seekMs={seekMs}
         onUpdatePlaying={updatePlaying}

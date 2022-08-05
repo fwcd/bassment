@@ -3,6 +3,7 @@ import React, { createRef, useCallback, useEffect } from 'react';
 
 export function AudioPlayer({
   isPlayingRequested,
+  track,
   url,
   seekMs,
   onUpdatePlaying,
@@ -40,6 +41,15 @@ export function AudioPlayer({
       elementRef.current.currentTime = seekMs / 1000;
     }
   }, [elementRef, seekMs]);
+
+  // Update now playing info via Media Session API
+  useEffect(() => {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track?.title,
+      artist: track?.artists.map(a => a.name).join(', '),
+      album: track?.albums.map(a => a.name).join(', '),
+    });
+  }, [track]);
 
   const onTimeUpdate = useCallback(() => {
     if (onUpdateElapsedMs && elementRef.current) {
