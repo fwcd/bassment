@@ -6,6 +6,9 @@ export function AudioPlayer({
   track,
   url,
   seekMs,
+  onRequestPlaying,
+  onRequestBack,
+  onRequestForward,
   onUpdatePlaying,
   onUpdateElapsedMs,
   onUpdateTotalMs,
@@ -51,6 +54,32 @@ export function AudioPlayer({
     });
   }, [track]);
 
+  // Set up hooks for responding to control updates via the Media Session API
+  useEffect(() => {
+    navigator.mediaSession.setActionHandler('play', () => {
+      if (onRequestPlaying) {
+        onRequestPlaying(true);
+      }
+    });
+    navigator.mediaSession.setActionHandler('pause', () => {
+      if (onRequestPlaying) {
+        onRequestPlaying(false);
+      }
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      if (onRequestForward) {
+        onRequestForward();
+      }
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      if (onRequestBack) {
+        onRequestBack();
+      }
+    });
+  }, [onRequestPlaying, onRequestForward, onRequestBack]);
+
+  // Handle updates from the <audio> player itself
+  // (e.g. if the user manipulates the controls directly through the browser)
   const onTimeUpdate = useCallback(() => {
     if (onUpdateElapsedMs && elementRef.current) {
       onUpdateElapsedMs(elementRef.current.currentTime * 1000);

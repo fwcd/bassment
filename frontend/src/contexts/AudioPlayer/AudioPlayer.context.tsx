@@ -221,6 +221,9 @@ export function AudioPlayerContextProvider(
         track={track}
         url={audioUrl}
         seekMs={seekMs}
+        onRequestPlaying={setPlayingRequested}
+        onRequestForward={forward}
+        onRequestBack={back}
         onUpdatePlaying={updatePlaying}
         onUpdateElapsedMs={updateElapsedMs}
         onUpdateTotalMs={setTotalMs}
