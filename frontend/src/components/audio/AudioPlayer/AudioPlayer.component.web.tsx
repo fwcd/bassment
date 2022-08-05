@@ -46,6 +46,7 @@ export function AudioPlayer({
   }, [elementRef, seekMs]);
 
   // Update now playing info via Media Session API
+  // TODO: Artwork
   useEffect(() => {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: track?.title,
@@ -53,6 +54,8 @@ export function AudioPlayer({
       album: track?.albums.map(a => a.name).join(', '),
     });
   }, [track]);
+
+  // TODO: Update progress info via Media Session API
 
   // Set up hooks for responding to control updates via the Media Session API
   useEffect(() => {
