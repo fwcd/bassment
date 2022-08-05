@@ -6,12 +6,14 @@ export function useSectionHeaderStyles() {
   return StyleSheet.create({
     container: {
       flexDirection: 'row',
+      alignItems: 'center',
     },
     label: {
       fontSize: styles.text.labelFontSize,
       color: styles.color.subscript,
       textTransform: 'uppercase',
       padding: styles.layout.space,
+      flex: 1,
     },
   });
 }
