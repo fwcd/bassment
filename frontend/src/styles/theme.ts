@@ -9,7 +9,7 @@ export function useDerivedTheme() {
     ...baseTheme,
     colors: {
       ...baseTheme.colors,
-      primary: '#ffc873',
+      primary: '#ffddab',
     },
   };
 }

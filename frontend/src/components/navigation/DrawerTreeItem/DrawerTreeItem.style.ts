@@ -22,7 +22,7 @@ export function useDrawerTreeItemStyles(focused: boolean, isButton: boolean) {
     },
     label: {
       fontSize: styles.text.fontSize,
-      color: styles.text.color,
+      color: styles.color.foreground,
     },
     chevron: {
       width: styles.icon.size,

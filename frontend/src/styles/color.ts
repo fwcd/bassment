@@ -4,7 +4,9 @@ export function useColorStyles() {
   const theme = useTheme();
   return {
     primary: theme.colors.primary,
+    foreground: theme.colors.text,
     background: theme.colors.background,
+    subscript: theme.dark ? '#777777' : '#666666',
     card: theme.colors.card,
     border: theme.colors.border,
     field: theme.dark ? '#292929' : '#e8e8e8',

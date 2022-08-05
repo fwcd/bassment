@@ -25,6 +25,7 @@ import { QueueTreeItem } from '@bassment/components/navigation/QueueTreeItem';
 import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { HistoryTreeItem } from '@bassment/components/navigation/HistoryTreeItem';
 import { AnnotatedTrack } from '@bassment/models/Track';
+import { SectionHeader } from '@bassment/components/structure/SectionHeader';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
@@ -107,6 +108,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
   return (
     <DrawerContentScrollView style={styles.sidebar}>
       <SearchBar value={searchText} onChangeText={setSearchText} />
+      <SectionHeader label="Library" />
       <DrawerTreeItem
         label="Tracks"
         icon={({ size, color }) => (
@@ -163,6 +165,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         ))}
       </DrawerTreeItem>
       <Divider />
+      <SectionHeader label="Categories" />
       {categories.map(category => (
         <CategoryTreeItem
           key={category.id}
@@ -189,6 +192,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         )}
       /> */}
       <Divider />
+      <SectionHeader label="Playback" />
       <QueueTreeItem
         count={player.queue?.tracks.length ?? 0}
         isFocused={route.name === 'queue'}
@@ -199,8 +203,8 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         isFocused={route.name === 'history'}
         onFocus={() => navigation.navigate('history', {})}
       />
-      {/* TODO: Make Queue droppable, perhaps move it to a separate component? */}
       <Divider />
+      <SectionHeader label="Playlists" />
       {playlists.map(playlist => (
         <PlaylistTreeItem
           key={playlist.id}

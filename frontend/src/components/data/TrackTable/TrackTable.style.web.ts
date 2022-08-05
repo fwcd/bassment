@@ -11,7 +11,7 @@ export function useTrackTableStyles() {
 
     .tt-table {
       width: 100%;
-      color: ${styles.text.color};
+      color: ${styles.color.foreground};
       font-size: ${styles.text.fontSize}px;
       border-spacing: 0;
     }

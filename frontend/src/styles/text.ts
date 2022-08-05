@@ -1,8 +1,6 @@
 import { envConstants } from '@bassment/constants/env';
-import { useTheme } from '@react-navigation/native';
 
 export function useTextStyles() {
-  const theme = useTheme();
   // TODO: Deal with platforms like 'macos' and 'windows' once/if we support them
   const scale = envConstants.platform.os === 'web' ? 1 : 1.3;
   return {
@@ -10,6 +8,6 @@ export function useTextStyles() {
     fontSize: 13 * scale,
     titleFontSize: 22 * scale,
     subtitleFontSize: 18 * scale,
-    color: theme.colors.text,
+    labelFontSize: 10 * scale,
   };
 }

@@ -11,7 +11,7 @@ export function useSearchBarStyles() {
       padding: styles.layout.smallSpace,
       backgroundColor: styles.color.field,
       fontSize: styles.text.fontSize,
-      color: styles.text.color,
+      color: styles.color.foreground,
     },
   });
 }
