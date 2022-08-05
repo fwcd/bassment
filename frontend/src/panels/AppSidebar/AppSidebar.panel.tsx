@@ -26,6 +26,8 @@ import { AudioPlayerContext } from '@bassment/contexts/AudioPlayer';
 import { HistoryTreeItem } from '@bassment/components/navigation/HistoryTreeItem';
 import { AnnotatedTrack } from '@bassment/models/Track';
 import { SectionHeader } from '@bassment/components/structure/SectionHeader';
+import { ThemedButton } from '@bassment/components/input/ThemedButton';
+import { SectionButton } from '@bassment/components/structure/SectionButton';
 
 export function AppSidebar(props: DrawerContentComponentProps) {
   const route = props.state.routes[props.state.index];
@@ -166,6 +168,7 @@ export function AppSidebar(props: DrawerContentComponentProps) {
       </DrawerTreeItem>
       <Divider />
       <SectionHeader label="Categories" />
+      {/* TODO: Add section button for adding new categories */}
       {categories.map(category => (
         <CategoryTreeItem
           key={category.id}
@@ -204,7 +207,20 @@ export function AppSidebar(props: DrawerContentComponentProps) {
         onFocus={() => navigation.navigate('history', {})}
       />
       <Divider />
-      <SectionHeader label="Playlists" />
+      <SectionHeader label="Playlists">
+        <SectionButton
+          iconName="add-outline"
+          onPress={() => {
+            createNewPlaylist(PlaylistKind.Playlist);
+          }}
+        />
+        <SectionButton
+          iconName="folder-outline"
+          onPress={() => {
+            createNewPlaylist(PlaylistKind.Folder);
+          }}
+        />
+      </SectionHeader>
       {playlists.map(playlist => (
         <PlaylistTreeItem
           key={playlist.id}
@@ -234,28 +250,6 @@ export function AppSidebar(props: DrawerContentComponentProps) {
           isEditFocused
         />
       ) : null}
-      <Divider />
-      <DrawerTreeItem
-        label="Add Playlist"
-        isButton
-        onPress={() => {
-          createNewPlaylist(PlaylistKind.Playlist);
-        }}
-        icon={({ size, color }) => (
-          <ThemedIcon name="add-outline" size={size} color={color} />
-        )}
-      />
-      <DrawerTreeItem
-        label="Add Folder"
-        isButton
-        onPress={() => {
-          createNewPlaylist(PlaylistKind.Folder);
-        }}
-        icon={({ size, color }) => (
-          <ThemedIcon name="add-outline" size={size} color={color} />
-        )}
-      />
-      {/* TODO: Add button for adding new categories */}
     </DrawerContentScrollView>
   );
 }
