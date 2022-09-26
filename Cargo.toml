@@ -1,7 +1,7 @@
 [package]
 name = "bassment"
 description = "Music library server with support for cue points, playlists, crates and more"
-version = "0.1.0"
+version = "0.1.1"
 license = "GPL-3.0"
 edition = "2021"
 repository = "https://github.com/fwcd/bassment"
